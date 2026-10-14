@@ -14,6 +14,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class MenuManager : MonoBehaviour
 {
+    //singleton
     public static MenuManager instance;
 
     [SerializeField] private Camera menuCamera;
@@ -511,6 +512,7 @@ public class MenuManager : MonoBehaviour
         enemyDeathCount = 0;
         enemyDeathCounterText.text = enemyDeathCount.ToString() + " enemies";
 
+        //resets resetabble objects
         replayManager.ResetScene();
         replayManager.StartRoundReplay();
         //Debug.Log("endnextrun");

@@ -151,12 +151,12 @@ public class ReplayManager : MonoBehaviour
                 case PlayerMovement.MovementState.Controlled:
                     //if the player is controlling it we need to record it
                     //Debug.Log("player " + players[i].id + " is being saved");
-                    currentSnapshotData.AddObjectSnapshot(players[i].SaveSnapshot());
+                    //currentSnapshotData.AddObjectSnapshot(players[i].SaveSnapshot());
                     break;
                 case PlayerMovement.MovementState.Playback:
                     //if its on playback we need to load it
                     //Debug.Log("player " + players[i].id + " is being Loaded");
-                    players[i].LoadSnapshot(currentSnapshotData.snapshots[players[i].id]);
+                    //players[i].LoadSnapshot(currentSnapshotData.snapshots[players[i].id]);
                     break;
                 default:
                     break;
@@ -172,7 +172,7 @@ public class ReplayManager : MonoBehaviour
             }
             else if (enemies[i].dead)
             {
-                currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                //currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
             }
         }
 

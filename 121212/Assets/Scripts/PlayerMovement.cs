@@ -462,10 +462,10 @@ public class PlayerMovement : Entities
 
     private void Exit(InputAction.CallbackContext context) => Application.Quit();
 
-    public SnapshotInfo SaveSnapshot()
+    public NewSnapshotInfo SaveSnapshot()
     {
 
-        SnapshotInfo SnapshotInfo = new SnapshotInfo()
+        NewSnapshotInfo NewSnapshotInfo = new NewSnapshotInfo()
         {
             replay_id = id,
             replay_position = transform.position,
@@ -478,13 +478,14 @@ public class PlayerMovement : Entities
             shootInfo.s_didShoot = false;   
         }
 
-        return SnapshotInfo;
+        return NewSnapshotInfo;
     }
 
-    public void LoadSnapshot(SnapshotInfo info)
+    public void LoadSnapshot(NewSnapshotInfo info)
     {
         transform.position = info.replay_position;
 
+        //if its at the default position get it out of the fucking way
         if (transform.position == Vector3.zero)
         {
             transform.position = new Vector3(0, -1000, 0);

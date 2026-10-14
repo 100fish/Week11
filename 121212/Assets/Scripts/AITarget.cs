@@ -187,9 +187,9 @@ public class AITarget : Entities
             lineRenderer.enabled = false;
 
             SaveSnapshot();
-            MenuManager menuManager = MenuManager.instance;
+            NewMenuManager newMenuManager = NewMenuManager.instance;
 
-            menuManager.EnemyDeath();
+            newMenuManager.EnemyDeath();
 
             foreach (var meshRenderer in meshRenderers)
             {
@@ -259,15 +259,15 @@ public class AITarget : Entities
 
     }
 
-    public SnapshotInfoEnemy SaveSnapshot()
+    public NewSnapshotInfoEnemy SaveSnapshot()
     {
 
-        SnapshotInfoEnemy SnapshotInfo = new SnapshotInfoEnemy()
+        NewSnapshotInfoEnemy NewSnapshotInfo = new NewSnapshotInfoEnemy()
         {
             replay_id = id,
             replay_dead = dead
         };
 
-        return SnapshotInfo;
+        return NewSnapshotInfo;
     }
 }

@@ -17,10 +17,10 @@ public class DEATHUIOUT : StateMachineBehaviour
     //OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        MenuManager menuManager = MenuManager.instance;
+        NewMenuManager newMenuManager = NewMenuManager.instance;
 
-        menuManager.gameCamera.transform.position = menuManager.kc_cameraStartPosition;
-        menuManager.ChangeRoundState(2);
+        newMenuManager.gameCamera.transform.position = newMenuManager.kc_cameraStartPosition;
+        newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

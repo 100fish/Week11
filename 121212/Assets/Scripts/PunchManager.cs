@@ -42,7 +42,7 @@ public class PunchManager : MonoBehaviour
             for (int i = 0; i < entities.Length; i++)
             {
                 //If an entity is within range
-                if (Vector3.Distance(punchPosition.position, entities[i].transform.position) > punchRange)
+                if (Vector3.Distance(punchPosition.position, entities[i].transform.position) < punchRange)
                 {
                     //And there's nothing blocking the punch
                     if (Physics.Linecast(punchPosition.position, entities[i].transform.position))

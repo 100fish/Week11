@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -73,6 +74,7 @@ public class NewMenuManager : MonoBehaviour
         Menu,
         Playing,
         End,
+        Elevator
     }
 
     //the state of the ROUND
@@ -98,7 +100,7 @@ public class NewMenuManager : MonoBehaviour
     }
 
     //the game's state
-    private GameState gameState = GameState.Menu;
+    public GameState gameState = GameState.Menu;
 
     //the round's state
     public RoundState roundState = RoundState.Menu;
@@ -119,7 +121,7 @@ public class NewMenuManager : MonoBehaviour
     private float gameTimer;
 
     //The amount of enemies that have died within the current run
-    private int enemyDeathCount;
+    public int enemyDeathCount;
 
     //Counts total amount of time for the end stats
     private float totalTime = 0;
@@ -142,7 +144,7 @@ public class NewMenuManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameTimerText;
 
     //The text that shows the player's stats after the game ends
-    [SerializeField] private TextMeshProUGUI gameEndText;
+    [SerializeField] private TextMeshProUGUI elevatorText;
 
     //The text that displays the amount of enemies that have died
     [SerializeField] private TextMeshProUGUI enemyDeathCounterText;
@@ -231,7 +233,7 @@ public class NewMenuManager : MonoBehaviour
                             //turn off the countdown Panel
                             gameStartTimerPanel.SetActive(false);
                             //start the round
-                            ChangeToGameplay();
+                            ChangeRoundState(RoundState.Gameplay);
                         }
 
                         break;
@@ -248,7 +250,7 @@ public class NewMenuManager : MonoBehaviour
 
                         #region Round / Game end checks
                         ///Win condition should be dynamic
-                        if (enemyDeathCount == 40)
+                        if (enemyDeathCount == newReplayManager.enemies.Count)
                         {
                             //if all the enemies are dead then end the game
                             ChangeState(GameState.End);
@@ -307,7 +309,7 @@ public class NewMenuManager : MonoBehaviour
 
                             if (runIndex >= 9)
                             {
-                                ChangeToEnd();
+                                ChangeState(GameState.End);
                                 return;
                             }
 
@@ -325,7 +327,9 @@ public class NewMenuManager : MonoBehaviour
                         break;
                 }
                 break;
-            default:
+            case GameState.End:
+                break;
+            case GameState.Elevator:
                 break;
         }
     }
@@ -351,6 +355,9 @@ public class NewMenuManager : MonoBehaviour
             case GameState.End:
                 ChangeFromEnd();
                 break;
+            case GameState.Elevator:
+                ChangeFromElevator();
+                break;
         }
 
         gameState = newState;
@@ -366,6 +373,9 @@ public class NewMenuManager : MonoBehaviour
                 break;
             case GameState.End:
                 ChangeToEnd();
+                break;
+            case GameState.Elevator:
+                ChangeToElevator();
                 break;
         }
     }
@@ -399,15 +409,11 @@ public class NewMenuManager : MonoBehaviour
     {
         //Setup players and time
         ///Just double check this is good with dynamic players
-        InitializePlayers();
+        InitializePlayerAndEnemies();
         Time.timeScale = 1;
 
         //Turn the gameplay UI on
         FocusUIPanel(GameStateUIPanels[(int)GameState.Playing]);
-
-        //turn the player on 
-        playerMovement.enabled = true;
-        SetCameras(1);
 
         //Lock the cursor 
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
@@ -419,9 +425,8 @@ public class NewMenuManager : MonoBehaviour
     }
     private void ChangeFromEnd()
     {
-        //If there's stuff here to reset the game without resetting the entire scene then do it here
-        //I think we can do it
-        //It would make me happy 
+        UnloadLevel(currentLevelObject);
+        currentLevel++;
     }
     private void ChangeToEnd()
     {
@@ -429,7 +434,7 @@ public class NewMenuManager : MonoBehaviour
         FocusUIPanel(GameStateUIPanels[(int)GameState.End]);
 
         ///Set final stat text
-        gameEndText.text = "USED UP\n"
+        elevatorText.text = "USED UP\n"
             + (Mathf.Round(totalTime / 100) * 100).ToString() + " Seconds\n"
             + totalBullets + " Bullets\n" 
             + (runIndex + 1) + " Lives\n" 
@@ -437,17 +442,68 @@ public class NewMenuManager : MonoBehaviour
 
         //Play time for dynamic view at the end
         Time.timeScale = 1;
-        //Disable player
-        playerMovement.enabled = false;
 
         //Return to menu camera
         SetCameras(0);
         //Stop the recordingandplayback
         newReplayManager.Stop();
-        //Free the cursor
-        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+    }
+
+    private void ChangeFromElevator()
+    {
+
+    }
+
+    private void ChangeToElevator()
+    {
+        //call this when the player walks back into the elevator
+
+        LoadLevel(currentLevel);
+
+        elevatorText.text = "USED UP\n"
+            + (Mathf.Round(totalTime / 100) * 100).ToString() + " Seconds\n"
+            + (runIndex + 1) + " Lives\n";
     }
     #endregion
+
+    public enum Levels
+    {
+        One,
+        Two
+    }
+
+    private Levels currentLevel;
+    private GameObject currentLevelObject;
+    [SerializeField] private GameObject[] levels;
+
+
+    private void LoadLevel(Levels newLevel)
+    {
+        currentLevelObject = Instantiate(levels[(int)newLevel]);
+    }
+
+    private void UnloadLevel(GameObject oldLevel)
+    {
+        //Clear out old arrays
+        newReplayManager.enemies.Clear();
+        for (int i = 0; i < newReplayManager.players.Count; i++)
+        {
+            newReplayManager.players[i].gameObject.SetActive(false);
+        }
+
+        //Moves the first player to the position of the current player
+        ///Have to change the first player's texture as well
+       
+        InitializePlayerAndEnemies();
+        newReplayManager.players[0].transform.position = newReplayManager.players[^1].transform.position;
+        newReplayManager.players[0].transform.rotation = newReplayManager.players[^1].transform.rotation;
+        //Reset the player to the first one
+        //We keep the old players, deactivated
+
+        //um idk if this is okay
+        //Gemini said do this :D
+        Destroy(oldLevel);
+    }
 
     #region RoundState State Machine
     //Second verse same as the first
@@ -651,19 +707,20 @@ public class NewMenuManager : MonoBehaviour
         //This function is where all of the between round work happens, as its the last
         //Thing that is called before the player is dropped into a new round
 
-        //Increase the Run index because its a new round
-        runIndex++;
-        
         //If the player that is meant to be controlled at this index hasn't been turned on already
-        ///This part needs a lot of work once changing players is dynamic
-        if (!newReplayManager.players[runIndex].isActiveAndEnabled)
+        if (runIndex != -1)
         {
             //Move to the next player
             newReplayManager.NextActivePlayer(runIndex);
+            gameCamera = newReplayManager.players[runIndex+1].myCamera;
+
             //Set the new camera
             gameCamera = newReplayManager.players[runIndex].myCamera;
             ///No setting of playermovement to new playerMovement????
         }
+
+        //Increase the Run index because its a new round
+        runIndex++;
 
         //Reset countdown Timer 
         gameStartTimerPanel.SetActive(true);
@@ -802,7 +859,7 @@ public class NewMenuManager : MonoBehaviour
     }
 
     //Called by the player movement script when the player is shot or falls into the water
-    public void PlayerDeath(GameObject perpetrator)
+    public void PlayerDeath(GameObject perpetrator, RoundEndCause roundEndCause)
     {
         if (runIndex >= 9)
         {
@@ -810,7 +867,7 @@ public class NewMenuManager : MonoBehaviour
             return;
         }
 
-        EndRound(RoundEndCause.enemy, perpetrator);
+        EndRound(roundEndCause, perpetrator);
     }
 
     //Input function for pausing the game
@@ -865,15 +922,8 @@ public class NewMenuManager : MonoBehaviour
             ///newReplayManager.enemies[i].id = i;
         }*/// COME BACK
         ///COME BACK AND TURN ENEMIES ON
-
-        //Foreach player give the player an ID, and disable it
-        for (int i = 0; i < newReplayManager.players.Count; i++)
-        {
-            newReplayManager.players[i].id = i;
-            newReplayManager.players[i].gameObject.SetActive(false);
-        }
-
-        newReplayManager.NextActivePlayer(0);
+        
+        newReplayManager.NextActivePlayer(-1);
         gameCamera = newReplayManager.players[0].myCamera;
     }
 

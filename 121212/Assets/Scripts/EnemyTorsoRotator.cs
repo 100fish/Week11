@@ -16,9 +16,6 @@ public class EnemyTorsoRotator : MonoBehaviour
         if (rotateTimer > 0)
         {
             rotateTimer -= Time.deltaTime;
-
-            
-
             newRotation = Quaternion.Lerp(targetRotation, startRotation, rotateTimer / rotateTime);
 
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, newRotation.eulerAngles.y, transform.eulerAngles.z);

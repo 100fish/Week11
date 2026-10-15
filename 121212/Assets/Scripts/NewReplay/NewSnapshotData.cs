@@ -22,8 +22,8 @@ public struct NewSnapshotData
         frameTime = time;
 
         //SAVE: The player information 
-        ///[NEEDS CHANGING BECAUSE PLAYERS WILL BE LIST NOT ARRAY]
-        playerSnapshots = new List<NewPlayerSnapshotInfo>();///update to be dynamic
+        playerSnapshots = new List<NewPlayerSnapshotInfo>();
+
         //for each player SAVE:
         for (int i = 0; i < playerSnapshots.Count; i++)
         {
@@ -41,8 +41,7 @@ public struct NewSnapshotData
         }
 
         //SAVE: The enemy infrmation
-        ///[NEEDS CHANGING BECAUSE ENEMIES WILL BE LIST NOT ARRAY]
-        enemySnapshots = new List<NewSnapshotInfoEnemy>();///update to be dynamic
+        enemySnapshots = new List<NewSnapshotInfoEnemy>();
         for (int i = 0; i < enemySnapshots.Count; i++)
         {
             //create a new CLASS for the enemies's data for that frame

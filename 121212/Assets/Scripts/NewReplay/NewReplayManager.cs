@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class NewReplayManager : MonoBehaviour
 {
@@ -18,9 +20,6 @@ public class NewReplayManager : MonoBehaviour
         }
 
         instance = this;
-
-        DontDestroyOnLoad(gameObject);
-
 
         newReplayContainer.Init();
     }
@@ -48,7 +47,7 @@ public class NewReplayManager : MonoBehaviour
     //Since we're changing the enemies this will also have to change
     //Their ID is set by menumanager at the start of the round
     //But they register themselves in their start function
-    public List<AITarget> enemies = new List<AITarget>();
+    public List<Enemy> enemies = new List<Enemy>();
 
     //This isnt really used for the replay, its just to avoid reloading the whole scene each time
     //The ResetabbleObjects register themselves in their start function
@@ -71,7 +70,7 @@ public class NewReplayManager : MonoBehaviour
     private bool m_hasNextSnapshot = true;
 
     //Called by enemies in their start function
-    public void RegisterEnemy(AITarget enemy)
+    public void RegisterEnemy(Enemy enemy)
     {
         enemies.Add(enemy);
     }
@@ -99,6 +98,8 @@ public class NewReplayManager : MonoBehaviour
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning
         currentState = State.Active; //turns it on
+        //capture first frame
+        TakeAndLoadSnapshots();
     }
 
     //Called by menumanager when a round ends
@@ -125,21 +126,30 @@ public class NewReplayManager : MonoBehaviour
     }
 
     //Changes the character that the player controls to the next one in the array
-    //This is called with the INCREASED playerindex passed into the function
-    public void NextActivePlayer(int playerIndex)
+    public void NextActivePlayer(int currentPlayerIndex)
     {
-        //Create a new player
-        players.Add(Instantiate(playerPrefab, playerSpawn.position, Quaternion.identity).GetComponent<NewPlayerMovement>());
+        int newPlayerIndex = currentPlayerIndex + 1;
+
+        //if the count of players is lower than the new index (current+1)
+        if(players.Count <= newPlayerIndex)
+        {
+            players.Add(Instantiate(playerPrefab, playerSpawn.position, Quaternion.identity).GetComponent<NewPlayerMovement>());
+        }
+        else
+        {
+            players[newPlayerIndex].gameObject.SetActive(true);
+        }
 
         //Activate the new player script
-        players[^1].SetStateControlled();
-        players[^1].id = playerIndex;
+        Debug.Log("Recent player's ID: " + players[newPlayerIndex].id);
+        players[newPlayerIndex].SetStateControlled();
+        players[newPlayerIndex].id = newPlayerIndex;
 
         //If there was a previous player
-        if (playerIndex > 0)
+        if (currentPlayerIndex > -1)
         {
             //Set that previous player to replay mode
-            players[playerIndex - 1].SetStatePlayback();
+            players[currentPlayerIndex].SetStatePlayback();
         }
     }
 
@@ -181,55 +191,69 @@ public class NewReplayManager : MonoBehaviour
             //And so is their causality
             NewSnapshotData currentSnapshotData;
 
-            //if we're past the end of the recorded snapshots
-            if (newReplayContainer.m_snapshots[^1].frameTime < m_time)
+        //if we're past the end of the recorded snapshots
+        Debug.Log("Oldest Frame Is at " + newReplayContainer.m_snapshots[^1].frameTime + " and is smaller than " + m_time);
+        ///If you get errors in this section the <= is why
+            if (newReplayContainer.m_snapshots[^1].frameTime <= m_time)
             {
                 //then make a new snapshot (all defaulted up)
-                //Debug.Log("Making a new frame at " + m_time + " time, with index at " + snapshotIndex);
+                Debug.Log("Making a new frame at " + m_time + " time, with index at " + snapshotIndex);
+                
                 currentSnapshotData = new NewSnapshotData(m_time);
             }
             else
             {
                 //otherwise set our new one to the one we already recorded at this index
-                //Debug.Log("Grabbing an old frame at " + m_time + " time, with index at " + snapshotIndex);
+                Debug.Log("Grabbing an old frame at " + m_time + " time, with index at " + snapshotIndex);
                 currentSnapshotData = newReplayContainer.m_snapshots[snapshotIndex];
             }
-            //the above if/else makes sure that if there's an old snapshot to work with, we work with that
-            //if there isn't, we make a new one. 
+        //the above if/else makes sure that if there's an old snapshot to work with, we work with that
+        //if there isn't, we make a new one. 
 
         #endregion
         #region Player Loading and Saving
 
-            //foreach player ('players' array is of player movement scripts)
-            for (int i = 0; i < players.Count; i++)
+        //foreach player ('players' array is of player movement scripts)
+        for (int i = 0; i < players.Count; i++)
             {
-                //Debug.Log("index is " + i + " and playerID is " + players[i].id);
+            //Debug.Log("index is " + i + " and playerID is " + players[i].id);
 
-                //we want to check if the player is inactive, controlled, or has already been controlled and now is being played back.
-                ///Maybe with the new system, this needs reworking? Because either a player is being played back or its the active player
-                switch (players[i].movementState)
-                {
-                    case NewPlayerMovement.MovementState.Controlled:
-                        //we RECORD the player if its being controlled
-                        //Debug.Log("player " + players[i].id + " is being saved");
+            //we want to check if the player is inactive, controlled, or has already been controlled and now is being played back.
+            ///Maybe with the new system, this needs reworking? Because either a player is being played back or its the active player
+            switch (players[i].movementState)
+            {
+                case NewPlayerMovement.MovementState.Controlled:
+                    currentSnapshotData.AddPlayerSnapshot(players[i].SaveSnapshot());
+                    break;
 
-                        //This is a function of the current snapshot
-                        //That takes the output of a function of the player's movement script
-                        //The player's function gives the movement to the snapshot frame
-                        //And the snapshot frame saves it 
+                case NewPlayerMovement.MovementState.Playback:
+
+                    //if we're past the snapshot frames on file then start saving frames of motionlessness instead so we don't get errors
+                    if (currentSnapshotData.playerSnapshots.Count <= i)
+                    {
                         currentSnapshotData.AddPlayerSnapshot(players[i].SaveSnapshot());
-                        break;
-                    case NewPlayerMovement.MovementState.Playback:
-                        //we LOAD the player if its being played back
-                        //Debug.Log("player " + players[i].id + " is being Loaded");
+                        ///If you want to turn the replayed players off when they die, this is a good place
+                    }
+                    else
+                    {
+                        NewPlayerSnapshotInfo frameToLoad;
 
-                        //This is the reverse of the previous case
-                        //Its a function of the current player
-                        //That takes a variable (a class of player info) from the current frame
-                        //And loads it (setting the player's pos, rot, and scale)
-                        players[i].LoadSnapshot(currentSnapshotData.playerSnapshots[players[i].id]);
-                        break;
-                }
+                        //If the snapshot at the current player's ID is blank or there isnt one there
+                        if (currentSnapshotData.playerSnapshots[players[i].id] != null)
+                        {
+                            frameToLoad = newReplayContainer.m_snapshots[snapshotIndex].playerSnapshots[players[i].id];
+                        }
+                        else
+                        {
+                            frameToLoad = FindPlayerNonNullFrame(newReplayContainer, snapshotIndex, i - 1);
+                        }
+
+                        players[i].LoadSnapshot(frameToLoad);
+
+                    }
+                    break;
+
+            }
             }
             //At the end of this for loop we've gone through every player
             //If they're being controlled we saved their position
@@ -239,32 +263,57 @@ public class NewReplayManager : MonoBehaviour
         #endregion
         #region Enemy Loading and Saving
 
-            //This works very similarily to the player part
-            //but since we save different things for the enemies, it has to be different code
-            //it could be dynamic, but I'm not sure how worth it it would be
-            ///What do you think?
-            for (int i = 0; i < enemies.Count; i++)
+        //This works very similarily to the player part
+        Debug.Log("enemy count: " + enemies.Count);
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            //We check the enemies state
+            switch (enemies[i].enemyState)
             {
-                
-                ///its ok to make this blind grab for the enemy, cause the enemies are static
-                //We always know one will be there
-                
-                //We check if the enemy is dead or not IN THE CURRENT SNAPSHOT
-                if (currentSnapshotData.enemySnapshots[i].replay_wasPunched != PunchManager.PunchType.None)
-                {
-                    //If we have it down as dead in the data, then we kill it
-                    ///a bit clumsy
-                    enemies[i].Hit_Entity(gameObject, currentSnapshotData.enemySnapshots[i].replay_wasPunched);
-                }
-                else //if (enemies[i].dead)
-                {
-                    //OR if the enemy has actually died
-                    //Then save that
-                    ///We should be saving the punch instead
-                    //currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
-                }
-            }
+                case Enemy.EnemyState.Active:
+                    if(currentSnapshotData.enemySnapshots.Count <= i)
+                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                    else
+                        enemies[i].enemyState = Enemy.EnemyState.Playback;
+                    break;
+                case Enemy.EnemyState.Playback:
+                    enemies[i].enemyRigidBody.isKinematic = true;
 
+                    //if we're past the snapshot frames on file then start saving frames of motionlessness instead so we don't get errors
+                    if (currentSnapshotData.enemySnapshots.Count <= i)
+                    {
+                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                        ///If you want to turn the replayed players off when they die, this is a good place
+                    }
+                    else
+                    {
+                        NewSnapshotInfoEnemy frameToLoad;
+
+                        //If the snapshot at the current player's ID is blank or there isnt one there
+                        if (currentSnapshotData.enemySnapshots[enemies[i].id] != null)
+                        {
+                            frameToLoad = newReplayContainer.m_snapshots[snapshotIndex].enemySnapshots[players[i].id];
+                        }
+                        else
+                        {
+                            frameToLoad = FindEnemyNonNullFrame(newReplayContainer, snapshotIndex, i - 1);
+                        }
+
+                        enemies[i].LoadSnapshot(frameToLoad);
+
+                    }
+                    break;
+                case Enemy.EnemyState.Dead:
+                    if (currentSnapshotData.enemySnapshots.Count <= i)
+                    {
+                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                        ///If you want to turn the replayed players off when they die, this is a good place
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
         #endregion
 
         //So now after the player section and the enemy section
@@ -273,8 +322,11 @@ public class NewReplayManager : MonoBehaviour
         //and we've loaded all of our all data
         ///Wthiout respect to causality
 
+        
+
         //then we add that snapshot frame to the list in the container
-        if (newReplayContainer.m_snapshots[^1].frameTime < m_time)
+        ///or here
+        if (newReplayContainer.m_snapshots[^1].frameTime <= m_time)
         {
             //if we're past the end of the list of snapshots, add a new one
             //Debug.Log("Saving the new frame at " + m_time + " time, with index at " + snapshotIndex);
@@ -291,5 +343,19 @@ public class NewReplayManager : MonoBehaviour
         //and we increase the index to move onto the next frame
         snapshotIndex++;
         //Debug.Log("End of this takeandloadSnapshot");
+    }
+    private NewPlayerSnapshotInfo FindPlayerNonNullFrame(NwReplayContainer newReplayContainer, int snapshotIndex, int index)
+    {
+        if (newReplayContainer.m_snapshots[snapshotIndex].playerSnapshots[players[index].id] != null)
+            return newReplayContainer.m_snapshots[snapshotIndex].playerSnapshots[players[index].id];
+        else
+            return FindPlayerNonNullFrame(newReplayContainer, snapshotIndex-1, index);
+    }
+    private NewSnapshotInfoEnemy FindEnemyNonNullFrame(NwReplayContainer newReplayContainer, int snapshotIndex, int index)
+    {
+        if (newReplayContainer.m_snapshots[snapshotIndex].enemySnapshots[enemies[index].id] != null)
+            return newReplayContainer.m_snapshots[snapshotIndex].enemySnapshots[enemies[index].id];
+        else
+            return FindEnemyNonNullFrame(newReplayContainer, snapshotIndex-1, index);
     }
 }

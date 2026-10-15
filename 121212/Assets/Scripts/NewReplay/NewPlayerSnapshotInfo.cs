@@ -9,5 +9,6 @@ public class NewPlayerSnapshotInfo
     public Vector3 replay_position = new Vector3(0, -1000, 0);
     public Quaternion replay_rotation = Quaternion.identity;
     public PunchManager.PunchType replay_punched = PunchManager.PunchType.None;
+    public bool replay_dead = false;
     public List<Entities> affectedObjects = new List<Entities>(); 
 }

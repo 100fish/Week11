@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VectorGraphics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,9 +14,6 @@ public class NewPlayerMovement : Entities
     //The meshrenderer for the Muzzle flash
     ///no more gun so remove
     [SerializeField] private MeshRenderer gunRenderer;
-
-    //The script controlling the player's particles
-    [SerializeField] private PlayerParticles playerParticles;
 
     //The player's character controller
     [SerializeField] private CharacterController characterController;
@@ -84,7 +82,8 @@ public class NewPlayerMovement : Entities
     public enum MovementState
     {
         Controlled,
-        Playback
+        Playback,
+        Dead
     }
 
     //When a new player is created, its because its about to be controlled
@@ -143,7 +142,7 @@ public class NewPlayerMovement : Entities
         if (movementState == MovementState.Controlled && (newMenuManager.roundState == NewMenuManager.RoundState.Gameplay || newMenuManager.roundState == NewMenuManager.RoundState.Tutorial || newMenuManager.roundState == NewMenuManager.RoundState.Countdown))
         {
             ///Need to create a list of all punchable entities instead of just entities
-            PunchManager.Punch(gameObject, transform, PunchManager.PunchType.Left, true, 2, newMenuManager.newReplayManager.enemies.ToArray());
+            PunchManager.Punch(gameObject, transform, PunchManager.PunchType.Left, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
             punchType = PunchManager.PunchType.Left;
 
             ///Maybe Harry should check over this type stuff
@@ -164,52 +163,68 @@ public class NewPlayerMovement : Entities
     private void Slide(InputAction.CallbackContext contex) => Slide();
     private void Slide()
     {
-        StartUI.Move_Through_UI(2);
+        if(movementState == MovementState.Controlled)
+        {
+            StartUI.Move_Through_UI(2);
 
-        if (!groundedPlayer) { slide_memory = slide_memory_max; return; }
-        if (slide_delaying) return;
+            if (!groundedPlayer) { slide_memory = slide_memory_max; return; }
+            if (slide_delaying) return;
 
-        AudioManager.PlaySound(SFX.SlideRoll, 0.2f);
+            AudioManager.PlaySound(SFX.SlideRoll, 0.2f);
 
-        slide_amount = slide_max;
-        slide_move = Get_Movement_Direction(true);
-        myCamera.transform.localPosition = new Vector3(0, 0.1f, 0);
-        slide_bump = 2;
+            slide_amount = slide_max;
+            slide_move = Get_Movement_Direction(true);
+            myCamera.transform.localPosition = new Vector3(0, 0.1f, 0);
+            slide_bump = 2;
+        }
     }
 
     private void StopSlide(InputAction.CallbackContext context) => StopSlide();
     private void StopSlide()
     {
+        if(movementState == MovementState.Controlled)
+        {
+            AudioManager.PlaySound(SFX.SlideRoll, 0.2f, false, true);
+            if (slide_amount <= 0) return;
 
-        AudioManager.PlaySound(SFX.SlideRoll, 0.2f, false, true);
-        if (slide_amount <= 0) return;
+            //AudioManager.PlaySound(SFX.SlideCymbol, 0.2f);
 
-        //AudioManager.PlaySound(SFX.SlideCymbol, 0.2f);
-
-        slide_amount = 0;
-        myCamera.transform.localPosition = new Vector3(0, 0.65f, 0);
-        slide_delay = slide_delay_max;
-        slide_delaying = true;
+            slide_amount = 0;
+            myCamera.transform.localPosition = new Vector3(0, 0.65f, 0);
+            slide_delay = slide_delay_max;
+            slide_delaying = true;
+        }
     }
 
+    public TextMeshProUGUI[] IDTexts = new TextMeshProUGUI[4];
 
     private void Update()
     {
-        //move character
-        MovePlayer();
-        //rotate character
-        RotateCamera();
-        transform.Rotate(new Vector3(0, playerInput.Standard.MouseLook.ReadValue<Vector2>().x, 0) * lookSpeed);
+        ///DEBUG
+        for (int i = 0; i < IDTexts.Length; i++)
+        {
+            IDTexts[i].text = id.ToString();
+        }
 
-        if (zoom_in) zoom_in_current += Time.deltaTime * time_mult;
-        else zoom_in_current -= Time.deltaTime * time_mult;
+        if(movementState == MovementState.Controlled)
+        {
+            //move character
+            MovePlayer();
+            //rotate character
+            RotateCamera();
+            transform.Rotate(new Vector3(0, playerInput.Standard.MouseLook.ReadValue<Vector2>().x, 0) * lookSpeed);
 
-        zoom_in_current = Mathf.Clamp01(zoom_in_current);
+            if (zoom_in) zoom_in_current += Time.deltaTime * time_mult;
+            else zoom_in_current -= Time.deltaTime * time_mult;
 
-        myCamera.fieldOfView = Mathf.Lerp(base_FOV, zoomed_FOV, zoom_in_current);
-        float _gun_transform_z = Mathf.Lerp(base_gun_pos, new_gun_pos, zoom_in_current);
-        leftFist.localPosition = new Vector3(0, 0, _gun_transform_z);
-        rightFist.localPosition = new Vector3(0, 0, _gun_transform_z);
+            zoom_in_current = Mathf.Clamp01(zoom_in_current);
+
+            myCamera.fieldOfView = Mathf.Lerp(base_FOV, zoomed_FOV, zoom_in_current);
+            float _gun_transform_z = Mathf.Lerp(base_gun_pos, new_gun_pos, zoom_in_current);
+            leftFist.localPosition = new Vector3(0, 0, _gun_transform_z);
+            rightFist.localPosition = new Vector3(0, 0, _gun_transform_z);
+        }
+
     }
 
     #region Camera and Zoom
@@ -387,7 +402,7 @@ public class NewPlayerMovement : Entities
         {
             CameraShake();
 
-            newMenuManager.PlayerDeath(perpetrator);
+            newMenuManager.PlayerDeath(perpetrator, NewMenuManager.RoundEndCause.enemy);
 
         }
 
@@ -397,7 +412,7 @@ public class NewPlayerMovement : Entities
     {
         if (other.gameObject.tag == "Kill" && movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
         {
-            newMenuManager.PlayerDeath(gameObject);
+            newMenuManager.PlayerDeath(gameObject, NewMenuManager.RoundEndCause.fall);
         }
     }
 
@@ -424,15 +439,14 @@ public class NewPlayerMovement : Entities
 
         playerInput.Standard.ESC.started += Exit;
 
-        ///Change to texture change (?)
-        playerParticles.DisableParticles();
+        characterController.enabled = true;
     }
 
     //Called by the replaymanager when changing the active player
     public void SetStatePlayback()
     {
         myCamera.enabled = false;
-        myAudioListener.enabled = false;
+        Destroy(myAudioListener);
 
         movementState = MovementState.Playback;
 
@@ -448,11 +462,12 @@ public class NewPlayerMovement : Entities
 
         playerInput.Standard.ESC.started -= Exit;
 
-        playerParticles.EnableParticles();
-
+        characterController.enabled = false;
     }
 
     private void Exit(InputAction.CallbackContext context) => Application.Quit();
+
+    bool isDead;
 
     public NewPlayerSnapshotInfo SaveSnapshot()
     {
@@ -462,7 +477,8 @@ public class NewPlayerMovement : Entities
             replay_id = id,
             replay_position = transform.position,
             replay_rotation = transform.rotation,
-            replay_punched = punchType
+            replay_punched = punchType,
+            replay_dead = isDead
         };
 
         //Punch type is initiall changed from none in the Punch Function
@@ -479,14 +495,8 @@ public class NewPlayerMovement : Entities
     public void LoadSnapshot(NewPlayerSnapshotInfo info)
     {
         transform.position = info.replay_position;
-
-        //if its at the default position get it out of the fucking way
-        if (transform.position == Vector3.zero)
-        {
-            transform.position = new Vector3(0, -1000, 0);
-        }
-
         transform.rotation = info.replay_rotation;
+
         if (info.replay_punched != PunchManager.PunchType.None)
         {
             ///Right now this only punhces enemies

@@ -36,7 +36,7 @@ public struct NewSnapshotData
             //DEFAULT: if the player's rotation
             snapshots[i].replay_rotation = Quaternion.identity;
             //DEFAULT: if the player shot
-            snapshots[i].replay_shootInfo = default;
+            //snapshots[i].replay_shootInfo = default;
         }
 
         //SAVE: The enemy infrmation

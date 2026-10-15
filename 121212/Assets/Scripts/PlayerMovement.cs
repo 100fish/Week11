@@ -7,27 +7,18 @@ using UnityEngine.Rendering;
 
 public class PlayerMovement : Entities
 {
-    [SerializeField]
-    private MeshRenderer gunRenderer;
-
-    [SerializeField]
-    private PlayerParticles playerParticles;
+    [Header("Player Params")]
+    public int id;
+    public MovementState movementState = MovementState.Inactive;
     private CharacterController characterController;
-    private MenuManager menuManager;
-
-    [SerializeField]
-    private Transform gunTransform;
-    [SerializeField]
-    private Transform gunPoint;
-    [SerializeField]
-    private Color[] shootColors;
-    [SerializeField]
-    private float shootFadeOutSpeed;
 
     [SerializeField]
     public Camera myCamera;
     [SerializeField]
     public AudioListener myAudioListener;
+    [SerializeField] private Animator camera_shake;
+
+    [Header("Movement")]
     [SerializeField]
     private float moveSpeed;
     [SerializeField]
@@ -35,39 +26,12 @@ public class PlayerMovement : Entities
     [SerializeField]
     private float gravity;
 
-    [SerializeField] private Animator gun_animator;
-    [SerializeField] private Animator camera_shake;
-
-    public struct ShootInfo
-    {
-        public Transform s_cameraTransform;
-        public Transform s_gunPointTransform;
-        public Color32 s_shootColour;
-        public bool s_didShoot;
-
-        public ShootInfo(Transform cameraTransform, Transform gunPointTransform, Color32 shootColour, bool didShoot)
-        {
-            s_cameraTransform = cameraTransform;
-            s_gunPointTransform = gunPointTransform;
-            s_shootColour = shootColour;
-            s_didShoot = didShoot;
-        }
-    }
-
-    ShootInfo shootInfo;
-    private int shootIndex = 0;
-    private int previoushootIndex = -1;
-
     public enum MovementState
     {
         Inactive,
         Controlled,
         Playback
     }
-
-    public MovementState movementState = MovementState.Inactive;
-
-    public int id;
 
     public float ammo { get; private set; } = 10;
     public bool Is_Ghost()
@@ -78,9 +42,9 @@ public class PlayerMovement : Entities
 
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        Cursor.visible = false;
 
-        menuManager = MenuManager.instance;
+        characterController = GetComponent<CharacterController>();
 
         TargetManager.Add_Player_To_Scene(transform);
 
@@ -100,6 +64,7 @@ public class PlayerMovement : Entities
     private void OnEnable()
     {
         //input setup moved to SetStateControlled & SetStatePlayback
+        SetStateControlled();
     }
 
     private void OnDisable()
@@ -109,57 +74,17 @@ public class PlayerMovement : Entities
     }
     #endregion Inputsetup
 
-    private void Shoot(InputAction.CallbackContext context)
-    {
-        if(ammo > 0 && (menuManager.roundState == MenuManager.RoundState.Gameplay || menuManager.roundState == MenuManager.RoundState.Tutorial))
-        {
-            if(menuManager.roundState == MenuManager.RoundState.Gameplay)
-            {
-                ammo--;
-            }
-
-            ShootManager.Shoot(myCamera.transform, myCamera.transform.forward, gunPoint, new Color32(54, 23, 244, 255), gameObject, (menuManager.roundState != MenuManager.RoundState.DeathUI));
-            shootInfo = new(myCamera.transform, gunPoint, new Color32(54, 23, 244, 255), true);
-            shootIndex++;
-
-            StartUI.Move_Through_UI(3);
-
-            gun_animator.SetTrigger("Shoot");
-            camera_shake.SetTrigger("Screenshake");
-
-            AudioManager.PlaySound(SFX.GunShot, 0.2f);
-            
-            gun_animator.SetTrigger("Shoot");
-            CameraShake();
- 
-        }
-
-    }
-
     public void CameraShake()
     {
         camera_shake.SetTrigger("Screenshake");
     }
 
-    //float current_roll = 0;
-    //float roll_count = 10;
-    //float randomness_divide = 7;
-
-    //private void ScreenShake()
-    //{
-        
-    //}
-
-    //private void SetCurrentRoll()
-    //{
-    //    current_roll = 
-    //}
-
-    public float slide_amount;
+    [Header("Slide")]
     [SerializeField] private float slide_max = 1f;
     [SerializeField] private float slide_increase = 2;
     [SerializeField] private float slide_delay_max = 0.5f;
     [SerializeField] private float slide_memory_max = 0.1f;
+    private float slide_amount;
     private float slide_memory;
     private float slide_delay = 0;
     private bool slide_delaying = false;
@@ -167,7 +92,6 @@ public class PlayerMovement : Entities
     Vector3 slide_move = Vector3.zero;
     float slide_bump = 0;
 
-    public Transform gun_transform;
     bool zoom_in = false;
     float base_FOV = 60, zoomed_FOV = 30, zoom_in_current = 0, time_mult = 10;
     float base_gun_pos = 0.0f, new_gun_pos = 0.6f, current_gun_pos = 0.0f;
@@ -175,15 +99,12 @@ public class PlayerMovement : Entities
     private void Start_ZoomIn(InputAction.CallbackContext contex)
     {
         zoom_in = true;
-        StartUI.Move_Through_UI(4);
     }
     private void Stop_ZoomIn(InputAction.CallbackContext contex) => zoom_in = false;
 
     private void Slide(InputAction.CallbackContext contex) => Slide();
     private void Slide()
     {
-        StartUI.Move_Through_UI(2);
-
         if (!groundedPlayer) { slide_memory = slide_memory_max; return; }
         if (slide_delaying) return;
 
@@ -210,26 +131,17 @@ public class PlayerMovement : Entities
         slide_delaying = true;
     }
 
-   private bool double_jumped = false;
+    [Header("Jump")]
 
     [SerializeField] private float jump_height = 1;
     [SerializeField] private float jump_multiplier = 0.3f;
     private float current_jump_multiplier = 1;
     private bool groundedPlayer;
+    private bool double_jumped = false;
+    int wall_jump_dir = 1;
 
     private void Update()
     {
-        if (Time.timeScale == 0)
-        {
-            gun_transform.gameObject.SetActive(false);
-        }
-        else
-        {
-            gun_transform.gameObject.SetActive(true);
-        }
-
-        Debug.DrawRay(gunPoint.position, gunPoint.forward, Color.green);
-
         //move character
         MovePlayer();
         //rotate character
@@ -242,8 +154,6 @@ public class PlayerMovement : Entities
         zoom_in_current = Mathf.Clamp01(zoom_in_current);
 
         myCamera.fieldOfView = Mathf.Lerp(base_FOV, zoomed_FOV, zoom_in_current);
-        float _gun_transform_z = Mathf.Lerp(base_gun_pos, new_gun_pos, zoom_in_current);
-        gun_transform.localPosition = new Vector3(0, 0, _gun_transform_z);
     }
 
     float ClampAngle(float angle, float from, float to)
@@ -322,20 +232,16 @@ public class PlayerMovement : Entities
         // Jump using WasPressedThisFrame()
         if (playerInput.Standard.Jump.WasPressedThisFrame() && (groundedPlayer || !double_jumped))
         {
-            
-
             playerVelocity.y = Mathf.Sqrt(jump_height * -2f * gravity);
             wallJump();
 
             if (!groundedPlayer)
             {
                 double_jumped = true;
-                StartUI.Move_Through_UI(1);
                 AudioManager.PlaySound(SFX.Jump, 0.1f);
             }
             else
             {
-                StartUI.Move_Through_UI(0);
                 double_jumped = false;
                 AudioManager.PlaySound(SFX.DoubleJump, 0.25f);
             }
@@ -369,8 +275,6 @@ public class PlayerMovement : Entities
         //characterController.Move(new Vector3(_moveAxis.x * _moveSpeed, gravity, _moveAxis.z * _moveSpeed));
     }
 
-    int wall_jump_dir = 1;
-
     public void wallJump()
     {
         RaycastHit Lhit;
@@ -394,22 +298,21 @@ public class PlayerMovement : Entities
 
     public override void Hit_Entity(GameObject perpetrator)
     {
-        if(movementState == MovementState.Controlled && menuManager.roundState == MenuManager.RoundState.Gameplay)
-        {
-            CameraShake();
+        //if(movementState == MovementState.Controlled && menuManager.roundState == MenuManager.RoundState.Gameplay)
+        //{
+        //    CameraShake();
 
-            menuManager.PlayerDeath(perpetrator);
+        //    menuManager.PlayerDeath(perpetrator);
 
-        }
-
+        //}
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Kill" && movementState == MovementState.Controlled && menuManager.roundState == MenuManager.RoundState.Gameplay)
-        {
-            menuManager.PlayerDeath(gameObject);
-        }
+        //if(other.gameObject.tag == "Kill" && movementState == MovementState.Controlled && menuManager.roundState == MenuManager.RoundState.Gameplay)
+        //{
+        //    menuManager.PlayerDeath(gameObject);
+        //}
     }
 
     #region replay
@@ -424,8 +327,6 @@ public class PlayerMovement : Entities
         movementState = MovementState.Controlled;
 
         playerInput.Enable();
-        playerInput.Standard.Shoot.started += Shoot;
-
         playerInput.Standard.Slide.started += Slide;
         playerInput.Standard.Slide.canceled += StopSlide;
 
@@ -433,8 +334,6 @@ public class PlayerMovement : Entities
         playerInput.Standard.ZoomIn.canceled += Stop_ZoomIn;
 
         playerInput.Standard.ESC.started += Exit;
-
-        playerParticles.DisableParticles();
     }
 
     public void SetStatePlayback()
@@ -446,7 +345,6 @@ public class PlayerMovement : Entities
 
         //playerInput.Disable();
         playerInput.Standard.Disable();
-        playerInput.Standard.Shoot.started -= Shoot;
 
         playerInput.Standard.Slide.started -= Slide;
         playerInput.Standard.Slide.canceled -= StopSlide;
@@ -455,9 +353,6 @@ public class PlayerMovement : Entities
         playerInput.Standard.ZoomIn.canceled -= Stop_ZoomIn;
 
         playerInput.Standard.ESC.started -= Exit;
-
-        playerParticles.EnableParticles();
-
     }
 
     private void Exit(InputAction.CallbackContext context) => Application.Quit();
@@ -470,13 +365,7 @@ public class PlayerMovement : Entities
             replay_id = id,
             replay_position = transform.position,
             replay_rotation = transform.rotation,
-            replay_shootInfo = shootInfo
         };
-
-        if(shootInfo.s_didShoot == true)
-        {
-            shootInfo.s_didShoot = false;   
-        }
 
         return NewSnapshotInfo;
     }
@@ -492,15 +381,15 @@ public class PlayerMovement : Entities
         }
 
         transform.rotation = info.replay_rotation;
-        if(info.replay_shootInfo.s_didShoot == true && info.replay_shootInfo.s_cameraTransform != null)
-        {
-            ShootManager.Shoot(info.replay_shootInfo.s_cameraTransform,
-                               info.replay_shootInfo.s_cameraTransform.forward,
-                               info.replay_shootInfo.s_gunPointTransform,
-                               info.replay_shootInfo.s_shootColour,
-                               gameObject,
-                               (menuManager.roundState != MenuManager.RoundState.DeathUI));
-        }
+        //if(info.replay_shootInfo.s_didShoot == true && info.replay_shootInfo.s_cameraTransform != null)
+        //{
+        //    ShootManager.Shoot(info.replay_shootInfo.s_cameraTransform,
+        //                       info.replay_shootInfo.s_cameraTransform.forward,
+        //                       info.replay_shootInfo.s_gunPointTransform,
+        //                       info.replay_shootInfo.s_shootColour,
+        //                       gameObject,
+        //                       (menuManager.roundState != MenuManager.RoundState.DeathUI));
+        //}
     }
 
     #endregion

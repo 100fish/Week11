@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ResettableObjectElevator : ResettableObject
 {
+    /*
     [SerializeField]
     private Animator animator;
 
@@ -12,4 +13,5 @@ public class ResettableObjectElevator : ResettableObject
         animator.ResetControllerState();
         animator.SetBool("Open", false);
     }
+    */
 }

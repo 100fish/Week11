@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 
 public class PlayerMovement : Entities
 {
-    [SerializeField]
+    /*[SerializeField]
     private MeshRenderer gunRenderer;
 
     [SerializeField]
@@ -392,7 +392,7 @@ public class PlayerMovement : Entities
         }
     }
 
-    public override void Hit_Entity(GameObject perpetrator)
+    /*public override void Hit_Entity(GameObject perpetrator)
     {
         if(movementState == MovementState.Controlled && menuManager.roundState == MenuManager.RoundState.Gameplay)
         {
@@ -462,10 +462,10 @@ public class PlayerMovement : Entities
 
     private void Exit(InputAction.CallbackContext context) => Application.Quit();
 
-    public NewSnapshotInfo SaveSnapshot()
+    public NewPlayerSnapshotInfo SaveSnapshot()
     {
 
-        NewSnapshotInfo NewSnapshotInfo = new NewSnapshotInfo()
+        NewPlayerSnapshotInfo NewSnapshotInfo = new NewPlayerSnapshotInfo()
         {
             replay_id = id,
             replay_position = transform.position,
@@ -481,7 +481,7 @@ public class PlayerMovement : Entities
         return NewSnapshotInfo;
     }
 
-    public void LoadSnapshot(NewSnapshotInfo info)
+    public void LoadSnapshot(NewPlayerSnapshotInfo info)
     {
         transform.position = info.replay_position;
 
@@ -503,6 +503,15 @@ public class PlayerMovement : Entities
         }
     }
 
-    #endregion
+    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    {
+        throw new System.NotImplementedException();
+    }
 
+    #endregion
+    */
+    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    {
+        throw new System.NotImplementedException();
+    }
 }

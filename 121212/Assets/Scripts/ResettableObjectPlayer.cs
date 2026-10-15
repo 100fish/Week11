@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 
 public class ResettableObjectPlayer : ResettableObject
 {
+    /*
     private PlayerParticles playerParticles;
 
     protected override void Start()
@@ -21,6 +22,6 @@ public class ResettableObjectPlayer : ResettableObject
         base.ReplayReset();
     }
 
-    
+    */
 
 }

@@ -9,7 +9,8 @@ using static UnityEngine.GraphicsBuffer;
 [RequireComponent(typeof(NavMeshAgent))]
 public class AITarget : Entities
 {
-    private ReplayManager replayManager;
+    /*
+    private NewReplayManager newReplayManager;
     private List<Transform> target = new List<Transform>();
 
     [SerializeField] private float destination_until_stop = 0.5f;
@@ -86,10 +87,10 @@ public class AITarget : Entities
     public void Start()
     {
         // agent.updatePosition = false;
-        menuManager = MenuManager.instance;
+        newMenuManager = NewMenuManager.instance;
 
-        replayManager = ReplayManager.instance;
-        replayManager.RegisterEnemy(this);
+        newReplayManager = NewReplayManager.instance;
+        newReplayManager.RegisterEnemy(this);
 
         renderers = new Renderer[meshRenderers.Length];
 
@@ -179,8 +180,9 @@ public class AITarget : Entities
         }
     }
 
-    public override void Hit_Entity(GameObject perpetrator)
+    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
     {
+        ///Add punch behaviour here 
         if(!dead)
         {
             dead = true;
@@ -253,7 +255,7 @@ public class AITarget : Entities
         lineRenderer.enabled = false;
 
         AudioManager.PlaySound(SFX.Shot, 0.1f);
-        ShootManager.Shoot(transform, direction, transform, new Color(255, 0, 0, 255), gameObject, (menuManager.roundState != MenuManager.RoundState.DeathUI));
+        ShootManager.Shoot(transform, direction, transform, new Color(255, 0, 0, 255), gameObject, (newMenuManager.roundState != NewMenuManager.RoundState.DeathUI));
 
         //ShootManager.Shoot(transform, direction, transform, new Color(255, 0, 0, 255), gameObject);
 
@@ -269,5 +271,10 @@ public class AITarget : Entities
         };
 
         return NewSnapshotInfo;
+    }
+    */
+    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    {
+        throw new System.NotImplementedException();
     }
 }

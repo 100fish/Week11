@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Replay Container")]
 public class ReplayContainer : ScriptableObject
 {
+    /*
     [SerializeField]
     public List<SnapshotData> m_snapshots;
 
@@ -38,4 +39,5 @@ public class ReplayContainer : ScriptableObject
         data = m_snapshots[index];
         return true;
     }
+    */
 }

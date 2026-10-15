@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class StartUI : MonoBehaviour
 {
-    MenuManager menuManager;
+    NewMenuManager newMenuManager;
 
     public Animator StartUI_Animator_p;
     Animator StartUI_Animator;
@@ -39,7 +39,7 @@ public class StartUI : MonoBehaviour
 
     private void Start()
     {
-        menuManager = MenuManager.instance;
+        newMenuManager = NewMenuManager.instance;
 
         text_UI = text_UI_p;
         StartUI_Animator = StartUI_Animator_p;
@@ -108,7 +108,7 @@ public class StartUI : MonoBehaviour
 
     public static void Start_Countdown()
     {
-        Instance.menuManager.ChangeRoundState(2);
+        Instance.newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
     }
 
     public static void Open_Elevator()

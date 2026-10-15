@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b69a114db2641d4092c7e2fc042b9cf, type: 3}
-  m_Name: New Replay Container
-  m_EditorClassIdentifier: Assembly-CSharp::ReplayContainer
+  m_Script: {fileID: 11500000, guid: 863161d51187dd349b43c6844020344b, type: 3}
+  m_Name: New Nw Replay Container
+  m_EditorClassIdentifier: Assembly-CSharp::NwReplayContainer

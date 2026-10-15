@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class ShootManager : MonoBehaviour
 {
+    /*
     List<Shot> GunLines = new List<Shot>();
     int shot_point = 0;
 
@@ -64,4 +65,5 @@ public class ShootManager : MonoBehaviour
 
         return false;
     }
+    */
 }

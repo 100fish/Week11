@@ -18,10 +18,10 @@ public class DeathUIIN : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 
-        MenuManager menuManager = MenuManager.instance;
+        NewMenuManager newMenuManager = NewMenuManager.instance;
 
 
-        menuManager.gameCamera.transform.position = menuManager.kc_cameraStartPosition;
+        newMenuManager.gameCamera.transform.position = newMenuManager.kc_cameraStartPosition;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

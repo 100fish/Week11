@@ -32,7 +32,16 @@ public class NewMenuManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         instance = this;
+
+        DontDestroyOnLoad(gameObject);
+
         playerControls = new PlayerInput();
     }
 
@@ -42,7 +51,8 @@ public class NewMenuManager : MonoBehaviour
     //The camera used for the menu
     [SerializeField] private Camera menuCamera;
     //The camera used during gameplay
-    [SerializeField] public Camera gameCamera;
+    ///Set it somewhere
+    [HideInInspector] public Camera gameCamera;
     #endregion
 
     #region Player Setup
@@ -120,7 +130,7 @@ public class NewMenuManager : MonoBehaviour
     #region UI Setup
 
     //The list of UI panels
-    [SerializeField] private GameObject[] UIPanels;
+    [SerializeField] private GameObject[] GameStateUIPanels;
 
     //The Gameobject of the panel that shows the countdown at the start of each round
     [SerializeField] private GameObject gameStartTimerPanel;
@@ -130,9 +140,6 @@ public class NewMenuManager : MonoBehaviour
 
     //The text that shows the round's time
     [SerializeField] private TextMeshProUGUI gameTimerText;
-
-    ///The text that shows the player's ammo
-    [SerializeField] private TextMeshProUGUI gameAmmoText;
 
     //The text that shows the player's stats after the game ends
     [SerializeField] private TextMeshProUGUI gameEndText;
@@ -166,7 +173,7 @@ public class NewMenuManager : MonoBehaviour
 
     #region ReplayManager Setup
     //Script that manages the recording and playback
-    private NewReplayManager newReplayManager = NewReplayManager.instance;
+    [HideInInspector] public NewReplayManager newReplayManager;
     //The run index keeps track of which number run the player is on during the game
     //The run index starts at -1, because when the round starts its moved to 0 for the first player
     private int runIndex = -1;
@@ -184,9 +191,6 @@ public class NewMenuManager : MonoBehaviour
 
         killcamLerpTimer = killcamLerpTime;
         killcamHoverTimer = killcamHoverTime;
-
-        ///IDK IF USEFUL. DO IT YOUR WAY
-        playerMovement.enabled = false;
 
         //gimme that
         UnityEngine.Cursor.lockState = CursorLockMode.Confined;
@@ -241,9 +245,6 @@ public class NewMenuManager : MonoBehaviour
 
                         //Set and format timer text
                         gameTimerText.text = Mathf.Round(gameTimer).ToString() + " seconds";
-                        //Set and format ammo text
-                        ///ammo is being removed
-                        gameAmmoText.text = newReplayManager.players[runIndex].ammo.ToString() + " bullets";
 
                         #region Round / Game end checks
                         ///Win condition should be dynamic
@@ -265,11 +266,6 @@ public class NewMenuManager : MonoBehaviour
                             //With cause for the killcam and reset screen text
                             //And what state to be in cause idk ///tell me
                             EndRound(RoundEndCause.time, null);
-                        }
-                        else if (newReplayManager.players[runIndex].ammo <= 0)
-                        {
-                            //Lastly, if the ammo runs out, then End the round
-                            EndRound(RoundEndCause.bullets, null);
                         }
                         #endregion
 
@@ -374,13 +370,18 @@ public class NewMenuManager : MonoBehaviour
         }
     }
 
+    public void ButtonChangeGameState(int newState)
+    {
+        ChangeState((GameState)newState);
+    }
+
     private void ChangeFromMenu() 
     {
         Time.timeScale = 1;
     }
     private void ChangeToMenu()
     {
-        FocusUIPanel(UIPanels[(int)GameState.Menu]);
+        FocusUIPanel(GameStateUIPanels[(int)GameState.Menu]);
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0;
     }
@@ -402,7 +403,7 @@ public class NewMenuManager : MonoBehaviour
         Time.timeScale = 1;
 
         //Turn the gameplay UI on
-        FocusUIPanel(UIPanels[(int)GameState.Playing]);
+        FocusUIPanel(GameStateUIPanels[(int)GameState.Playing]);
 
         //turn the player on 
         playerMovement.enabled = true;
@@ -425,10 +426,7 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeToEnd()
     {
         gameState = GameState.End;
-        FocusUIPanel(UIPanels[(int)GameState.End]);
-
-        ///Removing bullets so remove this
-        totalBullets += 10 - newReplayManager.players[runIndex].ammo;
+        FocusUIPanel(GameStateUIPanels[(int)GameState.End]);
 
         ///Set final stat text
         gameEndText.text = "USED UP\n"
@@ -667,9 +665,6 @@ public class NewMenuManager : MonoBehaviour
             ///No setting of playermovement to new playerMovement????
         }
 
-        ///Reset ammo counter but we're going to cut ammo
-        gameAmmoText.text = newReplayManager.players[runIndex].ammo.ToString() + " bullets";
-
         //Reset countdown Timer 
         gameStartTimerPanel.SetActive(true);
         runStartTimer = runStartTimeMax;
@@ -711,7 +706,7 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeToPause()
     {
         ///Fix later
-        FocusUIPanel(UIPanels[2]);
+        FocusUIPanel(GameStateUIPanels[2]);
         Time.timeScale = 0;
         playerMovement.enabled = false;
 
@@ -781,8 +776,6 @@ public class NewMenuManager : MonoBehaviour
     //But its ok if there's no perp (null)! as long as the cause isn't an enemy
     private void EndRound(RoundEndCause roundEndCause, GameObject perp)
     {
-        ///Remove bullets
-        totalBullets += 10 - newReplayManager.players[runIndex].ammo;
 
         if(roundEndCause != RoundEndCause.enemy)
         {
@@ -801,7 +794,7 @@ public class NewMenuManager : MonoBehaviour
     ///now that the state machines have exits and entrances, we can probably make this way better
     private void FocusUIPanel(GameObject focusPanel)
     {
-        foreach (var panel in UIPanels)
+        foreach (var panel in GameStateUIPanels)
         {
             panel.gameObject.SetActive(false);
         }
@@ -864,16 +857,17 @@ public class NewMenuManager : MonoBehaviour
     //This is used by the menumanager, and creates IDs for the players
     //This is for the replaymanager to keep track of them mostly
     ///Will change a lot with dynamic players
-    private void InitializePlayers()
+    private void InitializePlayerAndEnemies()
     {
         //Foreach enemy give the enemy an ID
-        for (int i = 0; i < newReplayManager.enemies.Count; i++)
+        /*for (int i = 0; i < newReplayManager.enemies.Count; i++)
         {
-            newReplayManager.enemies[i].id = i;
-        }
+            ///newReplayManager.enemies[i].id = i;
+        }*/// COME BACK
+        ///COME BACK AND TURN ENEMIES ON
 
         //Foreach player give the player an ID, and disable it
-        for (int i = 0; i < newReplayManager.players.Length; i++)
+        for (int i = 0; i < newReplayManager.players.Count; i++)
         {
             newReplayManager.players[i].id = i;
             newReplayManager.players[i].gameObject.SetActive(false);

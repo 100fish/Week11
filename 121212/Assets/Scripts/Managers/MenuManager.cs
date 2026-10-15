@@ -14,6 +14,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class MenuManager : MonoBehaviour
 {
+    /*
     //singleton
     public static MenuManager instance;
 
@@ -184,7 +185,7 @@ public class MenuManager : MonoBehaviour
 
                         gameTimer -= Time.deltaTime;
 
-                        gameTimerText.text = Mathf.Round(/*TimeSpan.FromSeconds(*/gameTimer/*)*/).ToString(/*@"mm\:ss\:ff"*/) + " seconds";
+                        gameTimerText.text = Mathf.Round(gameTimer).ToString() + " seconds";
                         gameAmmoText.text = replayManager.players[runIndex].ammo.ToString() + " bullets";
 
 
@@ -621,4 +622,5 @@ public class MenuManager : MonoBehaviour
 
         enemyDeathCounterText.text = enemyDeathCount.ToString() + " enemies";
     }
+    */
 }

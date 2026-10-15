@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class ReplayManager : MonoBehaviour
 {
+    /*
     public static ReplayManager instance;
 
     public enum State
@@ -195,4 +196,5 @@ public class ReplayManager : MonoBehaviour
         snapshotIndex++;
         //Debug.Log("End of this takeandloadSnapshot");
     }
+    */
 }

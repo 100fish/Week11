@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ResettableMovingEnemy : ResettableObject
 {
+    /*
     AITarget aITarget;
 
     protected override void Start()
@@ -23,5 +24,5 @@ public class ResettableMovingEnemy : ResettableObject
             meshRenderer.material = aITarget.aliveMaterial;
         }
     }
-
+    */
 }

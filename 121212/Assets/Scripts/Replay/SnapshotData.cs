@@ -6,6 +6,7 @@ using UnityEngine;
 //this is the data for each snapshot FRAME
 public struct SnapshotData
 {
+    /*
     //what time the frame was captured
     public float frameTime;
     
@@ -53,4 +54,5 @@ public struct SnapshotData
     {
         return snapshots[id];
     }
+    */
 }

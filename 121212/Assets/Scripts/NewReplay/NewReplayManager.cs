@@ -6,6 +6,9 @@ public class NewReplayManager : MonoBehaviour
     #region Singleton
     public static NewReplayManager instance;
 
+    [SerializeField] GameObject playerPrefab;
+    [SerializeField] Transform playerSpawn;
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -39,7 +42,7 @@ public class NewReplayManager : MonoBehaviour
     //This is the list of every player
     //When one player's time is up, the index changes and the next player is activated
     //No players are instantiated (will have to change)
-    public PlayerMovement[] players = new PlayerMovement[10];
+    public List<NewPlayerMovement> players = new List<NewPlayerMovement>();
 
     //This is a list of the enemies
     //Since we're changing the enemies this will also have to change
@@ -110,29 +113,27 @@ public class NewReplayManager : MonoBehaviour
     //or, in 121212, the ending sequence too
     //This is only resets the scene between ROUNDS
     //not between GAMES. The entire game is reset between games
+    ///Well, I hope we don't do that in this game
     public void ResetScene()
     {
         //Reset every resettableobject
         //This only resets positios and rotation and scale
         foreach (ResettableObject resettableObject in resettableObjects)
         {
-            resettableObject.ReplayReset();
+            //resettableObject.ReplayReset();
         }
     }
 
     //Changes the character that the player controls to the next one in the array
+    //This is called with the INCREASED playerindex passed into the function
     public void NextActivePlayer(int playerIndex)
     {
-        ///NEEDS CHANGING:
-        /// - players should be a list
-        /// - That is added to (instantiation) here
-        /// - Cause theres more than 10 players now
-
-        //Activate the new player object
-        players[playerIndex].gameObject.SetActive(true);
+        //Create a new player
+        players.Add(Instantiate(playerPrefab, playerSpawn.position, Quaternion.identity).GetComponent<NewPlayerMovement>());
 
         //Activate the new player script
-        players[playerIndex].SetStateControlled();
+        players[^1].SetStateControlled();
+        players[^1].id = playerIndex;
 
         //If there was a previous player
         if (playerIndex > 0)
@@ -200,7 +201,7 @@ public class NewReplayManager : MonoBehaviour
         #region Player Loading and Saving
 
             //foreach player ('players' array is of player movement scripts)
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 //Debug.Log("index is " + i + " and playerID is " + players[i].id);
 
@@ -208,7 +209,7 @@ public class NewReplayManager : MonoBehaviour
                 ///Maybe with the new system, this needs reworking? Because either a player is being played back or its the active player
                 switch (players[i].movementState)
                 {
-                    case PlayerMovement.MovementState.Controlled:
+                    case NewPlayerMovement.MovementState.Controlled:
                         //we RECORD the player if its being controlled
                         //Debug.Log("player " + players[i].id + " is being saved");
 
@@ -216,9 +217,9 @@ public class NewReplayManager : MonoBehaviour
                         //That takes the output of a function of the player's movement script
                         //The player's function gives the movement to the snapshot frame
                         //And the snapshot frame saves it 
-                        currentSnapshotData.AddObjectSnapshot(players[i].SaveSnapshot());
+                        currentSnapshotData.AddPlayerSnapshot(players[i].SaveSnapshot());
                         break;
-                    case PlayerMovement.MovementState.Playback:
+                    case NewPlayerMovement.MovementState.Playback:
                         //we LOAD the player if its being played back
                         //Debug.Log("player " + players[i].id + " is being Loaded");
 
@@ -226,7 +227,7 @@ public class NewReplayManager : MonoBehaviour
                         //Its a function of the current player
                         //That takes a variable (a class of player info) from the current frame
                         //And loads it (setting the player's pos, rot, and scale)
-                        players[i].LoadSnapshot(currentSnapshotData.snapshots[players[i].id]);
+                        players[i].LoadSnapshot(currentSnapshotData.playerSnapshots[players[i].id]);
                         break;
                 }
             }
@@ -249,17 +250,18 @@ public class NewReplayManager : MonoBehaviour
                 //We always know one will be there
                 
                 //We check if the enemy is dead or not IN THE CURRENT SNAPSHOT
-                if (currentSnapshotData.enemySnapshots[i].replay_dead)
+                if (currentSnapshotData.enemySnapshots[i].replay_wasPunched != PunchManager.PunchType.None)
                 {
                     //If we have it down as dead in the data, then we kill it
                     ///a bit clumsy
-                    enemies[i].Hit_Entity(gameObject);
+                    enemies[i].Hit_Entity(gameObject, currentSnapshotData.enemySnapshots[i].replay_wasPunched);
                 }
-                else if (enemies[i].dead)
+                else //if (enemies[i].dead)
                 {
                     //OR if the enemy has actually died
                     //Then save that
-                    currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                    ///We should be saving the punch instead
+                    //currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
                 }
             }
 

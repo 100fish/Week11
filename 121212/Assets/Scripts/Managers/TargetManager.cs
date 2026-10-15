@@ -29,7 +29,7 @@ public class TargetManager : MonoBehaviour
             //print("distance: " + 1);
 
             if (players[i].gameObject.activeSelf == false) continue;
-            if (players[i].gameObject.GetComponent<PlayerMovement>().Is_Ghost()) continue;
+            if (players[i].gameObject.GetComponent<NewPlayerMovement>().Is_Ghost()) continue;
 
             //print("distance: " + 2);
 

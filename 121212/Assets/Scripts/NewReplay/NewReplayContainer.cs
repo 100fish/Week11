@@ -4,6 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(menuName = "Replay Container")]
 public class NewNewReplayContainer : ScriptableObject
 {
+    /*
     [SerializeField]
     public List<SnapshotData> m_snapshots;
 
@@ -37,4 +38,5 @@ public class NewNewReplayContainer : ScriptableObject
         data = m_snapshots[index];
         return true;
     }
+    */
 }

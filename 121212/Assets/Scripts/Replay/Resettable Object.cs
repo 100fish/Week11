@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ResettableObject : MonoBehaviour
 {
+    /*
     private ReplayManager replayManager;
 
     private Vector3 startPosition;
@@ -25,5 +26,5 @@ public class ResettableObject : MonoBehaviour
         transform.rotation = startRotation;
         transform.localScale = startScale;
     }
-
+    */
 }

@@ -1750,7 +1750,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -0, y: -0.02, z: 0}
+        value: {x: 0, y: -0.02, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -7856,7 +7856,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
+        value: 0
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -11828,42 +11828,6 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.y
-    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
     path: metarig/spine/spine.001/spine.002/shoulder.R
     classID: 4
     script: {fileID: 0}
@@ -11936,7 +11900,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/thigh.L
+    path: metarig/spine/spine.001/spine.002/shoulder.L/upper_arm.L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -11948,7 +11912,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: metarig/spine/thigh.L
+    path: metarig/spine/spine.001/spine.002/shoulder.L/upper_arm.L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -11960,43 +11924,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: metarig/spine/thigh.L
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
-    path: metarig/spine/spine.001/spine.002/spine.004/spine.005/spine.006
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.y
-    path: metarig/spine/spine.001/spine.002/spine.004/spine.005/spine.006
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: metarig/spine/spine.001/spine.002/spine.004/spine.005/spine.006
+    path: metarig/spine/spine.001/spine.002/shoulder.L/upper_arm.L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12044,7 +11972,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/thigh.R
+    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R/forearm.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12056,7 +11984,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: metarig/spine/thigh.R
+    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R/forearm.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12068,7 +11996,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: metarig/spine/thigh.R
+    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R/forearm.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12080,7 +12008,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/thigh.L/shin.L
+    path: metarig/spine/spine.001/spine.002/spine.004/spine.005/spine.006
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12092,7 +12020,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: metarig/spine/thigh.L/shin.L
+    path: metarig/spine/spine.001/spine.002/spine.004/spine.005/spine.006
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12104,7 +12032,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: metarig/spine/thigh.L/shin.L
+    path: metarig/spine/spine.001/spine.002/spine.004/spine.005/spine.006
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12152,7 +12080,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/spine.001
+    path: metarig/spine/thigh.L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12164,7 +12092,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: metarig/spine/spine.001
+    path: metarig/spine/thigh.L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12176,7 +12104,43 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: metarig/spine/spine.001
+    path: metarig/spine/thigh.L
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
+    path: metarig/spine/thigh.L/shin.L
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: metarig/spine/thigh.L/shin.L
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: metarig/spine/thigh.L/shin.L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12224,7 +12188,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/spine.001/spine.002/shoulder.L
+    path: metarig/spine/thigh.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12236,7 +12200,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: metarig/spine/spine.001/spine.002/shoulder.L
+    path: metarig/spine/thigh.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12248,7 +12212,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: metarig/spine/spine.001/spine.002/shoulder.L
+    path: metarig/spine/thigh.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12260,7 +12224,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R/forearm.R
+    path: metarig/spine/spine.001
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12272,7 +12236,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R/forearm.R
+    path: metarig/spine/spine.001
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12284,7 +12248,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R/forearm.R
+    path: metarig/spine/spine.001
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12296,7 +12260,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: metarig/spine/spine.001/spine.002/shoulder.L/upper_arm.L
+    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12308,7 +12272,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: metarig/spine/spine.001/spine.002/shoulder.L/upper_arm.L
+    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -12320,7 +12284,43 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: metarig/spine/spine.001/spine.002/shoulder.L/upper_arm.L
+    path: metarig/spine/spine.001/spine.002/shoulder.R/upper_arm.R
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
+    path: metarig/spine/spine.001/spine.002/shoulder.L
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: metarig/spine/spine.001/spine.002/shoulder.L
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: metarig/spine/spine.001/spine.002/shoulder.L
     classID: 4
     script: {fileID: 0}
     flags: 0

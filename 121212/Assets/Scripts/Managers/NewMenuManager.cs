@@ -20,6 +20,7 @@ public class NewMenuManager : MonoBehaviour
 
         playerControls.Standard.Reset.started += ResetScene;
         playerControls.Standard.Pause.started += PauseButtonPressed;
+        playerControls.Standard.NextLevel.started += NextLevel;
 
     }
 
@@ -29,6 +30,7 @@ public class NewMenuManager : MonoBehaviour
 
         playerControls.Standard.Reset.started -= ResetScene;
         playerControls.Standard.Pause.started -= PauseButtonPressed;
+        playerControls.Standard.NextLevel.started -= NextLevel;
     }
 
     private void Awake()
@@ -186,6 +188,8 @@ public class NewMenuManager : MonoBehaviour
     private void Start()
     {
         newReplayManager = NewReplayManager.instance;
+
+        LoadLevel(currentLevel);
 
         //Timer setup
         gameTimer = gameTimerLimit;
@@ -401,7 +405,6 @@ public class NewMenuManager : MonoBehaviour
         //Stop time
         Time.timeScale = 0;
         //Free the cursor
-        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
         //save mouse's position on UI
         mousePosOnUI = new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value);
     }
@@ -421,32 +424,33 @@ public class NewMenuManager : MonoBehaviour
         Mouse.current.WarpCursorPosition(mousePosOnUI);
 
         //Change the roundstate to tutorial, which is what actually begins the game
-        ChangeRoundState(RoundState.Tutorial);
+        if(tutorialCompleted)
+        {
+            ChangeRoundState(RoundState.Countdown);
+        }
+        else
+        {
+            ChangeRoundState(RoundState.Tutorial);
+        }
+        
     }
     private void ChangeFromEnd()
     {
         UnloadLevel(currentLevelObject);
         currentLevel++;
     }
+
     private void ChangeToEnd()
     {
         gameState = GameState.End;
-        FocusUIPanel(GameStateUIPanels[(int)GameState.End]);
-
-        ///Set final stat text
-        elevatorText.text = "USED UP\n"
-            + (Mathf.Round(totalTime / 100) * 100).ToString() + " Seconds\n"
-            + totalBullets + " Bullets\n" 
-            + (runIndex + 1) + " Lives\n" 
-            + enemyDeathCount + " Enemies";
 
         //Play time for dynamic view at the end
         Time.timeScale = 1;
 
-        //Return to menu camera
-        SetCameras(0);
         //Stop the recordingandplayback
         newReplayManager.Stop();
+
+        ///Turn stuff on that points the player back to the elevator here
     }
 
     private void ChangeFromElevator()
@@ -457,8 +461,15 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeToElevator()
     {
         //call this when the player walks back into the elevator
-
-        LoadLevel(currentLevel);
+        FocusUIPanel(GameStateUIPanels[(int)GameState.Elevator]);
+        if((int)currentLevel > levels.Length)
+        {
+            Debug.Log("oops, no more levels!");
+        }
+        else
+        {
+            LoadLevel(currentLevel);
+        }
 
         elevatorText.text = "USED UP\n"
             + (Mathf.Round(totalTime / 100) * 100).ToString() + " Seconds\n"
@@ -472,7 +483,7 @@ public class NewMenuManager : MonoBehaviour
         Two
     }
 
-    private Levels currentLevel;
+    private Levels currentLevel = Levels.One;
     private GameObject currentLevelObject;
     [SerializeField] private GameObject[] levels;
 
@@ -493,7 +504,8 @@ public class NewMenuManager : MonoBehaviour
 
         //Moves the first player to the position of the current player
         ///Have to change the first player's texture as well
-       
+        newReplayManager.players[^1].SetStatePlayback();
+
         InitializePlayerAndEnemies();
         newReplayManager.players[0].transform.position = newReplayManager.players[^1].transform.position;
         newReplayManager.players[0].transform.rotation = newReplayManager.players[^1].transform.rotation;
@@ -689,9 +701,11 @@ public class NewMenuManager : MonoBehaviour
         ///menu functions are empty cause its a dummy state that might change or be removed
     }
 
+    private bool tutorialCompleted; 
+
     private void ChangeFromTutorial()
     {
-        //I promise the from functions will be really good and useful
+        tutorialCompleted = true;
     }
     private void ChangeToTutorial()
     {
@@ -737,7 +751,7 @@ public class NewMenuManager : MonoBehaviour
         ///Is this nesacary if all recorded objects snap back anyway?
         newReplayManager.ResetScene();
         //Play/Start recording the tape
-        newReplayManager.StartRoundPlaybackAndRecording();
+        newReplayManager.StartRoundPlaybackAndRecording(runIndex);
     }
 
     private void ChangeFromGameplay()
@@ -796,8 +810,6 @@ public class NewMenuManager : MonoBehaviour
 
             newReplayManager.players[runIndex].lookSpeed = 0;
         }
-
-        roundState = RoundState.Killcam;
     }
 
     private void ChangeFromDeathUI()
@@ -840,7 +852,9 @@ public class NewMenuManager : MonoBehaviour
         }
         else
         {
-            ChangeRoundState(RoundState.Killcam, perp);
+            ///Killcam off for now, come back later
+            //ChangeRoundState(RoundState.Killcam, perp);
+            ChangeRoundState(RoundState.DeathUI, roundEndCause);
         }
     }
 
@@ -895,6 +909,14 @@ public class NewMenuManager : MonoBehaviour
     public void ResetScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reset scene
+    }
+
+    private void NextLevel(CallbackContext context)
+    {
+        if(gameState == GameState.Elevator)
+        {
+            ChangeState(GameState.Playing);
+        }
     }
 
     private void SetCameras(int gameCameraTrue) //Swaps between the camera for the menu and the player camera

@@ -181,6 +181,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextLevel"",
+                    ""type"": ""Button"",
+                    ""id"": ""28c8026b-3b49-4b79-bb94-6d970928c61f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -337,6 +346,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""ESC"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3c913767-b4cc-4b24-8446-4973f3ff1e29"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -355,6 +375,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Standard_Slide = m_Standard.FindAction("Slide", throwIfNotFound: true);
         m_Standard_ZoomIn = m_Standard.FindAction("ZoomIn", throwIfNotFound: true);
         m_Standard_ESC = m_Standard.FindAction("ESC", throwIfNotFound: true);
+        m_Standard_NextLevel = m_Standard.FindAction("NextLevel", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -445,6 +466,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Standard_Slide;
     private readonly InputAction m_Standard_ZoomIn;
     private readonly InputAction m_Standard_ESC;
+    private readonly InputAction m_Standard_NextLevel;
     /// <summary>
     /// Provides access to input actions defined in input action map "Standard".
     /// </summary>
@@ -496,6 +518,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Standard/ESC".
         /// </summary>
         public InputAction @ESC => m_Wrapper.m_Standard_ESC;
+        /// <summary>
+        /// Provides access to the underlying input action "Standard/NextLevel".
+        /// </summary>
+        public InputAction @NextLevel => m_Wrapper.m_Standard_NextLevel;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -552,6 +578,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ESC.started += instance.OnESC;
             @ESC.performed += instance.OnESC;
             @ESC.canceled += instance.OnESC;
+            @NextLevel.started += instance.OnNextLevel;
+            @NextLevel.performed += instance.OnNextLevel;
+            @NextLevel.canceled += instance.OnNextLevel;
         }
 
         /// <summary>
@@ -593,6 +622,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ESC.started -= instance.OnESC;
             @ESC.performed -= instance.OnESC;
             @ESC.canceled -= instance.OnESC;
+            @NextLevel.started -= instance.OnNextLevel;
+            @NextLevel.performed -= instance.OnNextLevel;
+            @NextLevel.canceled -= instance.OnNextLevel;
         }
 
         /// <summary>
@@ -703,5 +735,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnESC(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "NextLevel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNextLevel(InputAction.CallbackContext context);
     }
 }

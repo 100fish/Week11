@@ -51,4 +51,9 @@ public class NwReplayContainer : ScriptableObject
         data = m_snapshots[index];
         return true;
     }
+
+    public void ClearAllReplay()
+    {
+        m_snapshots.Clear();
+    }
 }

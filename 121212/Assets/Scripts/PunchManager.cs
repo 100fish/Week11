@@ -31,7 +31,7 @@ public class PunchManager : MonoBehaviour
         newMenuManager = NewMenuManager.instance;
     }
 
-    public static void Punch(GameObject puncher, Transform punchPosition, PunchType punchType, bool canPunch, float punchRange, Entities[] entities)
+    public static void Punch(NewPlayerMovement puncher, Transform punchPosition, PunchType punchType, bool canPunch, float punchRange, Entities[] entities)
     {
         if (canPunch)
         {
@@ -47,7 +47,12 @@ public class PunchManager : MonoBehaviour
                     //And there's nothing blocking the punch
                     if (Physics.Linecast(punchPosition.position, entities[i].transform.position))
                     {
-                        entities[i].Hit_Entity(puncher, punchType);
+                        Debug.Log("///////////////");
+                        Debug.Log("BANG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        Debug.Log("///////////////");
+
+                        puncher.Hit_Entity(puncher.gameObject, PunchType.None);
+                        entities[i].Hit_Entity(puncher.gameObject, punchType);
                     }
                 }
             }

@@ -142,7 +142,7 @@ public class NewPlayerMovement : Entities
         if (movementState == MovementState.Controlled && (newMenuManager.roundState == NewMenuManager.RoundState.Gameplay || newMenuManager.roundState == NewMenuManager.RoundState.Tutorial || newMenuManager.roundState == NewMenuManager.RoundState.Countdown))
         {
             ///Need to create a list of all punchable entities instead of just entities
-            PunchManager.Punch(gameObject, transform, PunchManager.PunchType.Left, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
+            PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
             punchType = PunchManager.PunchType.Left;
 
             ///Maybe Harry should check over this type stuff
@@ -414,6 +414,10 @@ public class NewPlayerMovement : Entities
         {
             newMenuManager.PlayerDeath(gameObject, NewMenuManager.RoundEndCause.fall);
         }
+        else if(other.gameObject.tag == "Elevator" && movementState == MovementState.Controlled && newMenuManager.gameState == NewMenuManager.GameState.End)
+        {
+            newMenuManager.ChangeState(NewMenuManager.GameState.Elevator);
+        }
     }
 
     #region replay
@@ -446,7 +450,7 @@ public class NewPlayerMovement : Entities
     public void SetStatePlayback()
     {
         myCamera.enabled = false;
-        Destroy(myAudioListener);
+        myAudioListener.enabled = false;
 
         movementState = MovementState.Playback;
 
@@ -508,7 +512,7 @@ public class NewPlayerMovement : Entities
             ///So when an enemy is set to playback, then they shouldn't get affected by punches, atleast in a force way
             ///They'll push themselves back / kill themselves
             ///UNLESSTHISPUNCHISOVERWRITTENINWHICHCASENEVERMIND
-            PunchManager.Punch(gameObject, transform, info.replay_punched, false, 2, newMenuManager.newReplayManager.enemies.ToArray());
+            PunchManager.Punch(this, transform, info.replay_punched, false, 3, newMenuManager.newReplayManager.enemies.ToArray());
         }
     }
 

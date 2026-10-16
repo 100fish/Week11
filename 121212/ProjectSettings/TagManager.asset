@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - OutsideWall
   - Kill
+  - Elevator
   layers:
   - Default
   - TransparentFX

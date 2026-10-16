@@ -26,14 +26,19 @@ public class Enemy : Entities
     private bool shooting = false;
     #endregion
 
-    public enum EnemyState
+    public enum EnemyReplayState
     {
         Active,
         Playback,
+    }
+    public enum EnemyState
+    {
+        Alive,
         Dead
     }
 
-    public EnemyState enemyState = EnemyState.Active;
+    public EnemyReplayState enemyReplayState = EnemyReplayState.Active;
+    public EnemyState enemyState = EnemyState.Alive;
 
     public bool recording;
     public int id;
@@ -103,7 +108,6 @@ public class Enemy : Entities
         else
         {
             Shoot_Countdown();
-
         }
     }
 
@@ -178,6 +182,24 @@ public class Enemy : Entities
             foreach (var meshRenderer in meshRenderers)
             {
                 meshRenderer.material = deadMaterial;
+            }
+        }
+    }
+
+    private void ReviveEnemy()
+    {
+        if (enemyState == EnemyState.Dead)
+        {
+            enemyState = EnemyState.Alive;
+
+            punched = PunchManager.PunchType.None;
+            lineRenderer.enabled = true;
+
+            NewMenuManager newMenuManager = NewMenuManager.instance;
+
+            foreach (var meshRenderer in meshRenderers)
+            {
+                meshRenderer.material = aliveMaterial;
             }
         }
     }
@@ -257,10 +279,17 @@ public class Enemy : Entities
         enemyRigidBody.linearVelocity = info.replay_linearVelocity;
         transform.rotation = info.replay_rotation;
         enemyRigidBody.angularVelocity = info.replay_angularVelocity;
+        
 
         if (info.replay_wasPunched != PunchManager.PunchType.None)
         {
             Hit_Entity(gameObject, info.replay_wasPunched);
         }
+        else if (enemyState == EnemyState.Dead)
+        {
+            //Sets punched back to none
+            ReviveEnemy();
+        }
+
     }
 }

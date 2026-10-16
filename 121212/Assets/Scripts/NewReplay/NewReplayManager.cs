@@ -1,5 +1,7 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -19,9 +21,8 @@ public class NewReplayManager : MonoBehaviour
             return;
         }
 
-        instance = this;
-
         newReplayContainer.Init();
+        instance = this;
     }
     #endregion
 
@@ -93,11 +94,35 @@ public class NewReplayManager : MonoBehaviour
 
     //Called by menumanager at the very start of a run
     //Resets the playback and recording
-    public void StartRoundPlaybackAndRecording()
+    public void StartRoundPlaybackAndRecording(int runIndex)
     {
+
+        Debug.Log("...................");
+        Debug.Log("//START " + runIndex + "th RECOUNT//");
+        for (int i = 0; i < newReplayContainer.m_snapshots.Count; i++)
+        {
+            Debug.Log("Frame at: " + newReplayContainer.m_snapshots[i].frameTime);
+            for (int ii = 0; ii < newReplayContainer.m_snapshots[i].enemySnapshots.Count; ii++)
+            {
+                Debug.Log("Enemy: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_id + " of " + newReplayContainer.m_snapshots[i].enemySnapshots.Count);
+                Debug.Log("Enemy's POsition this frame " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_position);
+            }
+        }
+        Debug.Log("//END  " + runIndex + "th RECOUNT//");
+
+
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning
         currentState = State.Active; //turns it on
+
+        //Give enemies IDs
+        //Once there's a function to play the replay
+        //Between levels
+        ///move this there
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].id = i;
+        }
         //capture first frame
         TakeAndLoadSnapshots();
     }
@@ -107,6 +132,10 @@ public class NewReplayManager : MonoBehaviour
     public void Stop()
     {
         currentState = State.Idle;//leaves replaymanage to sit and wait
+        newReplayContainer.Init();
+
+        m_time = 0; //Sets time to zero
+        snapshotIndex = 0; //Sets the playback/recording to the beginning
     }
 
     //Called by menumanager at the START of a run
@@ -192,6 +221,8 @@ public class NewReplayManager : MonoBehaviour
             NewSnapshotData currentSnapshotData;
 
         //if we're past the end of the recorded snapshots
+        Debug.Log("................");
+        Debug.Log("//SNAPSHOT FRAME INFO//");
         Debug.Log("Oldest Frame Is at " + newReplayContainer.m_snapshots[^1].frameTime + " and is smaller than " + m_time);
         ///If you get errors in this section the <= is why
             if (newReplayContainer.m_snapshots[^1].frameTime <= m_time)
@@ -209,6 +240,9 @@ public class NewReplayManager : MonoBehaviour
             }
         //the above if/else makes sure that if there's an old snapshot to work with, we work with that
         //if there isn't, we make a new one. 
+
+
+        Debug.Log("//END SNAPSHOT FRAME INFO//");
 
         #endregion
         #region Player Loading and Saving
@@ -255,34 +289,58 @@ public class NewReplayManager : MonoBehaviour
 
             }
             }
-            //At the end of this for loop we've gone through every player
-            //If they're being controlled we saved their position
-            //And if they're being played back we've loaded their position
-            ///This system assumes there WILL be something to load, maybe a problem?
+        //At the end of this for loop we've gone through every player
+        //If they're being controlled we saved their position
+        //And if they're being played back we've loaded their position
+        ///This system assumes there WILL be something to load, maybe a problem?
 
         #endregion
         #region Enemy Loading and Saving
 
         //This works very similarily to the player part
-        Debug.Log("enemy count: " + enemies.Count);
+        Debug.Log(".....................");
+        Debug.Log("//ENEMY LOAD AND SAVE START//");
+        Debug.Log("LOADING/SAVING " + enemies.Count + " ENEMIES");
         for (int i = 0; i < enemies.Count; i++)
         {
+            //For every enemy in the list
+            //(this is a pretty static list, it could be an array
+            //We're going to check its state, and do something based on that
+
+            //In the first round, every enemy will be active, and behaving normally.
+            //So the state machine will see that its active, see that nothing has been recorded for this frame
+            //(as in, the list of snapshots is less than that index of enemy, and because we go in order this does tell us that 
+
+            //So, at the end of the first round we should have snapshots for every enemy, up until the point the round ended
+
+
+
             //We check the enemies state
-            switch (enemies[i].enemyState)
+            Debug.Log("Current enemy to load/save: " + enemies[i].id);
+            Debug.Log("Which has a state of : " + enemies[i].enemyReplayState);
+            switch (enemies[i].enemyReplayState)
             {
-                case Enemy.EnemyState.Active:
-                    if(currentSnapshotData.enemySnapshots.Count <= i)
+                case Enemy.EnemyReplayState.Active:
+                    if (currentSnapshotData.enemySnapshots.Count <= i)
+                    {
+                        enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
                         currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                    }
                     else
-                        enemies[i].enemyState = Enemy.EnemyState.Playback;
+                    {
+                        Debug.Log("CHANGINGTOPLAYBACK---------------------------------------------------------------------------------");
+                        enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
+                    }
+
                     break;
-                case Enemy.EnemyState.Playback:
-                    enemies[i].enemyRigidBody.isKinematic = true;
+                case Enemy.EnemyReplayState.Playback:
+                    enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)126;
 
                     //if we're past the snapshot frames on file then start saving frames of motionlessness instead so we don't get errors
                     if (currentSnapshotData.enemySnapshots.Count <= i)
                     {
                         currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                        enemies[i].enemyReplayState = Enemy.EnemyReplayState.Active;
                         ///If you want to turn the replayed players off when they die, this is a good place
                     }
                     else
@@ -303,17 +361,11 @@ public class NewReplayManager : MonoBehaviour
 
                     }
                     break;
-                case Enemy.EnemyState.Dead:
-                    if (currentSnapshotData.enemySnapshots.Count <= i)
-                    {
-                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
-                        ///If you want to turn the replayed players off when they die, this is a good place
-                    }
-                    break;
-                default:
-                    break;
             }
         }
+
+        Debug.Log("//ENEMY LOAD AND SAVE END//");
+
         #endregion
 
         //So now after the player section and the enemy section
@@ -322,7 +374,7 @@ public class NewReplayManager : MonoBehaviour
         //and we've loaded all of our all data
         ///Wthiout respect to causality
 
-        
+
 
         //then we add that snapshot frame to the list in the container
         ///or here

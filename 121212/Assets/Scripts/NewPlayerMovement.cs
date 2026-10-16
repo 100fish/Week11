@@ -9,7 +9,7 @@ using UnityEngine.Rendering;
 public class NewPlayerMovement : Entities
 {
     //MenuManager instance
-    private NewMenuManager newMenuManager;
+    public NewMenuManager newMenuManager;
 
     //The meshrenderer for the Muzzle flash
     ///no more gun so remove
@@ -512,7 +512,7 @@ public class NewPlayerMovement : Entities
             ///So when an enemy is set to playback, then they shouldn't get affected by punches, atleast in a force way
             ///They'll push themselves back / kill themselves
             ///UNLESSTHISPUNCHISOVERWRITTENINWHICHCASENEVERMIND
-            PunchManager.Punch(this, transform, info.replay_punched, false, 3, newMenuManager.newReplayManager.enemies.ToArray());
+            PunchManager.Punch(this, transform, info.replay_punched, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
         }
     }
 

@@ -19,7 +19,7 @@ public class DEATHUIOUT : StateMachineBehaviour
     {
         NewMenuManager newMenuManager = NewMenuManager.instance;
 
-        newMenuManager.gameCamera.transform.position = newMenuManager.kc_cameraStartPosition;
+        //newMenuManager.gameCamera.transform.position = newMenuManager.kc_cameraStartPosition;
         newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
     }
 

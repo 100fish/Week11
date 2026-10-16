@@ -51,8 +51,12 @@ public class PunchManager : MonoBehaviour
                         Debug.Log("BANG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                         Debug.Log("///////////////");
 
-                        puncher.Hit_Entity(puncher.gameObject, PunchType.None);
                         entities[i].Hit_Entity(puncher.gameObject, punchType);
+
+                        if(puncher.newMenuManager.enemyDeathCount != puncher.newMenuManager.newReplayManager.enemies.Count)
+                        {
+                            puncher.Hit_Entity(puncher.gameObject, PunchType.None);
+                        }
                     }
                 }
             }

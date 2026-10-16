@@ -180,7 +180,7 @@ public class NewMenuManager : MonoBehaviour
     [HideInInspector] public NewReplayManager newReplayManager;
     //The run index keeps track of which number run the player is on during the game
     //The run index starts at -1, because when the round starts its moved to 0 for the first player
-    private int runIndex = -1;
+    public int runIndex = -1;
     #endregion
 
     #region Start and Update
@@ -291,20 +291,20 @@ public class NewMenuManager : MonoBehaviour
                         {
                             killcamLerpTimer -= Time.unscaledDeltaTime;
 
-                            gameCamera.transform.position = Vector3.Lerp(kc_cameraEndPosition, kc_cameraStartPosition, killcamLerpTimer / killcamLerpTime);
-                            gameCamera.transform.rotation = Quaternion.Lerp(kc_cameraEndRotation, kc_cameraStartRotation, killcamLerpTimer / killcamLerpTime);
+                            //gameCamera.transform.position = Vector3.Lerp(kc_cameraEndPosition, kc_cameraStartPosition, killcamLerpTimer / killcamLerpTime);
+                            //gameCamera.transform.rotation = Quaternion.Lerp(kc_cameraEndRotation, kc_cameraStartRotation, killcamLerpTimer / killcamLerpTime);
                         }
                         else if (killcamHoverTimer > 0)
                         { 
-                            gameCamera.transform.RotateAround(kc_target.position, Vector3.up, kc_rotateSpeed * Time.unscaledDeltaTime);
+                            //gameCamera.transform.RotateAround(kc_target.position, Vector3.up, kc_rotateSpeed * Time.unscaledDeltaTime);
 
-                            gameCamera.transform.LookAt(kc_target.position);
+                            //gameCamera.transform.LookAt(kc_target.position);
 
                             killcamHoverTimer -= Time.unscaledDeltaTime;
                         }
                         else
                         {
-                            gameCamera.transform.rotation = kc_cameraStartRotation;
+                            //gameCamera.transform.rotation = kc_cameraStartRotation;
 
                             killcamLerpTimer = killcamLerpTime;
                             killcamHoverTimer = killcamHoverTime;
@@ -411,8 +411,10 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeToPlaying()
     {
         //Setup players and time
-        ///Just double check this is good with dynamic players
-        InitializePlayerAndEnemies();
+        if(!tutorialCompleted)
+        {
+            InitializePlayerAndEnemies();
+        }
         Time.timeScale = 1;
 
         //Turn the gameplay UI on
@@ -497,18 +499,25 @@ public class NewMenuManager : MonoBehaviour
     {
         //Clear out old arrays
         newReplayManager.enemies.Clear();
+
+
+        newReplayManager.players[^1].SetStatePlayback();
+
+
+        newReplayManager.players[0].transform.position = newReplayManager.players[^1].transform.position;
+        newReplayManager.players[0].transform.rotation = newReplayManager.players[^1].transform.rotation;
+
         for (int i = 0; i < newReplayManager.players.Count; i++)
         {
+            newReplayManager.players[i].transform.position = newReplayManager.playerSpawn.position;
+            newReplayManager.players[i].transform.rotation = newReplayManager.playerSpawn.rotation;
             newReplayManager.players[i].gameObject.SetActive(false);
         }
 
         //Moves the first player to the position of the current player
         ///Have to change the first player's texture as well
-        newReplayManager.players[^1].SetStatePlayback();
 
         InitializePlayerAndEnemies();
-        newReplayManager.players[0].transform.position = newReplayManager.players[^1].transform.position;
-        newReplayManager.players[0].transform.rotation = newReplayManager.players[^1].transform.rotation;
         //Reset the player to the first one
         //We keep the old players, deactivated
 
@@ -721,16 +730,13 @@ public class NewMenuManager : MonoBehaviour
         //This function is where all of the between round work happens, as its the last
         //Thing that is called before the player is dropped into a new round
 
+        Debug.Log("RunIndex: "+runIndex);
         //If the player that is meant to be controlled at this index hasn't been turned on already
         if (runIndex != -1)
         {
             //Move to the next player
             newReplayManager.NextActivePlayer(runIndex);
             gameCamera = newReplayManager.players[runIndex+1].myCamera;
-
-            //Set the new camera
-            gameCamera = newReplayManager.players[runIndex].myCamera;
-            ///No setting of playermovement to new playerMovement????
         }
 
         //Increase the Run index because its a new round
@@ -798,17 +804,17 @@ public class NewMenuManager : MonoBehaviour
 
         if (perpetrator != null)
         {
-            kc_cameraStartPosition = gameCamera.transform.position;
-            kc_cameraStartRotation = gameCamera.transform.rotation;
+            //kc_cameraStartPosition = gameCamera.transform.position;
+            //kc_cameraStartRotation = gameCamera.transform.rotation;
 
-            kc_cameraEndPosition = perpetrator.transform.position;
-            kc_cameraEndPosition += new Vector3(perpetrator.transform.forward.x * kc_cameraZAdd, perpetrator.transform.forward.y * kc_cameraZAdd + kc_cameraYAdd, perpetrator.transform.forward.z * kc_cameraZAdd);
+            //kc_cameraEndPosition = perpetrator.transform.position;
+            //kc_cameraEndPosition += new Vector3(perpetrator.transform.forward.x * kc_cameraZAdd, perpetrator.transform.forward.y * kc_cameraZAdd + kc_cameraYAdd, perpetrator.transform.forward.z * kc_cameraZAdd);
 
-            kc_cameraEndRotation = Quaternion.LookRotation((perpetrator.transform.position - kc_cameraEndPosition).normalized, Vector3.up);
+            //kc_cameraEndRotation = Quaternion.LookRotation((perpetrator.transform.position - kc_cameraEndPosition).normalized, Vector3.up);
 
-            kc_target = perpetrator.transform;
+            //kc_target = perpetrator.transform;
 
-            newReplayManager.players[runIndex].lookSpeed = 0;
+            //newReplayManager.players[runIndex].lookSpeed = 0;
         }
     }
 
@@ -944,8 +950,8 @@ public class NewMenuManager : MonoBehaviour
             ///newReplayManager.enemies[i].id = i;
         }*/// COME BACK
         ///COME BACK AND TURN ENEMIES ON
-        
-        newReplayManager.NextActivePlayer(-1);
+        runIndex = -1;
+        newReplayManager.NextActivePlayer(runIndex);
         gameCamera = newReplayManager.players[0].myCamera;
     }
 

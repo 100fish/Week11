@@ -10,8 +10,10 @@ public class NewReplayManager : MonoBehaviour
     #region Singleton
     public static NewReplayManager instance;
 
+    public event Action EndReplay;
+
     [SerializeField] GameObject playerPrefab;
-    [SerializeField] Transform playerSpawn;
+    [SerializeField] public Transform playerSpawn;
 
     private void Awake()
     {
@@ -105,11 +107,13 @@ public class NewReplayManager : MonoBehaviour
             for (int ii = 0; ii < newReplayContainer.m_snapshots[i].enemySnapshots.Count; ii++)
             {
                 Debug.Log("Enemy: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_id + " of " + newReplayContainer.m_snapshots[i].enemySnapshots.Count);
-                Debug.Log("Enemy's POsition this frame " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_position);
+                Debug.Log("Enemy's Position this frame " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_position);
+                Debug.Log("Enemy's Punch this frame: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_wasPunched);
             }
         }
         Debug.Log("//END  " + runIndex + "th RECOUNT//");
 
+        EndReplay?.Invoke();
 
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning
@@ -122,6 +126,8 @@ public class NewReplayManager : MonoBehaviour
         for (int i = 0; i < enemies.Count; i++)
         {
             enemies[i].id = i;
+            enemies[i].ReviveEnemy();
+            enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
         }
         //capture first frame
         TakeAndLoadSnapshots();
@@ -318,9 +324,11 @@ public class NewReplayManager : MonoBehaviour
             //We check the enemies state
             Debug.Log("Current enemy to load/save: " + enemies[i].id);
             Debug.Log("Which has a state of : " + enemies[i].enemyReplayState);
+            Debug.Log("And has a punch of : " + enemies[i].punched);
             switch (enemies[i].enemyReplayState)
             {
                 case Enemy.EnemyReplayState.Active:
+                    //Checks if there is a frame for this enemy, passes if there isn't
                     if (currentSnapshotData.enemySnapshots.Count <= i)
                     {
                         enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
@@ -329,18 +337,25 @@ public class NewReplayManager : MonoBehaviour
                     else
                     {
                         Debug.Log("CHANGINGTOPLAYBACK---------------------------------------------------------------------------------");
-                        enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
+                        //enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
+
+                        enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
+                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
                     }
 
-                    break;
+                    break;                  
                 case Enemy.EnemyReplayState.Playback:
                     enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)126;
 
                     //if we're past the snapshot frames on file then start saving frames of motionlessness instead so we don't get errors
                     if (currentSnapshotData.enemySnapshots.Count <= i)
                     {
-                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
-                        enemies[i].enemyReplayState = Enemy.EnemyReplayState.Active;
+                        if(currentSnapshotData.frameTime != 0)
+                        {
+
+                            currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                            enemies[i].enemyReplayState = Enemy.EnemyReplayState.Active;
+                        }
                         ///If you want to turn the replayed players off when they die, this is a good place
                     }
                     else
@@ -350,7 +365,7 @@ public class NewReplayManager : MonoBehaviour
                         //If the snapshot at the current player's ID is blank or there isnt one there
                         if (currentSnapshotData.enemySnapshots[enemies[i].id] != null)
                         {
-                            frameToLoad = newReplayContainer.m_snapshots[snapshotIndex].enemySnapshots[players[i].id];
+                            frameToLoad = newReplayContainer.m_snapshots[snapshotIndex].enemySnapshots[enemies[i].id];
                         }
                         else
                         {

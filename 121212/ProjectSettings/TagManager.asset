@@ -9,6 +9,7 @@ TagManager:
   - OutsideWall
   - Kill
   - Elevator
+  - Enemy
   layers:
   - Default
   - TransparentFX

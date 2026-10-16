@@ -21,7 +21,7 @@ public class DeathUIIN : StateMachineBehaviour
         NewMenuManager newMenuManager = NewMenuManager.instance;
 
 
-        newMenuManager.gameCamera.transform.position = newMenuManager.kc_cameraStartPosition;
+        //newMenuManager.gameCamera.transform.position = newMenuManager.kc_cameraStartPosition;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

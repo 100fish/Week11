@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,6 +9,8 @@ public class Enemy : Entities
     private NewReplayManager newReplayManager;
 
     private NewMenuManager newMenuManager;
+
+    [SerializeField] private Transform barrel;
 
     [SerializeField] public Rigidbody enemyRigidBody;
 
@@ -89,14 +92,26 @@ public class Enemy : Entities
             renderers[i] = meshRenderers[i].gameObject.GetComponent<Renderer>();
         }
 
+        shootTimer = shootTime;
+
         //agent.updatePosition = true;
     }
 
     void Update()
     {
-        if (enemyState == EnemyState.Dead) return;
+        if (enemyState == EnemyState.Dead || newMenuManager.roundState != NewMenuManager.RoundState.Gameplay) return;
 
-        if (shooting == true && shootDelayTimer > 0)
+        if(shootTimer > 0)
+        {
+            shootTimer -= Time.deltaTime;
+        }
+        else
+        {
+            shootTimer = UnityEngine.Random.Range(shootTime-.5f, shootTime+.5f);
+            Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+        }
+
+        /*if (shooting == true && shootDelayTimer > 0)
         {
             shootDelayTimer -= Time.deltaTime;
         }
@@ -108,7 +123,7 @@ public class Enemy : Entities
         else
         {
             Shoot_Countdown();
-        }
+        }*/
     }
 
     public Gradient LineColor;
@@ -160,13 +175,17 @@ public class Enemy : Entities
         }
     }
 
-    private PunchManager.PunchType punched = PunchManager.PunchType.None;
+    public PunchManager.PunchType punched = PunchManager.PunchType.None;
 
     public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
     {
         ///Add punch behaviour here 
         ///Explosions and physics
         ///Lives
+        ///
+
+        enemyReplayState = EnemyReplayState.Active;
+
         if (enemyState != EnemyState.Dead)
         {
             enemyState = EnemyState.Dead;
@@ -186,27 +205,22 @@ public class Enemy : Entities
         }
     }
 
-    private void ReviveEnemy()
+    public void ReviveEnemy()
     {
-        if (enemyState == EnemyState.Dead)
+        enemyState = EnemyState.Alive;
+
+        punched = PunchManager.PunchType.None;
+        lineRenderer.enabled = true;
+
+        foreach (var meshRenderer in meshRenderers)
         {
-            enemyState = EnemyState.Alive;
-
-            punched = PunchManager.PunchType.None;
-            lineRenderer.enabled = true;
-
-            NewMenuManager newMenuManager = NewMenuManager.instance;
-
-            foreach (var meshRenderer in meshRenderers)
-            {
-                meshRenderer.material = aliveMaterial;
-            }
+            meshRenderer.material = aliveMaterial;
         }
     }
 
     public void Reset_Shot_Count()
     {
-        time_between_shots = time_between_shots_max + Random.Range(-randomness_between_shots, randomness_between_shots);
+        time_between_shots = time_between_shots_max + UnityEngine.Random.Range(-randomness_between_shots, randomness_between_shots);
     }
 
     Transform save_shot_target;
@@ -268,8 +282,8 @@ public class Enemy : Entities
             replay_wasPunched = punched
         };
 
-        if (punched != PunchManager.PunchType.None)
-            punched = PunchManager.PunchType.None;
+        //if (punched != PunchManager.PunchType.None)
+            //punched = PunchManager.PunchType.None;
 
         return NewSnapshotInfo;
     }
@@ -283,13 +297,71 @@ public class Enemy : Entities
 
         if (info.replay_wasPunched != PunchManager.PunchType.None)
         {
+            Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
             Hit_Entity(gameObject, info.replay_wasPunched);
         }
-        else if (enemyState == EnemyState.Dead)
+    }
+
+    private List<Transform> myPlayerList = new List<Transform>();
+    private float closestPlayerDistance;
+    private Transform closestPlayer;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Player")
         {
-            //Sets punched back to none
-            ReviveEnemy();
+            enemyReplayState = EnemyReplayState.Active;
         }
 
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            myPlayerList.Add(other.transform);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            myPlayerList.Remove(other.transform);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.gameObject.tag == "Player" && enemyState != EnemyState.Dead)
+        {
+            if (closestPlayer == null)
+            {
+                closestPlayer = other.transform;
+            }
+            else
+            {
+
+                float newPlayerDistance;
+                newPlayerDistance = Vector3.Distance(other.transform.position, transform.position);
+                closestPlayerDistance = Vector3.Distance(closestPlayer.position, transform.position);
+
+                if (newPlayerDistance < closestPlayerDistance)
+                {
+                    closestPlayerDistance = newPlayerDistance;
+                    closestPlayer = other.transform;
+                }
+            }
+            barrel.transform.LookAt(closestPlayer);
+        }
+    }
+
+    [SerializeField] private Transform projectileSpawn;
+
+    [SerializeField] private GameObject projectile;
+
+    private float shootTimer;
+    [SerializeField] private float shootTime;
+
+
 }

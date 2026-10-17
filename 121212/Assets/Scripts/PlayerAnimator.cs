@@ -9,6 +9,7 @@ public class PlayerAnimator : MonoBehaviour
     bool _moving = false;
     bool _sliding = false;
     bool _falling = false;
+    bool _doubleJump = false;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class PlayerAnimator : MonoBehaviour
         if (state != PlayerAnimationState.Walk) _moving = false;
         if (state != PlayerAnimationState.Slide) _sliding = false;
         if (state != PlayerAnimationState.Falling || state != PlayerAnimationState.Jump) _falling = false;
+        if (state != PlayerAnimationState.DoubleJump || state != PlayerAnimationState.Jump) _doubleJump = false;
 
         CurrentState = state;
 
@@ -52,6 +54,14 @@ public class PlayerAnimator : MonoBehaviour
         PlayAnimation(PlayerAnimationState.Falling);
     }
 
+    public void DoubleJump()
+    {
+        if (_doubleJump) return;
+
+        _doubleJump = true;
+        PlayAnimation(PlayerAnimationState.DoubleJump);
+    }
+
     public void Slide()
     {
         if (_sliding) return;
@@ -74,6 +84,7 @@ public enum PlayerAnimationState
     Run,
     Jump,
     Falling,
+    DoubleJump,
     Slide,
 
     StartPunch,

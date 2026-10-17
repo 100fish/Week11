@@ -632,6 +632,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5, y: 6, z: 10.03}
   m_Center: {x: -2.5, y: 3, z: 0}
+--- !u!95 &190287028 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1848179497726540984, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
+  m_PrefabInstance: {fileID: 1517723634}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &239619316
 GameObject:
   m_ObjectHideFlags: 0
@@ -1957,6 +1962,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
   m_PrefabInstance: {fileID: 770885732}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &777173731 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7607688690832564196, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
+  m_PrefabInstance: {fileID: 1517723634}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &777173733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777173731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 403789bfadccdce48baaa59dc97c5f20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElevatorAnimator
+  animator: {fileID: 190287028}
 --- !u!1 &825530903
 GameObject:
   m_ObjectHideFlags: 0
@@ -4301,6 +4324,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StartElements
       objectReference: {fileID: 0}
+    - target: {fileID: 2001206435717657080, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
+      propertyPath: NoTutorial
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5189694360191374887, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4348,7 +4375,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7607688690832564196, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 777173733}
   m_SourcePrefab: {fileID: 100100000, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
 --- !u!4 &1517723635 stripped
 Transform:

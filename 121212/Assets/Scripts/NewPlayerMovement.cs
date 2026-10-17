@@ -94,6 +94,8 @@ public class NewPlayerMovement : Entities
     PunchManager.PunchType punchType;
 
 
+    [SerializeField] public float punchRange = 3;
+
     #endregion
 
     //Whether this player is being controlled
@@ -109,26 +111,33 @@ public class NewPlayerMovement : Entities
     private PlayerInput playerInput;
     private void Awake()
     {
+        myEntityType = EntityType.Player;
+
         myCamera = GetComponentInChildren<Camera>();
 
         playerInput = new PlayerInput();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         //input setup moved to SetStateControlled & SetStatePlayback
     }
-
-    private void OnDisable()
+    protected override void OnDisable ()
     {
-        //input setup moved to SetStateControlled & SetStatePlayback
+        base.OnDisable();
+
         SetStatePlayback();
     }
+
+
     #endregion Inputsetup
 
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         Cursor.visible = false;
 
         newMenuManager = NewMenuManager.instance;
@@ -229,9 +238,11 @@ public class NewPlayerMovement : Entities
 
             AudioManager.PlaySound(SFX.SlideRoll, 0.2f);
 
+            characterController.height = 1;
+
             slide_amount = slide_max;
             slide_move = Get_Movement_Direction(true);
-            //myCamera.transform.localPosition = new Vector3(0, 0.1f, 0);
+            myCamera.transform.localPosition = new Vector3(myCamera.transform.localPosition.x, myCamera.transform.localPosition.y - 0.55f, myCamera.transform.localPosition.z);
             slide_bump = 2;
         }
     }
@@ -246,8 +257,10 @@ public class NewPlayerMovement : Entities
 
             //AudioManager.PlaySound(SFX.SlideCymbol, 0.2f);
 
+            characterController.height = 2;
+
             slide_amount = 0;
-           // myCamera.transform.localPosition = new Vector3(0, 0.65f, 0);
+            myCamera.transform.localPosition = new Vector3(myCamera.transform.localPosition.x, myCamera.transform.localPosition.y + 0.55f, myCamera.transform.localPosition.z);
             slide_delay = slide_delay_max;
             slide_delaying = true;
         }
@@ -663,7 +676,7 @@ public class NewPlayerMovement : Entities
             ///So when an enemy is set to playback, then they shouldn't get affected by punches, atleast in a force way
             ///They'll push themselves back / kill themselves
             ///UNLESSTHISPUNCHISOVERWRITTENINWHICHCASENEVERMIND
-            PunchManager.Punch(this, transform, info.replay_punched, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
+            PunchManager.Punch(this, transform, info.replay_punched, true, punchRange);
         }
     }
 

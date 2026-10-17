@@ -197,6 +197,7 @@ MonoBehaviour:
   - {fileID: 6149368784970132450}
   - {fileID: 1265931501661321568}
   enemyTorsoRotator: {fileID: 546725132545123614}
+  idleRotateSpeed: 10
   LineColor:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}

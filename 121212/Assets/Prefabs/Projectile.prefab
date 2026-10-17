@@ -132,6 +132,7 @@ MonoBehaviour:
   firingSpeed: 50
   aimingMaterial: {fileID: 2100000, guid: 27d242e9bff5f38499b90e0c1867fb6e, type: 2}
   firingMaterial: {fileID: 2100000, guid: b19b3b89a6d965141beb261598eb2c13, type: 2}
+  hittableMaterial: {fileID: 2100000, guid: 5c9c7f11fd38f4941b5c990c0d1a5cc7, type: 2}
 --- !u!54 &4260909391431056873
 Rigidbody:
   m_ObjectHideFlags: 0

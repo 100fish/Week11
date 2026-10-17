@@ -189,7 +189,7 @@ public class NewMenuManager : MonoBehaviour
     {
         newReplayManager = NewReplayManager.instance;
 
-        LoadLevel(currentLevel);
+        LoadLevel(0);
 
         //Timer setup
         gameTimer = gameTimerLimit;

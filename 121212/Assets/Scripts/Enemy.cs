@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations;
 using static PunchManager;
 
 public class Enemy : Entities
@@ -67,8 +68,12 @@ public class Enemy : Entities
 
     private LineRenderer lineRenderer;
 
-    void Awake()
+    [SerializeField] float idleRotateSpeed;
+
+    protected void Awake()
     {
+        myEntityType = EntityType.Enemy;
+
         Reset_Shot_Count();
 
         lineRenderer = GetComponent<LineRenderer>();
@@ -76,8 +81,10 @@ public class Enemy : Entities
         lineRenderer.SetPositions(new Vector3[2] { Vector3.zero, Vector3.zero });
     }
 
-    public void Start()
+    protected override void Start()
     {
+        base.Start();
+
         // agent.updatePosition = false;
         newMenuManager = NewMenuManager.instance;
 
@@ -99,6 +106,14 @@ public class Enemy : Entities
 
     void Update()
     {
+
+
+
+        if (myPlayerList.Count <= 0)
+        {
+            barrel.transform.Rotate(0, idleRotateSpeed * Time.deltaTime, 0);
+        }
+
         if (enemyState == EnemyState.Dead || newMenuManager.roundState != NewMenuManager.RoundState.Gameplay) return;
 
         if(shootTimer > 0)
@@ -107,8 +122,11 @@ public class Enemy : Entities
         }
         else
         {
-            shootTimer = UnityEngine.Random.Range(shootTime-.5f, shootTime+.5f);
-            Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+            if (myPlayerList.Count <= 0)
+            {
+                shootTimer = UnityEngine.Random.Range(shootTime - .5f, shootTime + .5f);
+                Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+            }
         }
 
         /*if (shooting == true && shootDelayTimer > 0)

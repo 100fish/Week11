@@ -20,12 +20,20 @@ public class Projectile : Entities
 
     [SerializeField] Material aimingMaterial;
     [SerializeField] Material firingMaterial;
+    [SerializeField] Material hittableMaterial;
 
 
     private bool fired;
 
-    private void Start()
+    private void Awake()
     {
+        myEntityType = EntityType.Projectile;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
         newMenuManager = NewMenuManager.instance;
         targetPlayer = newMenuManager.newReplayManager.players[newMenuManager.runIndex];
 
@@ -38,6 +46,8 @@ public class Projectile : Entities
         aimingTimer = aimingTime;
 
         mr.material = aimingMaterial;
+        previousMaterial = aimingMaterial;
+
 
         lr.positionCount = 2;
     }
@@ -48,9 +58,22 @@ public class Projectile : Entities
         Firing
     }
 
+    Material previousMaterial;
+
     private void Update()
     {
         transform.LookAt(targetPlayer.transform);
+
+        if(Vector3.Distance(transform.position, targetPlayer.transform.position) < targetPlayer.punchRange)
+        {
+            previousMaterial = mr.material;
+            mr.material = hittableMaterial;
+        }
+        else
+        {
+            mr.material = previousMaterial;
+        }
+
 
         Vector3[] newTargets = new Vector3[2] { transform.position, targetPlayer.transform.position };
         lr.SetPositions(newTargets);
@@ -65,6 +88,8 @@ public class Projectile : Entities
             }
             else
             {
+
+                previousMaterial = firingMaterial;
                 mr.material = firingMaterial;
                 fired = true;
             }

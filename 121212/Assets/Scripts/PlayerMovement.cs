@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 
 public class PlayerMovement : Entities
 {
+    /*
     [Header("Player Params")]
     public int id;
     public MovementState movementState = MovementState.Inactive;
@@ -393,5 +394,9 @@ public class PlayerMovement : Entities
     }
 
     #endregion
-
+    */
+    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    {
+        throw new System.NotImplementedException();
+    }
 }

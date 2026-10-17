@@ -189,9 +189,6 @@ public class NewPlayerMovement : Entities
     {
         if (!Can_LeftPunch()) return;
 
-        ///Need to create a list of all punchable entities instead of just entities
-        PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
-        punchType = PunchManager.PunchType.Left;
 
         ///Maybe Harry should check over this type stuff
         StartUI.Move_Through_UI(3);
@@ -348,7 +345,7 @@ public class NewPlayerMovement : Entities
 
     public void WindUpPunch()
     {
-        print("WindUpPunch");
+        //print("WindUpPunch");
 
         held_punch_for += Time.deltaTime;
 
@@ -390,10 +387,16 @@ public class NewPlayerMovement : Entities
         characterController.Move(finalMove * Time.deltaTime);
         held_punch_for -= Time.deltaTime;
 
-        if(held_punch_for <= 0)
+        PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, punchRange);
+        punchType = PunchManager.PunchType.Left;
+
+        if (held_punch_for <= 0)
         {
             punching = false;
         }
+
+
+
     }
 
     public void MovePlayer()

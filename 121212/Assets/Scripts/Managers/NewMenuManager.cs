@@ -7,6 +7,8 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class NewMenuManager : MonoBehaviour
 {
+    [SerializeField] private ElevatorAnimator elevatorAnimator;
+
     #region Input and Singleton setup
 
     //singleton
@@ -202,6 +204,7 @@ public class NewMenuManager : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.Confined;
     }
 
+    private bool elevatorClosed;
     private void Update()
     {
         //Which gamestate is it
@@ -258,6 +261,11 @@ public class NewMenuManager : MonoBehaviour
                         {
                             //if all the enemies are dead then end the game
                             ChangeState(GameState.End);
+                        }
+                        else if (enemyDeathCount == 1 && !elevatorClosed)
+                        {
+                            elevatorClosed = true;
+                            elevatorAnimator.Reset_Elevator();
                         }
                         else if (gameTimer < 0)
                         {
@@ -426,7 +434,7 @@ public class NewMenuManager : MonoBehaviour
         Mouse.current.WarpCursorPosition(mousePosOnUI);
 
         //Change the roundstate to tutorial, which is what actually begins the game
-        if(tutorialCompleted)
+        if(tutorialCompleted || StartUI.Instance.NoTutorial)
         {
             ChangeRoundState(RoundState.Countdown);
         }
@@ -752,6 +760,10 @@ public class NewMenuManager : MonoBehaviour
         //Reset enemy death counter
         enemyDeathCount = 0;
         enemyDeathCounterText.text = enemyDeathCount.ToString() + " enemies";
+
+        Debug.Log("Hi im the elevator opening");
+        elevatorClosed = false;
+        elevatorAnimator.Open_Elevator();
 
         //Reset the scene
         ///Is this nesacary if all recorded objects snap back anyway?

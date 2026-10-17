@@ -23,7 +23,6 @@ public abstract class Entities : MonoBehaviour
     public void Register_Punchable()
     {
         Get_PunchManager();
-        Debug.Log(punchManager);
         punchManager.entities.Add(this);
     }
 

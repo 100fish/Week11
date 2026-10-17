@@ -29,7 +29,7 @@ public class DeathUI : MonoBehaviour
                 break;
             case NewMenuManager.RoundEndCause.player:
                 text.text = "DON'T\nSTOP";
-                animator.SetTrigger("Continue");
+                animator.SetTrigger("Death");
 
                 break;
             case NewMenuManager.RoundEndCause.time:

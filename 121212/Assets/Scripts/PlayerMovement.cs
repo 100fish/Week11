@@ -358,42 +358,46 @@ public class PlayerMovement : Entities
 
     private void Exit(InputAction.CallbackContext context) => Application.Quit();
 
-    public NewSnapshotInfo SaveSnapshot()
-    {
+    //public NewSnapshotInfo SaveSnapshot()
+    //{
 
-        NewSnapshotInfo NewSnapshotInfo = new NewSnapshotInfo()
-        {
-            replay_id = id,
-            replay_position = transform.position,
-            replay_rotation = transform.rotation,
-        };
+    //    NewSnapshotInfo NewSnapshotInfo = new NewSnapshotInfo()
+    //    {
+    //        replay_id = id,
+    //        replay_position = transform.position,
+    //        replay_rotation = transform.rotation,
+    //    };
 
-        return NewSnapshotInfo;
-    }
+    //    return NewSnapshotInfo;
+    //}
 
-    public void LoadSnapshot(NewSnapshotInfo info)
-    {
-        transform.position = info.replay_position;
+    //public void LoadSnapshot(NewSnapshotInfo info)
+    //{
+    //    transform.position = info.replay_position;
 
-        //if its at the default position get it out of the fucking way
-        if (transform.position == Vector3.zero)
-        {
-            transform.position = new Vector3(0, -1000, 0);
-        }
+    //    //if its at the default position get it out of the fucking way
+    //    if (transform.position == Vector3.zero)
+    //    {
+    //        transform.position = new Vector3(0, -1000, 0);
+    //    }
 
-        transform.rotation = info.replay_rotation;
-        //if(info.replay_shootInfo.s_didShoot == true && info.replay_shootInfo.s_cameraTransform != null)
-        //{
-        //    ShootManager.Shoot(info.replay_shootInfo.s_cameraTransform,
-        //                       info.replay_shootInfo.s_cameraTransform.forward,
-        //                       info.replay_shootInfo.s_gunPointTransform,
-        //                       info.replay_shootInfo.s_shootColour,
-        //                       gameObject,
-        //                       (menuManager.roundState != MenuManager.RoundState.DeathUI));
-        //}
-    }
+    //    transform.rotation = info.replay_rotation;
+    //    //if(info.replay_shootInfo.s_didShoot == true && info.replay_shootInfo.s_cameraTransform != null)
+    //    //{
+    //    //    ShootManager.Shoot(info.replay_shootInfo.s_cameraTransform,
+    //    //                       info.replay_shootInfo.s_cameraTransform.forward,
+    //    //                       info.replay_shootInfo.s_gunPointTransform,
+    //    //                       info.replay_shootInfo.s_shootColour,
+    //    //                       gameObject,
+    //    //                       (menuManager.roundState != MenuManager.RoundState.DeathUI));
+    //    //}
+    //}
 
     #endregion
+    //public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    //{
+    //    throw new System.NotImplementedException();
+    //}
     */
     public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
     {

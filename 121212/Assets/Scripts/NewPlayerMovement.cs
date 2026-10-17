@@ -8,41 +8,51 @@ using UnityEngine.Rendering;
 
 public class NewPlayerMovement : Entities
 {
+    //When a new player is created, its because its about to be controlled
+    //So we default to controlled
+    public MovementState movementState = MovementState.Controlled;
+
+    //This player's ID
+    //Used for the replay
+    public int id;
+
+
+    public TextMeshProUGUI[] IDTexts = new TextMeshProUGUI[4];
+
+    [Header("Player Params")]
     //MenuManager instance
     public NewMenuManager newMenuManager;
 
-    //The meshrenderer for the Muzzle flash
-    ///no more gun so remove
-    [SerializeField] private MeshRenderer gunRenderer;
+    [SerializeField]
+    private PlayerAnimator playerAnimator;
 
     //The player's character controller
     [SerializeField] private CharacterController characterController;
 
-    #region Camera and Audio setup
+    //This player's audio Listener
+    [SerializeField] public AudioListener myAudioListener;
+
+    //Animator for the camera
+    [SerializeField] private Animator camera_shake;
+    [SerializeField] Transform leftFist;
+    [SerializeField] Transform rightFist;
+
+    [Header("Camera")]
     //This player's camera
     [SerializeField] public Camera myCamera;
     //The highest angle the player can look
     [SerializeField] float camera_max = 80;
-    //This player's audio Listener
-    [SerializeField] public AudioListener myAudioListener;
-    #endregion
 
-    #region Movement Settings Setup
+    [Header("Movement")]
     //This player's movespeed
     [SerializeField] private float moveSpeed;
     //This player's Lookspeed
     [SerializeField] public float lookSpeed;
     //This player's Gravity
     [SerializeField] private float gravity;
-    #endregion
-
-    //Animator for the gun
-    [SerializeField] private Animator gun_animator;
-    //Animator for the camera
-    [SerializeField] private Animator camera_shake;
 
 
-    #region Slide Setup
+    [Header("Slide")]
     public float slide_amount;
     [SerializeField] private float slide_max = 1f;
     [SerializeField] private float slide_increase = 2;
@@ -53,27 +63,36 @@ public class NewPlayerMovement : Entities
     private bool slide_delaying = false;
     Vector3 slide_move = Vector3.zero;
     float slide_bump = 0;
-    #endregion
 
-    #region ZoomSetup
     bool zoom_in = false;
     float base_FOV = 60, zoomed_FOV = 30, zoom_in_current = 0, time_mult = 10;
     float base_gun_pos = 0.0f, new_gun_pos = 0.6f, current_gun_pos = 0.0f;
-    #endregion
 
     #region Jump Setup
-    private bool double_jumped = false;
+    [Header("Jump")]
     [SerializeField] private float jump_height = 1;
     [SerializeField] private float jump_multiplier = 0.3f;
     private float current_jump_multiplier = 1;
     private bool groundedPlayer;
+    private bool double_jumped = false;
+
+    [Header("Punch Params")]
+    [SerializeField] bool windup_punching = false;
+    [SerializeField] bool punching = false;
+    bool stop_punch = false;
+    [SerializeField] float cannot_punch_delay;
+    private float current_cannot_punch_delay = 0;
+    [SerializeField] private float hold_punch_time;
+    [SerializeField] private float punch_distance;
+    private float held_punch_for = 0;
+    [SerializeField] private float punch_move_divide;
+    public AnimationCurve PunchEvaluation;
 
     #endregion
 
     #region Punch Setup
     PunchManager.PunchType punchType;
-    [SerializeField] Transform leftFist;
-    [SerializeField] Transform rightFist;
+
 
     [SerializeField] public float punchRange = 3;
 
@@ -87,15 +106,6 @@ public class NewPlayerMovement : Entities
         Playback,
         Dead
     }
-
-    //When a new player is created, its because its about to be controlled
-    //So we default to controlled
-    public MovementState movementState = MovementState.Controlled;
-
-    //This player's ID
-    //Used for the replay
-    public int id;
-
 
     #region Input and Camera setup
     private PlayerInput playerInput;
@@ -128,6 +138,7 @@ public class NewPlayerMovement : Entities
     protected override void Start()
     {
         base.Start();
+        Cursor.visible = false;
 
         newMenuManager = NewMenuManager.instance;
 
@@ -135,6 +146,8 @@ public class NewPlayerMovement : Entities
 
         playerVelocity = Vector3.zero;
         current_jump_multiplier = 1;
+
+        playerAnimator.Idle();
     }
 
     public bool Is_Ghost()
@@ -143,37 +156,51 @@ public class NewPlayerMovement : Entities
         else return true;
     }
 
+    private bool Can_LeftPunch()
+    {
+        //If we're controlling this character, and we're in the correct movementstate
+        ///I think the controlled check is unessary cause we setup the input so only the active character is on already right?
+
+        if (punching) return false;
+        if (current_cannot_punch_delay > 0) return false;
+        if (movementState == MovementState.Controlled && (newMenuManager.roundState == NewMenuManager.RoundState.Gameplay || newMenuManager.roundState == NewMenuManager.RoundState.Tutorial || newMenuManager.roundState == NewMenuManager.RoundState.Countdown)) return true;
+        return false;
+    }
 
 
     private void LeftPunch(InputAction.CallbackContext context)
     {
-        //If we're controlling this character, and we're in the correct movementstate
-        ///I think the controlled check is unessary cause we setup the input so only the active character is on already right?
-        if (movementState == MovementState.Controlled && (newMenuManager.roundState == NewMenuManager.RoundState.Gameplay || newMenuManager.roundState == NewMenuManager.RoundState.Tutorial || newMenuManager.roundState == NewMenuManager.RoundState.Countdown))
-        {
-            ///Need to create a list of all punchable entities instead of just entities
-            PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, punchRange);
-            punchType = PunchManager.PunchType.Left;
+        if (!Can_LeftPunch()) return;
 
-            ///Maybe Harry should check over this type stuff
-            StartUI.Move_Through_UI(3);
+        ///Need to create a list of all punchable entities instead of just entities
+        PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
+        punchType = PunchManager.PunchType.Left;
 
-            gun_animator.SetTrigger("Shoot");
-            camera_shake.SetTrigger("Screenshake");
+        ///Maybe Harry should check over this type stuff
+        StartUI.Move_Through_UI(3);
+        //camera_shake.SetTrigger("Screenshake");
 
-            AudioManager.PlaySound(SFX.GunShot, 0.2f);
+        // AudioManager.PlaySound(SFX.GunShot, 0.2f);
 
-            gun_animator.SetTrigger("Shoot");
-            CameraShake();
+        // CameraShake();
 
-        }
+        playerAnimator.Start_Punch();
 
+        held_punch_for = 0;
+        windup_punching = true;
+    }
+
+    private void LeftPunchEnd(InputAction.CallbackContext context)
+    {
+        if (!windup_punching) return;
+
+        stop_punch = true;
     }
 
     private void Slide(InputAction.CallbackContext contex) => Slide();
     private void Slide()
     {
-        if(movementState == MovementState.Controlled)
+        if (movementState == MovementState.Controlled)
         {
             StartUI.Move_Through_UI(2);
 
@@ -194,7 +221,7 @@ public class NewPlayerMovement : Entities
     private void StopSlide(InputAction.CallbackContext context) => StopSlide();
     private void StopSlide()
     {
-        if(movementState == MovementState.Controlled)
+        if (movementState == MovementState.Controlled)
         {
             AudioManager.PlaySound(SFX.SlideRoll, 0.2f, false, true);
             if (slide_amount <= 0) return;
@@ -210,7 +237,6 @@ public class NewPlayerMovement : Entities
         }
     }
 
-    public TextMeshProUGUI[] IDTexts = new TextMeshProUGUI[4];
 
     private void Update()
     {
@@ -220,25 +246,30 @@ public class NewPlayerMovement : Entities
             IDTexts[i].text = id.ToString();
         }
 
-        if(movementState == MovementState.Controlled)
-        {
-            //move character
-            MovePlayer();
-            //rotate character
-            RotateCamera();
-            transform.Rotate(new Vector3(0, playerInput.Standard.MouseLook.ReadValue<Vector2>().x, 0) * lookSpeed);
+        if (movementState != MovementState.Controlled) return;
 
-            if (zoom_in) zoom_in_current += Time.deltaTime * time_mult;
-            else zoom_in_current -= Time.deltaTime * time_mult;
+        //Punch
+        if (punching) Punching();
+        else if (windup_punching) WindUpPunch();
+       
 
-            zoom_in_current = Mathf.Clamp01(zoom_in_current);
+        //move character
+        MovePlayer();
+        //rotate character
+        RotateCamera();
+        transform.Rotate(new Vector3(0, playerInput.Standard.MouseLook.ReadValue<Vector2>().x, 0) * lookSpeed);
 
-            myCamera.fieldOfView = Mathf.Lerp(base_FOV, zoomed_FOV, zoom_in_current);
-            float _gun_transform_z = Mathf.Lerp(base_gun_pos, new_gun_pos, zoom_in_current);
-            leftFist.localPosition = new Vector3(0, 0, _gun_transform_z);
-            rightFist.localPosition = new Vector3(0, 0, _gun_transform_z);
-        }
+        if (zoom_in) zoom_in_current += Time.deltaTime * time_mult;
+        else zoom_in_current -= Time.deltaTime * time_mult;
 
+        zoom_in_current = Mathf.Clamp01(zoom_in_current);
+
+       // myCamera.fieldOfView = Mathf.Lerp(base_FOV, zoomed_FOV, zoom_in_current);
+        float _gun_transform_z = Mathf.Lerp(base_gun_pos, new_gun_pos, zoom_in_current);
+        leftFist.localPosition = new Vector3(0, 0, _gun_transform_z);
+        rightFist.localPosition = new Vector3(0, 0, _gun_transform_z);
+
+        AnimatingPlayer();
     }
 
     #region Camera and Zoom
@@ -287,6 +318,46 @@ public class NewPlayerMovement : Entities
     }
 
     Vector3 playerVelocity = Vector3.zero;
+
+    public void WindUpPunch()
+    {
+        print("WindUpPunch");
+
+        held_punch_for += Time.deltaTime;
+
+        if (held_punch_for >= hold_punch_time || stop_punch == true && held_punch_for >= hold_punch_time / 2) punching = true;
+    }
+
+    public bool PunchHappening()
+    {
+        if (windup_punching || punching) return true;
+        return false;
+    }
+
+    public void Punching()
+    {
+        print("Punching: " + held_punch_for);
+
+        if(windup_punching) playerAnimator.Punch();
+
+        stop_punch = false;
+        windup_punching = false;
+        punching = true;
+
+        Vector3 _moveAxis = Get_Movement_Direction(true);
+
+        float _punch_distance = PunchEvaluation.Evaluate(held_punch_for / hold_punch_time);
+
+        Vector3 finalMove = _moveAxis * (_punch_distance * punch_distance) + Vector3.up * playerVelocity.y + (Vector3.back * playerVelocity.z);
+
+        characterController.Move(finalMove * Time.deltaTime);
+        held_punch_for -= Time.deltaTime;
+
+        if(held_punch_for <= 0)
+        {
+            punching = false;
+        }
+    }
 
     public void MovePlayer()
     {
@@ -337,8 +408,7 @@ public class NewPlayerMovement : Entities
         // Jump using WasPressedThisFrame()
         if (playerInput.Standard.Jump.WasPressedThisFrame() && (groundedPlayer || !double_jumped))
         {
-
-
+            playerAnimator.Jump();
             playerVelocity.y = Mathf.Sqrt(jump_height * -2f * gravity);
             wallJump();
 
@@ -378,11 +448,19 @@ public class NewPlayerMovement : Entities
             finalMove *= slide_bump;
             slide_bump = 0;
         }
+
+        if(PunchHappening()) finalMove = new Vector3(finalMove.x / punch_move_divide, finalMove.y / punch_move_divide, finalMove.z / punch_move_divide);
+
         //print("finalMove: " + finalMove + ", moveAxis: " + _moveAxis + ", _moveSpeed" + _moveSpeed + ", _moveAxis: " + playerVelocity.y);
         characterController.Move(finalMove * Time.deltaTime);
 
         //characterController.Move(new Vector3(_moveAxis.x * _moveSpeed, gravity, _moveAxis.z * _moveSpeed));
+
+
+        velocity = finalMove;
     }
+
+    Vector3 velocity;
 
     int wall_jump_dir = 1;
 
@@ -406,6 +484,31 @@ public class NewPlayerMovement : Entities
             playerVelocity.y += 2.5f;
             wall_jump_dir = -1;
         }
+    }
+
+   
+
+    public void AnimatingPlayer()
+    {
+        if (PunchHappening()) return;
+
+
+        if (slide_amount > 0)
+        {
+            playerAnimator.Slide();
+            return;
+        }
+
+        if (!groundedPlayer)
+        {
+            playerAnimator.Falling();
+            return;
+        }
+
+        Vector3 _moveAxis = Get_Movement_Direction();
+
+        if(_moveAxis != Vector3.zero) playerAnimator.Move();
+        else playerAnimator.Idle();
     }
 
     #endregion
@@ -448,6 +551,7 @@ public class NewPlayerMovement : Entities
 
         playerInput.Enable();
         playerInput.Standard.Shoot.started += LeftPunch;
+        playerInput.Standard.Shoot.canceled += LeftPunchEnd;
 
         playerInput.Standard.Slide.started += Slide;
         playerInput.Standard.Slide.canceled += StopSlide;
@@ -471,6 +575,8 @@ public class NewPlayerMovement : Entities
         //playerInput.Disable();
         playerInput.Standard.Disable();
         playerInput.Standard.Shoot.started -= LeftPunch;
+        playerInput.Standard.Shoot.canceled -= LeftPunchEnd;
+
 
         playerInput.Standard.Slide.started -= Slide;
         playerInput.Standard.Slide.canceled -= StopSlide;

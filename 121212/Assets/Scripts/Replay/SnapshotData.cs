@@ -28,7 +28,7 @@ public struct SnapshotData
             snapshots[i].replay_id = i;
             snapshots[i].replay_position = Vector3.zero;
             snapshots[i].replay_rotation = Quaternion.identity;
-            snapshots[i].replay_shootInfo = default;
+            //snapshots[i].replay_shootInfo = default;
         }
 
         enemySnapshots = new SnapshotInfoEnemy[40];

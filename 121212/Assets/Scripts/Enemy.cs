@@ -104,17 +104,29 @@ public class Enemy : Entities
         //agent.updatePosition = true;
     }
 
+    [SerializeField] private Material idleMaterial;
+    [SerializeField] private Material activeMaterial;
+
+    private void SetMaterial(Material newMaterial)
+    {
+        foreach (var meshRenderer in meshRenderers)
+        {
+            meshRenderer.material = newMaterial;
+        }
+    }
+    
     void Update()
     {
-
-
+        SetMaterial(idleMaterial);
 
         if (myPlayerList.Count <= 0)
         {
+            SetMaterial(activeMaterial);
             barrel.transform.Rotate(0, idleRotateSpeed * Time.deltaTime, 0);
         }
 
         if (enemyState == EnemyState.Dead || newMenuManager.roundState != NewMenuManager.RoundState.Gameplay) return;
+
 
         if(shootTimer > 0)
         {
@@ -195,7 +207,10 @@ public class Enemy : Entities
 
     public PunchManager.PunchType punched = PunchManager.PunchType.None;
 
-    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    [SerializeField] private DummyTurret dummyTurret;
+    [SerializeField] private float dummyFlyStrength;
+
+    public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
         ///Add punch behaviour here 
         ///Explosions and physics
@@ -208,6 +223,9 @@ public class Enemy : Entities
         {
             enemyState = EnemyState.Dead;
 
+
+            dummyTurret.ActivateDummy(dummyFlyStrength, perpetrator.transform.position, barrel.position, transform.position, barrel.rotation, transform.rotation);
+
             punched = PunchManager.PunchType.Left;
             lineRenderer.enabled = false;
 
@@ -218,7 +236,7 @@ public class Enemy : Entities
 
             foreach (var meshRenderer in meshRenderers)
             {
-                meshRenderer.material = deadMaterial;
+                meshRenderer.enabled = false;
             }
         }
     }
@@ -230,9 +248,11 @@ public class Enemy : Entities
         punched = PunchManager.PunchType.None;
         lineRenderer.enabled = true;
 
+        dummyTurret.DectivateDummy();
+
         foreach (var meshRenderer in meshRenderers)
         {
-            meshRenderer.material = aliveMaterial;
+            meshRenderer.enabled = true;
         }
     }
 
@@ -316,7 +336,7 @@ public class Enemy : Entities
         if (info.replay_wasPunched != PunchManager.PunchType.None)
         {
             Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
-            Hit_Entity(gameObject, info.replay_wasPunched);
+            Hit_Entity(this, info.replay_wasPunched);
         }
     }
 

@@ -274,7 +274,7 @@ public NewSnapshotInfoEnemy SaveSnapshot()
    return NewSnapshotInfo;
 }*/
 
-    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
         throw new System.NotImplementedException();
     }

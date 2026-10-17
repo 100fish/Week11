@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.VectorGraphics;
 using Unity.VisualScripting;
@@ -172,9 +173,6 @@ public class NewPlayerMovement : Entities
     {
         if (!Can_LeftPunch()) return;
 
-        ///Need to create a list of all punchable entities instead of just entities
-        PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
-        punchType = PunchManager.PunchType.Left;
 
         ///Maybe Harry should check over this type stuff
         StartUI.Move_Through_UI(3);
@@ -336,9 +334,12 @@ public class NewPlayerMovement : Entities
 
     public void Punching()
     {
-        print("Punching: " + held_punch_for);
+        //print("Punching: " + held_punch_for);
 
-        if(windup_punching) playerAnimator.Punch();
+        PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, punchRange);
+        punchType = PunchManager.PunchType.Left;
+
+        if (windup_punching) playerAnimator.Punch();
 
         stop_punch = false;
         windup_punching = false;
@@ -513,13 +514,25 @@ public class NewPlayerMovement : Entities
 
     #endregion
 
-    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
         if (movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
         {
             CameraShake();
 
-            newMenuManager.PlayerDeath(perpetrator, NewMenuManager.RoundEndCause.enemy);
+            switch (perpetrator.myEntityType)
+            {
+                case EntityType.Player:
+                    newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.player);
+                    break;
+                case EntityType.Enemy:
+                    break;
+                case EntityType.Projectile:
+                    newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.projectile);
+                    break;
+                default:
+                    break;
+            }
 
         }
 

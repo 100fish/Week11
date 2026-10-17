@@ -22,6 +22,9 @@ public class Projectile : Entities
     [SerializeField] Material firingMaterial;
     [SerializeField] Material hittableMaterial;
 
+    [SerializeField] Gradient inactiveGradient;
+    [SerializeField] Gradient activeGradient;
+
 
     private bool fired;
 
@@ -50,6 +53,8 @@ public class Projectile : Entities
 
 
         lr.positionCount = 2;
+
+        lr.colorGradient = inactiveGradient;
     }
 
     public enum ProjectileState
@@ -88,6 +93,7 @@ public class Projectile : Entities
             }
             else
             {
+                lr.colorGradient = activeGradient;
 
                 previousMaterial = firingMaterial;
                 mr.material = firingMaterial;
@@ -105,7 +111,7 @@ public class Projectile : Entities
     {
         if (other.gameObject == targetPlayer.gameObject)
         {
-            targetPlayer.Hit_Entity(gameObject, PunchManager.PunchType.None);
+            targetPlayer.Hit_Entity(this, PunchManager.PunchType.None);
         }
         else if(other.gameObject.tag != "Enemy")
         {
@@ -119,7 +125,7 @@ public class Projectile : Entities
         gameObject.SetActive(false);
     }
 
-    public override void Hit_Entity(GameObject perp, PunchManager.PunchType punchType)
+    public override void Hit_Entity(Entities perp, PunchManager.PunchType punchType)
     {
         Deactivate();
     }

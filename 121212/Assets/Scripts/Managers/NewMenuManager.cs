@@ -96,8 +96,8 @@ public class NewMenuManager : MonoBehaviour
     public enum RoundEndCause
     {
         fall,
-        enemy,
-        bullets,
+        projectile,
+        player,
         time
     }
 
@@ -318,7 +318,7 @@ public class NewMenuManager : MonoBehaviour
                             }
 
                             //Once the killcam is done we start the new round
-                            ChangeRoundState(RoundState.DeathUI, RoundEndCause.enemy);
+                            ChangeRoundState(RoundState.DeathUI, RoundEndCause.projectile);
                         }
 
                         break;
@@ -831,16 +831,16 @@ public class NewMenuManager : MonoBehaviour
         switch (roundEndCause)
         {
             case RoundEndCause.fall:
-                DeathUI.Death("SWALLED \n BY WAVES");
+                DeathUI.Death(roundEndCause);
                 break;
-            case RoundEndCause.enemy:
-                DeathUI.Death("ONCE \n TWICE");
+            case RoundEndCause.projectile:
+                DeathUI.Death(roundEndCause);
                 break;
-            case RoundEndCause.bullets:
-                DeathUI.Death("GUNS EMPTY");
+            case RoundEndCause.player:
+                DeathUI.Death(roundEndCause);
                 break;
             case RoundEndCause.time:
-                DeathUI.Death("TIMES UP");
+                DeathUI.Death(roundEndCause);
                 break;
             default:
                 break;
@@ -852,7 +852,7 @@ public class NewMenuManager : MonoBehaviour
     private void EndRound(RoundEndCause roundEndCause, GameObject perp)
     {
 
-        if(roundEndCause != RoundEndCause.enemy)
+        if(roundEndCause != RoundEndCause.projectile)
         {
             ChangeRoundState(RoundState.DeathUI, roundEndCause);
         }

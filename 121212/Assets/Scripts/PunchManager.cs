@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEditor;
+using System.Linq;
 
 public class PunchManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class PunchManager : MonoBehaviour
 
     public List<Entities> entities = new List<Entities>();
 
-    public void Start()
+    private void Awake()
     {
         //Singleton Setup
         if (instance != null && instance != this)
@@ -42,6 +43,7 @@ public class PunchManager : MonoBehaviour
             //(This function is static so the list of enemies has to be passed in by the caller lol
             //if they have a reference to replaymanager they can get it from there
             //or get a reference to replaymanager from menumanager
+            Debug.Log(instance.entities.Count);
             for (int i = 0; i < instance.entities.Count; i++)
             {
                 //If an entity is within range
@@ -54,12 +56,18 @@ public class PunchManager : MonoBehaviour
                         Debug.Log("BANG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                         Debug.Log("///////////////");
 
-                        instance.entities[i].Hit_Entity(puncher.gameObject, punchType);
+                        Entities.EntityType hitType = instance.entities[i].myEntityType;
+
+                        if (hitType != Entities.EntityType.Player)
+                        {
+
+                            instance.entities[i].Hit_Entity(puncher, punchType);
+                        }
 
                         if(puncher.newMenuManager.enemyDeathCount != puncher.newMenuManager.newReplayManager.enemies.Count
-                            && instance.entities[i].myEntityType != Entities.EntityType.Projectile)
+                            && hitType != Entities.EntityType.Projectile)
                         {
-                            puncher.Hit_Entity(puncher.gameObject, PunchType.None);
+                            puncher.Hit_Entity(puncher, PunchType.None);
                         }
                     }
                 }

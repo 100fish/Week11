@@ -14,16 +14,16 @@ public abstract class Entities : MonoBehaviour
 
     protected PunchManager punchManager;
 
-    public abstract void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType);
+    public abstract void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType);
 
     public void Get_PunchManager()
     {
-
         punchManager = PunchManager.instance;
     }
     public void Register_Punchable()
     {
         Get_PunchManager();
+        Debug.Log(punchManager);
         punchManager.entities.Add(this);
     }
 

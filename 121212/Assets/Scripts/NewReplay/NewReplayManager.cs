@@ -98,7 +98,7 @@ public class NewReplayManager : MonoBehaviour
     //Resets the playback and recording
     public void StartRoundPlaybackAndRecording(int runIndex)
     {
-
+        /*
         Debug.Log("...................");
         Debug.Log("//START " + runIndex + "th RECOUNT//");
         for (int i = 0; i < newReplayContainer.m_snapshots.Count; i++)
@@ -110,7 +110,7 @@ public class NewReplayManager : MonoBehaviour
                 Debug.Log("Enemy's Position this frame " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_position);
                 Debug.Log("Enemy's Punch this frame: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_wasPunched);
             }
-        }
+        }*/
         Debug.Log("//END  " + runIndex + "th RECOUNT//");
 
         EndReplay?.Invoke();
@@ -176,7 +176,7 @@ public class NewReplayManager : MonoBehaviour
         }
 
         //Activate the new player script
-        Debug.Log("Recent player's ID: " + players[newPlayerIndex].id);
+        //Debug.Log("Recent player's ID: " + players[newPlayerIndex].id);
         players[newPlayerIndex].SetStateControlled();
         players[newPlayerIndex].id = newPlayerIndex;
 
@@ -227,28 +227,28 @@ public class NewReplayManager : MonoBehaviour
             NewSnapshotData currentSnapshotData;
 
         //if we're past the end of the recorded snapshots
-        Debug.Log("................");
+        /*Debug.Log("................");
         Debug.Log("//SNAPSHOT FRAME INFO//");
-        Debug.Log("Oldest Frame Is at " + newReplayContainer.m_snapshots[^1].frameTime + " and is smaller than " + m_time);
+        Debug.Log("Oldest Frame Is at " + newReplayContainer.m_snapshots[^1].frameTime + " and is smaller than " + m_time);*/
         ///If you get errors in this section the <= is why
             if (newReplayContainer.m_snapshots[^1].frameTime <= m_time)
             {
                 //then make a new snapshot (all defaulted up)
-                Debug.Log("Making a new frame at " + m_time + " time, with index at " + snapshotIndex);
+                //Debug.Log("Making a new frame at " + m_time + " time, with index at " + snapshotIndex);
                 
                 currentSnapshotData = new NewSnapshotData(m_time);
             }
             else
             {
                 //otherwise set our new one to the one we already recorded at this index
-                Debug.Log("Grabbing an old frame at " + m_time + " time, with index at " + snapshotIndex);
+                //Debug.Log("Grabbing an old frame at " + m_time + " time, with index at " + snapshotIndex);
                 currentSnapshotData = newReplayContainer.m_snapshots[snapshotIndex];
             }
         //the above if/else makes sure that if there's an old snapshot to work with, we work with that
         //if there isn't, we make a new one. 
 
 
-        Debug.Log("//END SNAPSHOT FRAME INFO//");
+        //Debug.Log("//END SNAPSHOT FRAME INFO//");
 
         #endregion
         #region Player Loading and Saving
@@ -304,9 +304,9 @@ public class NewReplayManager : MonoBehaviour
         #region Enemy Loading and Saving
 
         //This works very similarily to the player part
-        Debug.Log(".....................");
+        /*Debug.Log(".....................");
         Debug.Log("//ENEMY LOAD AND SAVE START//");
-        Debug.Log("LOADING/SAVING " + enemies.Count + " ENEMIES");
+        Debug.Log("LOADING/SAVING " + enemies.Count + " ENEMIES");*/
         for (int i = 0; i < enemies.Count; i++)
         {
             //For every enemy in the list
@@ -322,9 +322,9 @@ public class NewReplayManager : MonoBehaviour
 
 
             //We check the enemies state
-            Debug.Log("Current enemy to load/save: " + enemies[i].id);
+            /*Debug.Log("Current enemy to load/save: " + enemies[i].id);
             Debug.Log("Which has a state of : " + enemies[i].enemyReplayState);
-            Debug.Log("And has a punch of : " + enemies[i].punched);
+            Debug.Log("And has a punch of : " + enemies[i].punched);*/
             switch (enemies[i].enemyReplayState)
             {
                 case Enemy.EnemyReplayState.Active:
@@ -336,7 +336,7 @@ public class NewReplayManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("CHANGINGTOPLAYBACK---------------------------------------------------------------------------------");
+                        //Debug.Log("CHANGINGTOPLAYBACK---------------------------------------------------------------------------------");
                         //enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
 
                         enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
@@ -352,7 +352,6 @@ public class NewReplayManager : MonoBehaviour
                     {
                         if(currentSnapshotData.frameTime != 0)
                         {
-
                             currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
                             enemies[i].enemyReplayState = Enemy.EnemyReplayState.Active;
                         }
@@ -379,7 +378,7 @@ public class NewReplayManager : MonoBehaviour
             }
         }
 
-        Debug.Log("//ENEMY LOAD AND SAVE END//");
+        //Debug.Log("//ENEMY LOAD AND SAVE END//");
 
         #endregion
 

@@ -399,7 +399,7 @@ public class PlayerMovement : Entities
     //    throw new System.NotImplementedException();
     //}
     */
-    public override void Hit_Entity(GameObject perpetrator, PunchManager.PunchType punchType)
+    public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
         throw new System.NotImplementedException();
     }

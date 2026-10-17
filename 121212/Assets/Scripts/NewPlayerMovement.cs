@@ -175,13 +175,42 @@ public class NewPlayerMovement : Entities
 
         // CameraShake();
 
-        playerAnimator.Start_Punch();
+        Punch(false);
+    }
+
+    private void RightPunch(InputAction.CallbackContext context)
+    {
+        if (!Can_LeftPunch()) return;
+
+        ///Need to create a list of all punchable entities instead of just entities
+        PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, 3, newMenuManager.newReplayManager.enemies.ToArray());
+        punchType = PunchManager.PunchType.Left;
+
+        ///Maybe Harry should check over this type stuff
+        StartUI.Move_Through_UI(3);
+        //camera_shake.SetTrigger("Screenshake");
+
+        // AudioManager.PlaySound(SFX.GunShot, 0.2f);
+
+        // CameraShake();
+
+        Punch(true);
+    }
+
+    bool upper_cut = false;
+
+    private void Punch(bool _upper_cut)
+    {
+        upper_cut = _upper_cut;
+
+        if(upper_cut) playerAnimator.Start_Uppercut();
+        else playerAnimator.Start_Punch();
 
         held_punch_for = 0;
         windup_punching = true;
     }
 
-    private void LeftPunchEnd(InputAction.CallbackContext context)
+    private void PunchEnd(InputAction.CallbackContext context)
     {
         if (!windup_punching) return;
 
@@ -325,7 +354,11 @@ public class NewPlayerMovement : Entities
     {
         print("Punching: " + held_punch_for);
 
-        if(windup_punching) playerAnimator.Punch();
+        if(windup_punching)
+        {
+            if(upper_cut) playerAnimator.Uppercut();
+            else playerAnimator.Punch();
+        }
 
         stop_punch = false;
         windup_punching = false;
@@ -335,7 +368,13 @@ public class NewPlayerMovement : Entities
 
         float _punch_distance = PunchEvaluation.Evaluate(held_punch_for / hold_punch_time);
 
-        Vector3 finalMove = _moveAxis * (_punch_distance * punch_distance) + Vector3.up * playerVelocity.y + (Vector3.back * playerVelocity.z);
+        float _x_distance = 1;
+        float _y_distance = 1;
+
+        if (!upper_cut) _x_distance = _punch_distance * punch_distance;
+        else _y_distance = _punch_distance * punch_distance;
+
+        Vector3 finalMove = _moveAxis * (_x_distance) + Vector3.up * _y_distance + (Vector3.back * playerVelocity.z);
 
         characterController.Move(finalMove * Time.deltaTime);
         held_punch_for -= Time.deltaTime;
@@ -488,7 +527,8 @@ public class NewPlayerMovement : Entities
 
         if (!groundedPlayer)
         {
-            playerAnimator.Falling();
+            if(double_jumped) playerAnimator.DoubleJump();
+            else playerAnimator.Falling();
             return;
         }
 
@@ -538,13 +578,15 @@ public class NewPlayerMovement : Entities
 
         playerInput.Enable();
         playerInput.Standard.Shoot.started += LeftPunch;
-        playerInput.Standard.Shoot.canceled += LeftPunchEnd;
+        playerInput.Standard.Shoot.canceled += PunchEnd;
+
+        playerInput.Standard.ZoomIn.started += RightPunch;
+        playerInput.Standard.ZoomIn.canceled += PunchEnd;
 
         playerInput.Standard.Slide.started += Slide;
         playerInput.Standard.Slide.canceled += StopSlide;
 
-        playerInput.Standard.ZoomIn.started += Start_ZoomIn;
-        playerInput.Standard.ZoomIn.canceled += Stop_ZoomIn;
+
 
         playerInput.Standard.ESC.started += Exit;
 
@@ -562,14 +604,16 @@ public class NewPlayerMovement : Entities
         //playerInput.Disable();
         playerInput.Standard.Disable();
         playerInput.Standard.Shoot.started -= LeftPunch;
-        playerInput.Standard.Shoot.canceled -= LeftPunchEnd;
+        playerInput.Standard.Shoot.canceled -= PunchEnd;
+
+
+        playerInput.Standard.ZoomIn.started -= RightPunch;
+        playerInput.Standard.ZoomIn.canceled -= PunchEnd;
 
 
         playerInput.Standard.Slide.started -= Slide;
         playerInput.Standard.Slide.canceled -= StopSlide;
 
-        playerInput.Standard.ZoomIn.started -= Start_ZoomIn;
-        playerInput.Standard.ZoomIn.canceled -= Stop_ZoomIn;
 
         playerInput.Standard.ESC.started -= Exit;
 

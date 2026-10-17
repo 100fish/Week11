@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 
 public class StartUI : MonoBehaviour
 {
+    public bool NoTutorial;
+
     NewMenuManager newMenuManager;
 
     public Animator StartUI_Animator_p;
@@ -45,6 +47,16 @@ public class StartUI : MonoBehaviour
         StartUI_Animator = StartUI_Animator_p;
         Elevator_Animator = Elevator_Animator_p;
         function_to_start_recording = function_to_start_recording_p;
+
+        if(NoTutorial)
+        {
+            
+            current_ID = Instance.text_UI.Length;
+            Instance.alpha_direction = -1;
+
+            Open_Elevator();
+            return;
+        }
 
         for (var i = 0; text_UI.Length > i; i++)
         {
@@ -121,16 +133,5 @@ public class StartUI : MonoBehaviour
     public static void StartTutorial()
     {
         startTutorial = true;
-    }
-
-    public static void SkipTutorial()
-    {
-        startTutorial = true;
-        Debug.Log(Instance.text_UI.Length);
-        Instance.text_UI[4].text = "";
-        Instance.alpha = 1;
-        Instance.current_ID = 4;
-        Move_Through_UI(4);
-
     }
 }

@@ -264,11 +264,6 @@ public class NewMenuManager : MonoBehaviour
                             //if all the enemies are dead then end the game
                             ChangeState(GameState.End);
                         }
-                        else if (enemyDeathCount == 1 && !elevatorClosed)
-                        {
-                            elevatorClosed = true;
-                            elevatorAnimator.Reset_Elevator();
-                        }
                         else if (gameTimer < 0)
                         {
                             if (runIndex >= 9)
@@ -401,6 +396,7 @@ public class NewMenuManager : MonoBehaviour
 
     private void ChangeFromMenu() 
     {
+        menuCamera.depth = 80;
         Time.timeScale = 1;
     }
     private void ChangeToMenu()
@@ -740,7 +736,12 @@ public class NewMenuManager : MonoBehaviour
         //This function is where all of the between round work happens, as its the last
         //Thing that is called before the player is dropped into a new round
 
-
+        if(runIndex > -1)
+        {
+            //newReplayManager.NextActivePlayer(runIndex);
+            //gameCamera = newReplayManager.players[runIndex + 1].myCamera;
+            //camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Environment);
+        }
         //Increase the Run index because its a new round
         runIndex++;
 
@@ -755,25 +756,22 @@ public class NewMenuManager : MonoBehaviour
         enemyDeathCount = 0;
         enemyDeathCounterText.text = enemyDeathCount.ToString() + " enemies";
 
-        Debug.Log("Hi im the elevator opening");
-        elevatorClosed = false;
-        elevatorAnimator.Open_Elevator();
-
-        //Reset the scene
-        ///Is this nesacary if all recorded objects snap back anyway?
-        newReplayManager.ResetScene();
         //Play/Start recording the tape
         newReplayManager.StartRoundPlaybackAndRecording(runIndex);
     }
 
     private void ChangeFromGameplay()
     {
-        ///Maybe something about changing the player out once we get to this part?
+        newReplayManager.StopRound(runIndex);
+
+        elevatorClosed = true;
+        elevatorAnimator.Reset_Elevator();
     }
     private void ChangeToGameplay()
     {
-        StartUI.Open_Elevator();
-        //Harry script interface
+        Debug.Log("Hi im the elevator opening");
+        elevatorClosed = false;
+        elevatorAnimator.Open_Elevator();
     }
 
     private void ChangeFromPause()
@@ -843,52 +841,37 @@ public class NewMenuManager : MonoBehaviour
         switch (roundEndCause)
         {
             case RoundEndCause.fall:
-                if (runIndex != -1)
-                {
-                    //Move to the next player
-                    newReplayManager.NextActivePlayer(runIndex);
-                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
-                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Environment);
-                }
-                DeathUI.Death(roundEndCause);
+                PlayerTransition(RoundEndCause.fall);
+                elevatorAnimator.deathText.text = "SWALLED\nBY WAVES";
                 break;
             case RoundEndCause.projectile:
-                if (runIndex != -1)
-                {
-                    //Move to the next player
-                    newReplayManager.NextActivePlayer(runIndex);
-                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
-                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Enemy);
-                }
-
-                DeathUI.Death(roundEndCause);
+                PlayerTransition(RoundEndCause.projectile);
+                elevatorAnimator.deathText.text = "DONT\nSTOP";
                 break;
             case RoundEndCause.player:
-                if (runIndex != -1)
-                {
-                    //Move to the next player
-                    newReplayManager.NextActivePlayer(runIndex);
-                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
-                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Progression);
-                }
-
-                DeathUI.Death(roundEndCause);
+                PlayerTransition(RoundEndCause.player);
+                elevatorAnimator.deathText.text = (newReplayManager.enemies.Count - enemyDeathCount).ToSafeString() +"\nREMAINING";
                 break;
             case RoundEndCause.time:
-                if (runIndex != -1)
-                {
-                    //Move to the next player
-                    newReplayManager.NextActivePlayer(runIndex);
-                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
-                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Environment);
-                }
-
-                DeathUI.Death(roundEndCause);
+                PlayerTransition(RoundEndCause.time);
+                elevatorAnimator.deathText.text = "WATCH\nTHE CLOCK"; 
                 break;
             default:
                 break;
         }
     }
+
+    private void PlayerTransition(RoundEndCause roundEndCause)
+    {
+        if (runIndex != -1)
+        {
+            //Move to the next player
+            newReplayManager.NextActivePlayer(runIndex);
+            gameCamera = newReplayManager.players[runIndex + 1].myCamera;
+            camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex +1].myCamera, roundEndCause);
+        }
+    }
+
     //This is called when the round ends, there are a lot of checks for it in the Update function of this script
     //It takes the reason that the round ended, and if possible the gameobject that caused it for the killcam
     //But its ok if there's no perp (null)! as long as the cause isn't an enemy
@@ -926,7 +909,7 @@ public class NewMenuManager : MonoBehaviour
     {
         if (runIndex >= 9)
         {
-            ChangeState(GameState.End);
+            //ChangeState(GameState.End);
             return;
         }
 

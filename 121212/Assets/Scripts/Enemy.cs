@@ -125,7 +125,7 @@ public class Enemy : Entities
             barrel.transform.Rotate(0, idleRotateSpeed * Time.deltaTime, 0);
         }
 
-        Debug.Log("Enemy update:" + id);
+        //Debug.Log("Enemy update:" + id);
 
         if (enemyState == EnemyState.Dead || newMenuManager.roundState != NewMenuManager.RoundState.Gameplay) return;
 
@@ -136,11 +136,11 @@ public class Enemy : Entities
         }
         else
         {
-            Debug.Log("Enemy shootTimer:" + id);
-            Debug.Log("Enemy playerList:" + myPlayerList.Count);
+            //Debug.Log("Enemy shootTimer:" + id);
+            //Debug.Log("Enemy playerList:" + myPlayerList.Count);
             if (myPlayerList.Count > 0 && myPlayerList.Contains(newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform))
             {
-                Debug.Log("Enemy SHOOTCHECK:" + id);
+                //Debug.Log("Enemy SHOOTCHECK:" + id);
 
                 shootTimer = UnityEngine.Random.Range(shootTime - .5f, shootTime + .5f);
                 Instantiate(projectile, projectileSpawn.position, Quaternion.identity);

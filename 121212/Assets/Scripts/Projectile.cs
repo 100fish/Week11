@@ -9,6 +9,7 @@ public class Projectile : Entities
     private NewPlayerMovement targetPlayer;
 
     private Rigidbody rb;
+    private SphereCollider sc;
     private MeshRenderer mr;
     private LineRenderer lr;
     private ParticleSystem ps;
@@ -45,6 +46,7 @@ public class Projectile : Entities
         newMenuManager.newReplayManager.EndReplay += Deactivate;
 
         rb = GetComponent<Rigidbody>();
+        sc = GetComponent<SphereCollider>();
         mr = GetComponent<MeshRenderer>();
         lr = GetComponent<LineRenderer>();
         ps = GetComponent<ParticleSystem>();
@@ -130,7 +132,9 @@ public class Projectile : Entities
     public void Deactivate()
     {
         newMenuManager.newReplayManager.EndReplay -= Deactivate;
-        gameObject.SetActive(false);
+        mr.enabled = false;
+        sc.enabled = false;
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     public override void Hit_Entity(Entities perp, PunchManager.PunchType punchType)

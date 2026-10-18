@@ -98,6 +98,29 @@ public class NewReplayManager : MonoBehaviour
     //Resets the playback and recording
     public void StartRoundPlaybackAndRecording(int runIndex)
     {
+
+
+
+        currentState = State.Active; //turns it on
+        m_time = 0; //Sets time to zero
+        snapshotIndex = 0; //Sets the playback/recording to the beginning
+        //Give enemies IDs
+        //Once there's a function to play the replay
+        //Between levels
+        ///move this there
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].id = i;
+            enemies[i].ReviveEnemy();
+            enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
+        }
+        //capture first frame
+        TakeAndLoadSnapshots();
+    }
+
+    public void StopRound(int runIndex)
+    {
+        currentState = State.Idle;//leaves replaymanage to sit and wait
         /*
         Debug.Log("...................");
         Debug.Log("//START " + runIndex + "th RECOUNT//");
@@ -115,22 +138,10 @@ public class NewReplayManager : MonoBehaviour
 
         EndReplay?.Invoke();
 
+
+        currentState = State.Idle;//leaves replaymanage to sit and wait
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning
-        currentState = State.Active; //turns it on
-
-        //Give enemies IDs
-        //Once there's a function to play the replay
-        //Between levels
-        ///move this there
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            enemies[i].id = i;
-            enemies[i].ReviveEnemy();
-            enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
-        }
-        //capture first frame
-        TakeAndLoadSnapshots();
     }
 
     //Called by menumanager when a round ends
@@ -142,22 +153,6 @@ public class NewReplayManager : MonoBehaviour
 
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning
-    }
-
-    //Called by menumanager at the START of a run
-    //because inbetween rounds things like the killcam happen
-    //or, in 121212, the ending sequence too
-    //This is only resets the scene between ROUNDS
-    //not between GAMES. The entire game is reset between games
-    ///Well, I hope we don't do that in this game
-    public void ResetScene()
-    {
-        //Reset every resettableobject
-        //This only resets positios and rotation and scale
-        foreach (ResettableObject resettableObject in resettableObjects)
-        {
-            //resettableObject.ReplayReset();
-        }
     }
 
     //Changes the character that the player controls to the next one in the array

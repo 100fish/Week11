@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
+using static UnityEditor.FilePathAttribute;
 
 public class NewPlayerMovement : Entities
 {
@@ -135,11 +137,16 @@ public class NewPlayerMovement : Entities
 
     #endregion Inputsetup
 
+    [SerializeField] private LayerMask cameraLayerMask;
 
     protected override void Start()
     {
         base.Start();
-        Cursor.visible = false;
+
+        previousCameraPos = myCamera.transform.position;
+        previousCameraRot = myCamera.transform.rotation;
+
+        UnityEngine.Cursor.visible = false;
 
         newMenuManager = NewMenuManager.instance;
 
@@ -261,9 +268,17 @@ public class NewPlayerMovement : Entities
         }
     }
 
+         Vector3 previousCameraPos;
+        Quaternion previousCameraRot;
+
+    [SerializeField] private float cameraDistance;
 
     private void Update()
     {
+        
+        myCamera.transform.rotation = previousCameraRot;
+        myCamera.transform.position = previousCameraPos;
+
         ///DEBUG
         for (int i = 0; i < IDTexts.Length; i++)
         {
@@ -275,7 +290,9 @@ public class NewPlayerMovement : Entities
         //Punch
         if (punching) Punching();
         else if (windup_punching) WindUpPunch();
-       
+
+
+        if (movementState != MovementState.Controlled) return;
 
         //move character
         MovePlayer();
@@ -294,6 +311,24 @@ public class NewPlayerMovement : Entities
         rightFist.localPosition = new Vector3(0, 0, _gun_transform_z);
 
         AnimatingPlayer();
+
+        previousCameraRot = myCamera.transform.rotation;
+        previousCameraPos = myCamera.transform.position;
+
+        CameraRaycast();
+
+
+        //cameraDistance = Vector3.Distance(myCamera.transform.position, transform.position);
+    }
+
+    private void CameraRaycast()
+    {
+        RaycastHit ray;
+        if(Physics.Raycast(transform.position, (myCamera.transform.position - transform.position).normalized, out ray, cameraDistance, cameraLayerMask))
+        {
+            myCamera.transform.position = ray.point;
+        }
+
     }
 
     #region Camera and Zoom
@@ -492,6 +527,7 @@ public class NewPlayerMovement : Entities
         if(PunchHappening()) finalMove = new Vector3(finalMove.x / punch_move_divide, finalMove.y / punch_move_divide, finalMove.z / punch_move_divide);
 
         //print("finalMove: " + finalMove + ", moveAxis: " + _moveAxis + ", _moveSpeed" + _moveSpeed + ", _moveAxis: " + playerVelocity.y);
+        //Debug.Log("Hi I'm: " + id + "and I'm: " + movementState);
         characterController.Move(finalMove * Time.deltaTime);
 
         //characterController.Move(new Vector3(_moveAxis.x * _moveSpeed, gravity, _moveAxis.z * _moveSpeed));
@@ -558,6 +594,7 @@ public class NewPlayerMovement : Entities
     {
         if (movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
         {
+            Debug.Log("Hi I'm: " + id + "And I'm: " + movementState);
             CameraShake();
 
             switch (perpetrator.myEntityType)
@@ -597,7 +634,7 @@ public class NewPlayerMovement : Entities
     {
         playerInput = new PlayerInput();
 
-        myCamera.enabled = true;
+        //myCamera.enabled = true;
         myAudioListener.enabled = true;
 
         movementState = MovementState.Controlled;
@@ -622,7 +659,7 @@ public class NewPlayerMovement : Entities
     //Called by the replaymanager when changing the active player
     public void SetStatePlayback()
     {
-        myCamera.enabled = false;
+        //myCamera.enabled = false;
         myAudioListener.enabled = false;
 
         movementState = MovementState.Playback;
@@ -659,7 +696,8 @@ public class NewPlayerMovement : Entities
             replay_position = transform.position,
             replay_rotation = transform.rotation,
             replay_punched = punchType,
-            replay_dead = isDead
+            replay_dead = isDead,
+            replay_animationState = playerAnimator.CurrentState
         };
 
         //Punch type is initiall changed from none in the Punch Function
@@ -672,7 +710,7 @@ public class NewPlayerMovement : Entities
         return NewSnapshotInfo;
     }
 
-
+    private PlayerAnimationState previousReplayState;
     public void LoadSnapshot(NewPlayerSnapshotInfo info)
     {
         transform.position = info.replay_position;
@@ -691,6 +729,13 @@ public class NewPlayerMovement : Entities
             ///UNLESSTHISPUNCHISOVERWRITTENINWHICHCASENEVERMIND
             PunchManager.Punch(this, transform, info.replay_punched, true, punchRange);
         }
+
+        if(info.replay_animationState != previousReplayState)
+        {
+            playerAnimator.PlayAnimation(info.replay_animationState);
+        }
+
+        previousReplayState = info.replay_animationState;
     }
 
     #endregion

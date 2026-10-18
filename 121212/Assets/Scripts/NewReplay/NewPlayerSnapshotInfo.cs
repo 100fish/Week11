@@ -10,5 +10,7 @@ public class NewPlayerSnapshotInfo
     public Quaternion replay_rotation = Quaternion.identity;
     public PunchManager.PunchType replay_punched = PunchManager.PunchType.None;
     public bool replay_dead = false;
-    public List<Entities> affectedObjects = new List<Entities>(); 
+    public List<Entities> affectedObjects = new List<Entities>();
+
+    public PlayerAnimationState replay_animationState = PlayerAnimationState.Idle;
 }

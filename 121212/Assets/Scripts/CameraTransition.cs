@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CameraTransition : MonoBehaviour
 {
+    private NewMenuManager newMenuManager;
+
+    [SerializeField] private LayerMask camACullMask;
+
     [SerializeField] private float sceneTransitionTime;
     [SerializeField] private float sceneTransitionTimer;
 
@@ -27,6 +31,8 @@ public class CameraTransition : MonoBehaviour
     void Start()
     {
         sceneTransitionTimer = sceneTransitionTime;
+
+        newMenuManager = NewMenuManager.instance;
     }
 
     public void SetupFirstCamera(Camera newCam)
@@ -35,16 +41,32 @@ public class CameraTransition : MonoBehaviour
         Shader.SetGlobalFloat("_MyFireProgress", 2);
     }
 
-    public void StartTransition(Camera camA, Camera camB, TransitionCause cause)
+    public void StartTransition(Camera camA, Camera camB, NewMenuManager.RoundEndCause cause)
     {
+        Debug.Log("CAMERAGO!!!");
         camA.targetTexture = camART;
         camB.targetTexture = camBRT;
 
-        camA.cullingMask = 247;
+        switch (cause)
+        {
+            case NewMenuManager.RoundEndCause.fall:
+                transitionCause = TransitionCause.Environment;
+                break;
+            case NewMenuManager.RoundEndCause.projectile:
+                transitionCause = TransitionCause.Enemy;
+                break;
+            case NewMenuManager.RoundEndCause.player:
+                transitionCause = TransitionCause.Progression;
+                break;
+            case NewMenuManager.RoundEndCause.time:
+                transitionCause = TransitionCause.Environment;
+                break;
+            default:
+                break;
+        }
 
-        transitionCause = cause;
 
-        Shader.SetGlobalColor("_MyFireColour", colors[(int)cause]);
+        Shader.SetGlobalColor("_MyFireColour", colors[(int)transitionCause]);
         camART.Update();
     }
 
@@ -64,12 +86,11 @@ public class CameraTransition : MonoBehaviour
         }
         else
         {
-            EndCameraTransition.Invoke();
+            newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
 
-            
 
             sceneTransitionTimer = sceneTransitionTime;
-            Shader.SetGlobalFloat("_MyFireProgress", -1);
+            Shader.SetGlobalFloat("_MyFireProgress", 1);
             transitionCause = TransitionCause.None;
         }
 

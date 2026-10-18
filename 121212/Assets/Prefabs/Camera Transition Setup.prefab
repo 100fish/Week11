@@ -159,16 +159,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ccbe2f16dbaa5f4fb8a6309492641df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraTransition
-  sceneTransitionTime: 1
+  camACullMask:
+    serializedVersion: 2
+    m_Bits: 2007
+  sceneTransitionTime: 5
   sceneTransitionTimer: 0
   camART: {fileID: 8600000, guid: fd1d6101a4ec0374db47e19f3bff1170, type: 2}
   camBRT: {fileID: 8600000, guid: a0d5ad8a3f2e6984f9d9693b3ce5b0b6, type: 2}
   colors:
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 1, g: 0, b: 0, a: 0}
-  - {r: 0.2688679, g: 0.62580985, b: 1, a: 0}
-  - {r: 0.24062625, g: 0, b: 0.735849, a: 0}
-  targetMaterial: {fileID: 2100000, guid: 80c6a05c7c918364083e7f8b8a9e3dd7, type: 2}
+  - {r: 0.23921569, g: 0, b: 0.7372549, a: 0}
+  - {r: 0.27058825, g: 0.627451, b: 1, a: 0}
 --- !u!1 &5684163967804974015
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +240,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 4.5
-  m_Depth: 100
+  m_Depth: 90
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295

@@ -1791,6 +1791,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1992550343}
   - {fileID: 1177349051}
   - {fileID: 1073390570}
   - {fileID: 1414049332}
@@ -3162,6 +3163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMenuManager
   elevatorAnimator: {fileID: 576573417}
+  camTrans: {fileID: 1992550344}
   menuCamera: {fileID: 1398905198}
   gameCamera: {fileID: 0}
   gameState: 0
@@ -5002,6 +5004,83 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991161463}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1992550342
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 709044117}
+    m_Modifications:
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -42
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365451969292132010, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_Name
+      value: Camera Transition Setup
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164467451677598742, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+--- !u!4 &1992550343 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2302088605254699626, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+  m_PrefabInstance: {fileID: 1992550342}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1992550344 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5832031838676645943, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
+  m_PrefabInstance: {fileID: 1992550342}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ccbe2f16dbaa5f4fb8a6309492641df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraTransition
 --- !u!1001 &2074834127
 PrefabInstance:
   m_ObjectHideFlags: 0

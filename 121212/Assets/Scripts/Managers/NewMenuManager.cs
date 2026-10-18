@@ -8,6 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 public class NewMenuManager : MonoBehaviour
 {
     [SerializeField] private ElevatorAnimator elevatorAnimator;
+    [SerializeField] private CameraTransition camTrans;
 
     #region Input and Singleton setup
 
@@ -42,6 +43,7 @@ public class NewMenuManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
 
         instance = this;
 
@@ -738,14 +740,6 @@ public class NewMenuManager : MonoBehaviour
         //This function is where all of the between round work happens, as its the last
         //Thing that is called before the player is dropped into a new round
 
-        Debug.Log("RunIndex: "+runIndex);
-        //If the player that is meant to be controlled at this index hasn't been turned on already
-        if (runIndex != -1)
-        {
-            //Move to the next player
-            newReplayManager.NextActivePlayer(runIndex);
-            gameCamera = newReplayManager.players[runIndex+1].myCamera;
-        }
 
         //Increase the Run index because its a new round
         runIndex++;
@@ -840,18 +834,55 @@ public class NewMenuManager : MonoBehaviour
         //Here, we tell it that the player died and it does the UI Animation
         //We set the text depending on the death type
         //Then, it calls back to the menuManager and sets it back to countdown (in DEATHUIOUT)
+
+        Debug.Log("RunIndex: " + runIndex);
+        //If the player that is meant to be controlled at this index hasn't been turned on already
+
+
+
         switch (roundEndCause)
         {
             case RoundEndCause.fall:
+                if (runIndex != -1)
+                {
+                    //Move to the next player
+                    newReplayManager.NextActivePlayer(runIndex);
+                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
+                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Environment);
+                }
                 DeathUI.Death(roundEndCause);
                 break;
             case RoundEndCause.projectile:
+                if (runIndex != -1)
+                {
+                    //Move to the next player
+                    newReplayManager.NextActivePlayer(runIndex);
+                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
+                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Enemy);
+                }
+
                 DeathUI.Death(roundEndCause);
                 break;
             case RoundEndCause.player:
+                if (runIndex != -1)
+                {
+                    //Move to the next player
+                    newReplayManager.NextActivePlayer(runIndex);
+                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
+                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Progression);
+                }
+
                 DeathUI.Death(roundEndCause);
                 break;
             case RoundEndCause.time:
+                if (runIndex != -1)
+                {
+                    //Move to the next player
+                    newReplayManager.NextActivePlayer(runIndex);
+                    gameCamera = newReplayManager.players[runIndex + 1].myCamera;
+                    camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Environment);
+                }
+
                 DeathUI.Death(roundEndCause);
                 break;
             default:
@@ -965,6 +996,7 @@ public class NewMenuManager : MonoBehaviour
         runIndex = -1;
         newReplayManager.NextActivePlayer(runIndex);
         gameCamera = newReplayManager.players[0].myCamera;
+        camTrans.SetupFirstCamera(gameCamera);
     }
 
     //Called by the enemy when they dide

@@ -177,7 +177,7 @@ MonoBehaviour:
   barrel: {fileID: 667348197567360773}
   enemyRigidBody: {fileID: 3871457546657152799}
   attacking_distance: 60
-  time_between_shots_max: 3
+  time_between_shots_max: 1
   randomness_between_shots: 0.5
   charge_time_max: 0.25
   time_between_shots: 0
@@ -439,7 +439,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 10
+  m_Radius: 60
   m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &2644870555092678581
 GameObject:

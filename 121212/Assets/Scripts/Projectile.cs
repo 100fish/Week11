@@ -11,12 +11,14 @@ public class Projectile : Entities
     private Rigidbody rb;
     private MeshRenderer mr;
     private LineRenderer lr;
+    private ParticleSystem ps;
 
     [SerializeField] private float aimingTime;
     private float aimingTimer;
 
     [SerializeField] private float aimingSpeed;
     [SerializeField] private float firingSpeed;
+    [SerializeField] private Vector3 targetVector;
 
     [SerializeField] Material aimingMaterial;
     [SerializeField] Material firingMaterial;
@@ -45,6 +47,7 @@ public class Projectile : Entities
         rb = GetComponent<Rigidbody>();
         mr = GetComponent<MeshRenderer>();
         lr = GetComponent<LineRenderer>();
+        ps = GetComponent<ParticleSystem>();
 
         aimingTimer = aimingTime;
 
@@ -67,8 +70,12 @@ public class Projectile : Entities
 
     private void Update()
     {
-        transform.LookAt(targetPlayer.transform);
+        if(!fired)
+        {
+            transform.LookAt(targetPlayer.transform);
+        }
 
+        /*
         if(Vector3.Distance(transform.position, targetPlayer.transform.position) < targetPlayer.punchRange)
         {
             previousMaterial = mr.material;
@@ -77,7 +84,7 @@ public class Projectile : Entities
         else
         {
             mr.material = previousMaterial;
-        }
+        }*/
 
 
         Vector3[] newTargets = new Vector3[2] { transform.position, targetPlayer.transform.position };
@@ -97,6 +104,7 @@ public class Projectile : Entities
 
                 previousMaterial = firingMaterial;
                 mr.material = firingMaterial;
+                ps.Play();
                 fired = true;
             }
 

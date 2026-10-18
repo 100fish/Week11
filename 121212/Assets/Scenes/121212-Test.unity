@@ -3167,7 +3167,7 @@ MonoBehaviour:
   gameState: 0
   roundState: 0
   runStartTimeMax: 1
-  gameTimerLimit: 20
+  gameTimerLimit: 120
   enemyDeathCount: 0
   GameStateUIPanels:
   - {fileID: 49043232}

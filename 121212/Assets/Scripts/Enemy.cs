@@ -138,12 +138,17 @@ public class Enemy : Entities
         {
             //Debug.Log("Enemy shootTimer:" + id);
             //Debug.Log("Enemy playerList:" + myPlayerList.Count);
-            if (myPlayerList.Count > 0 && myPlayerList.Contains(newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform))
+            if (myPlayerList.Count > 0)
             {
-                //Debug.Log("Enemy SHOOTCHECK:" + id);
+                Debug.Log("Runindex: " + newMenuManager.runIndex);
+                Debug.Log("Roundstate: " + newMenuManager.roundState);
+                if(myPlayerList.Contains(newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform))
+                {
+                    //Debug.Log("Enemy SHOOTCHECK:" + id);
 
-                shootTimer = UnityEngine.Random.Range(shootTime - .5f, shootTime + .5f);
-                Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+                    shootTimer = UnityEngine.Random.Range(shootTime - .5f, shootTime + .5f);
+                    Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+                }
             }
         }
 

@@ -43,7 +43,7 @@ public class PunchManager : MonoBehaviour
             //(This function is static so the list of enemies has to be passed in by the caller lol
             //if they have a reference to replaymanager they can get it from there
             //or get a reference to replaymanager from menumanager
-            Debug.Log(instance.entities.Count);
+            //Debug.Log(instance.entities.Count);
             for (int i = 0; i < instance.entities.Count; i++)
             {
                 //If an entity is within range

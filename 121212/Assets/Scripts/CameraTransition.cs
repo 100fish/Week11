@@ -86,7 +86,9 @@ public class CameraTransition : MonoBehaviour
         }
         else
         {
+
             newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
+
 
 
             sceneTransitionTimer = sceneTransitionTime;

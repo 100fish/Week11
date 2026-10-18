@@ -742,6 +742,7 @@ public class NewMenuManager : MonoBehaviour
             //gameCamera = newReplayManager.players[runIndex + 1].myCamera;
             //camTrans.StartTransition(newReplayManager.players[runIndex].myCamera, newReplayManager.players[runIndex + 1].myCamera, CameraTransition.TransitionCause.Environment);
         }
+
         //Increase the Run index because its a new round
         runIndex++;
 
@@ -762,7 +763,7 @@ public class NewMenuManager : MonoBehaviour
 
     private void ChangeFromGameplay()
     {
-        newReplayManager.StopRound(runIndex);
+        //newReplayManager.StopRound(runIndex);
 
         elevatorClosed = true;
         elevatorAnimator.Reset_Elevator();
@@ -859,6 +860,8 @@ public class NewMenuManager : MonoBehaviour
             default:
                 break;
         }
+
+        //ChangeRoundState(RoundState.Countdown);
     }
 
     private void PlayerTransition(RoundEndCause roundEndCause)

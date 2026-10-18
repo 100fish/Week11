@@ -3167,6 +3167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 653f6ea7351ae2e40b639af985fb03d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMenuManager
+  elevatorAnimator: {fileID: 0}
   menuCamera: {fileID: 1398905198}
   gameCamera: {fileID: 0}
   gameState: 0
@@ -4328,6 +4329,10 @@ PrefabInstance:
       propertyPath: NoTutorial
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4524356981700846802, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5189694360191374887, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4367,6 +4372,14 @@ PrefabInstance:
     - target: {fileID: 5189694360191374887, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7607688690832564196, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954819281490370921, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9174087233806766938, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: text_p

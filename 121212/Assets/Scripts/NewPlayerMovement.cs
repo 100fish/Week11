@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using Unity.VectorGraphics;
@@ -162,6 +163,7 @@ public class NewPlayerMovement : Entities
 
     #endregion Inputsetup
 
+    //[SerializeField] private Vector3 startCameraPos = new Vector3 (0.42899999f, 1.704f, -2.24099994f);
 
     protected override void Start()
     {
@@ -297,8 +299,6 @@ public class NewPlayerMovement : Entities
 
     private void Update()
     {   
-        myCamera.transform.rotation = previousCameraRot;
-        myCamera.transform.position = previousCameraPos;
 
         ///DEBUG
         for (int i = 0; i < IDTexts.Length; i++)
@@ -308,12 +308,17 @@ public class NewPlayerMovement : Entities
 
         if (movementState != MovementState.Controlled) return;
 
+        myCamera.transform.localRotation = previousCameraRot;
+        myCamera.transform.localPosition = previousCameraPos;
+
         //Punch
         if (punching) Punching();
         else if (windup_punching) WindUpPunch();
 
 
         if (movementState != MovementState.Controlled) return;
+
+
 
         //move character
         MovePlayer();
@@ -323,8 +328,8 @@ public class NewPlayerMovement : Entities
 
         AnimatingPlayer();
 
-        previousCameraRot = myCamera.transform.rotation;
-        previousCameraPos = myCamera.transform.position;
+        previousCameraRot = myCamera.transform.localRotation;
+        previousCameraPos = myCamera.transform.localPosition;
 
         CameraRaycast();
 
@@ -460,6 +465,7 @@ public class NewPlayerMovement : Entities
         characterController.Move(finalMove * Time.deltaTime);
         held_punch_for -= Time.deltaTime;
 
+        Debug.Log("Hi I'm " + id);
         PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, punchRange);
         punchType = PunchManager.PunchType.Left;
 
@@ -778,7 +784,7 @@ public class NewPlayerMovement : Entities
 
         meshRenderer.material = controlledMateral;
 
-        //myCamera.enabled = true;
+        //myCamera.transform.position = startCameraPos;
         myAudioListener.enabled = true;
 
         movementState = MovementState.Controlled;
@@ -812,7 +818,7 @@ public class NewPlayerMovement : Entities
         movementState = MovementState.Playback;
 
         //playerInput.Disable();
-        playerInput.Standard.Disable();
+        playerInput.Disable();
         playerInput.Standard.Shoot.started -= LeftPunch;
         playerInput.Standard.Shoot.canceled -= PunchEnd;
 

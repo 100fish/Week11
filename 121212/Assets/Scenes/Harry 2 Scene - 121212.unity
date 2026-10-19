@@ -568,7 +568,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 127484043}
-  - component: {fileID: 127484044}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Elevator
@@ -611,27 +610,6 @@ Transform:
   - {fileID: 828166492}
   m_Father: {fileID: 1073875411}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &127484044
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 127484042}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5, y: 6, z: 10.03}
-  m_Center: {x: -2.5, y: 3, z: 0}
 --- !u!1 &239619316
 GameObject:
   m_ObjectHideFlags: 0
@@ -3195,8 +3173,8 @@ MonoBehaviour:
   newReplayManager: {fileID: 0}
   runIndex: -1
   levels:
-  - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
   - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
+  - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
 --- !u!1 &1073875410
 GameObject:
   m_ObjectHideFlags: 0

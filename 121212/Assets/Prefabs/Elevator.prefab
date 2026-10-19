@@ -1341,9 +1341,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3869930039382203147}
   - component: {fileID: 4127717124338255338}
+  - component: {fileID: 4583550186247423650}
   m_Layer: 0
   m_Name: Elevator
-  m_TagString: Untagged
+  m_TagString: Elevator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1385,6 +1386,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorAnimator
   animator: {fileID: 654250088819075708}
   deathText: {fileID: 316495157988868432}
+--- !u!65 &4583550186247423650
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8072684369253087465}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 2.23, y: 0, z: 1.07}
 --- !u!1 &8240183449749695347
 GameObject:
   m_ObjectHideFlags: 0

@@ -262,7 +262,7 @@ public class NewMenuManager : MonoBehaviour
                         //Set and format timer text
                         gameTimerText.text = Mathf.Round(gameTimer).ToString() + " seconds";
 
-                        Debug.Log("Runindex player position: " + new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
+                        //Debug.Log("Runindex player position: " + new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
                         //Shader.SetGlobalVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 1000);
                         oceanBump.SetVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
 

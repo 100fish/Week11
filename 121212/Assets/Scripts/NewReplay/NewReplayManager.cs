@@ -65,7 +65,9 @@ public class NewReplayManager : MonoBehaviour
 
     //the timer used to track when its time to record a new frame. updated by fixed deltatime every fixed frame
     private float m_snapshotDeltaTotal;
-    private float m_time = 0;
+    //private float m_time = 0(TextGenerato);
+
+    public float m_time { get; private set; }
 
     //Used for replay, the current replay frame time
     public int snapshotIndex = 0;

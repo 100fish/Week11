@@ -13,27 +13,14 @@ public class EndUI : MonoBehaviour
     [Header("EndCanvasScores")]
     public EndCanvasScore Attempts;
     public EndCanvasScore Times;
-    public EndCanvasScore Combos;
+    public EndCanvasScore Kills;
     public EndCanvasScore OverallScore;
 
     [Header("Animator")]
     public Animator UIAnimator;
     public Animator RetryAnimator;
 
-    public void Start_UI()
-    {
-        if(overall_score < 0.4f) RetryAnimator.SetBool("Retry", true);
-        else RetryAnimator.SetBool("Retry", false);
-
-        UIAnimator.SetBool("Play", true);
-    }
-
-    public void End_UI()
-    {
-        UIAnimator.SetBool("Play", false);
-    }
-
-    public void Pass_Attempts(int attempts)
+    public void Pass_Attempts(float attempts)
     {
         overall_score = 0;
 
@@ -55,12 +42,12 @@ public class EndUI : MonoBehaviour
         overall_score += _value;
     }
 
-    public void Pass_Combos(int Combo)
+    public void Pass_Kills(float Kills)
     {
-        float _value = Combo / ComboCount;
+        float _value = Kills / ComboCount;
         if (_value > 1) _value = 1;
 
-        Combos.Set_Score(_value);
+        this.Kills.Set_Score(_value);
 
         overall_score += _value;
     }
@@ -68,8 +55,23 @@ public class EndUI : MonoBehaviour
     public void Pass_FinalScore()
     {
         float _value = overall_score / 3;
-        if(_value > 1) _value = 1;
+        if (_value > 1) _value = 1;
 
         OverallScore.Set_Score(_value);
     }
+
+    public void Start_UI()
+    {
+        if(overall_score < 0.4f) RetryAnimator.SetBool("Retry", true);
+        else RetryAnimator.SetBool("Retry", false);
+
+        UIAnimator.SetBool("Play", true);
+    }
+
+    public void End_UI()
+    {
+        UIAnimator.SetBool("Play", false);
+    }
+
+
 }

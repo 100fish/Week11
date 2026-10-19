@@ -2440,8 +2440,13 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 600, y: 600, z: 600}
-  m_Center: {x: 0, y: -300, z: 0}
+  m_Size: {x: 2000, y: 600, z: 2000}
+  m_Center: {x: 0, y: -1000, z: 0}
+--- !u!23 &902355177 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
+  m_PrefabInstance: {fileID: 770885732}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &951980402
 GameObject:
   m_ObjectHideFlags: 0
@@ -3164,6 +3169,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NewMenuManager
   elevatorAnimator: {fileID: 576573417}
   camTrans: {fileID: 1992550344}
+  ocean: {fileID: 902355177}
+  oceanBump: {fileID: 0}
   menuCamera: {fileID: 1398905198}
   gameCamera: {fileID: 0}
   gameState: 0

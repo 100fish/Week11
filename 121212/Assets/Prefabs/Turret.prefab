@@ -176,7 +176,7 @@ MonoBehaviour:
   myEntityType: 0
   barrel: {fileID: 667348197567360773}
   enemyRigidBody: {fileID: 3871457546657152799}
-  attacking_distance: 60
+  attacking_distance: 25
   time_between_shots_max: 1
   randomness_between_shots: 0.5
   charge_time_max: 0.25
@@ -240,7 +240,7 @@ MonoBehaviour:
     m_Bits: 1024
   projectileSpawn: {fileID: 1493225532344331425}
   projectile: {fileID: 2495954065950604686, guid: 4b19a800cedc2fb448d58fe0e1dda3ef, type: 3}
-  shootTime: 3
+  shootTime: 1.5
 --- !u!65 &5662471101290131797
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -287,8 +287,8 @@ public class NewPlayerMovement : Entities
 
     private void Update()
     {   
-        //myCamera.transform.rotation = previousCameraRot;
-        //myCamera.transform.position = previousCameraPos;
+        myCamera.transform.rotation = previousCameraRot;
+        myCamera.transform.position = previousCameraPos;
 
         ///DEBUG
         for (int i = 0; i < IDTexts.Length; i++)
@@ -308,13 +308,13 @@ public class NewPlayerMovement : Entities
         //move character
         MovePlayer();
         //rotate character
-        //RotateCamera();
+        RotateCamera();
         transform.Rotate(new Vector3(0, playerInput.Standard.MouseLook.ReadValue<Vector2>().x, 0) * lookSpeed);
 
         AnimatingPlayer();
 
-        //previousCameraRot = myCamera.transform.rotation;
-        //previousCameraPos = myCamera.transform.position;
+        previousCameraRot = myCamera.transform.rotation;
+        previousCameraPos = myCamera.transform.position;
 
         CameraRaycast();
 
@@ -617,11 +617,11 @@ public class NewPlayerMovement : Entities
         float _current_y_pos = transform.position.y;
 
         bool _can_decrease_slide = true;
-        if (Mathf.Round(_current_y_pos * 5) != Mathf.Round(_last_y_pos * 5)) _can_decrease_slide = false;
+        if (Mathf.Round(_current_y_pos * 5) != Mathf.Round(_last_y_pos * 10)) _can_decrease_slide = false;
  
         _last_y_pos = _current_y_pos;
 
-        print("slide_decrease: lsst_pos = " + Mathf.Round(_last_y_pos * 5) + ", new_pos: " + Mathf.Round(_current_y_pos * 5) + ", can_decrease_slide: " + _can_decrease_slide);
+        print("slide_decrease: lsst_pos = " + Mathf.Round(_last_y_pos * 10) + ", new_pos: " + Mathf.Round(_current_y_pos * 5) + ", can_decrease_slide: " + _can_decrease_slide);
 
         if (!_can_decrease_slide)
         {

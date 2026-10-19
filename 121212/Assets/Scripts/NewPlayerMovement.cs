@@ -11,6 +11,12 @@ using static UnityEditor.FilePathAttribute;
 
 public class NewPlayerMovement : Entities
 {
+    [SerializeField] Material aliveMateral;
+    [SerializeField] Material deadMateral;
+    [SerializeField] Material controlledMateral;
+
+    [SerializeField] SkinnedMeshRenderer meshRenderer;
+
     //When a new player is created, its because its about to be controlled
     //So we default to controlled
     public MovementState movementState = MovementState.Controlled;
@@ -719,6 +725,9 @@ public class NewPlayerMovement : Entities
 
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
+
+        meshRenderer.material = deadMateral;
+
         if (movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
         {
             Debug.Log("Hi I'm: " + id + "And I'm: " + movementState);
@@ -761,6 +770,8 @@ public class NewPlayerMovement : Entities
     {
         playerInput = new PlayerInput();
 
+        meshRenderer.material = controlledMateral;
+
         //myCamera.enabled = true;
         myAudioListener.enabled = true;
 
@@ -788,6 +799,9 @@ public class NewPlayerMovement : Entities
     {
         //myCamera.enabled = false;
         myAudioListener.enabled = false;
+
+
+        meshRenderer.material = aliveMateral;
 
         movementState = MovementState.Playback;
 
@@ -857,10 +871,16 @@ public class NewPlayerMovement : Entities
             PunchManager.Punch(this, transform, info.replay_punched, true, punchRange);
         }
 
-        if(info.replay_animationState != previousReplayState)
+        if(newMenuManager.newReplayManager.m_time < 0.2f)
+        {
+
+            playerAnimator.PlayAnimation(PlayerAnimationState.Idle);
+        }
+        else if(info.replay_animationState != previousReplayState)
         {
             playerAnimator.PlayAnimation(info.replay_animationState);
         }
+
 
         previousReplayState = info.replay_animationState;
     }

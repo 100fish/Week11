@@ -158,6 +158,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewPlayerMovement
   myEntityType: 0
+  aliveMateral: {fileID: 2100000, guid: 755a4f7e29c4aa04a96a4bb1ced1458c, type: 2}
+  deadMateral: {fileID: 2100000, guid: 84c9b86f99d21fe4c9a78abfb7a6fd52, type: 2}
+  controlledMateral: {fileID: 2100000, guid: d6f6ad72929b6fa4fa80eb4b319bb25d, type: 2}
+  meshRenderer: {fileID: 6810903480793881792}
   movementState: 0
   id: 0
   IDTexts:
@@ -1932,6 +1936,11 @@ MonoBehaviour:
 --- !u!4 &3305624891052637877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: edfbf0bd0f888574599a27889df67a6e, type: 3}
+  m_PrefabInstance: {fileID: 3050424786432612702}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6810903480793881792 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8417361359673230750, guid: edfbf0bd0f888574599a27889df67a6e, type: 3}
   m_PrefabInstance: {fileID: 3050424786432612702}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &9222318923445870251 stripped

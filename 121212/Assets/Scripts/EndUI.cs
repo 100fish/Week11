@@ -3,9 +3,9 @@ using UnityEngine;
 public class EndUI : MonoBehaviour
 {
     [Header("EndValues")]
-    public int BestAttempts;
+    public float BestAttempts;
     public float BestTime;
-    public int ComboCount;
+    public float KillCount;
 
     float overall_score = 0;
 
@@ -13,27 +13,28 @@ public class EndUI : MonoBehaviour
     [Header("EndCanvasScores")]
     public EndCanvasScore Attempts;
     public EndCanvasScore Times;
-    public EndCanvasScore Combos;
+    public EndCanvasScore Kills;
     public EndCanvasScore OverallScore;
 
     [Header("Animator")]
     public Animator UIAnimator;
     public Animator RetryAnimator;
 
-    public void Start_UI()
-    {
-        if(overall_score < 0.4f) RetryAnimator.SetBool("Retry", true);
-        else RetryAnimator.SetBool("Retry", false);
 
-        UIAnimator.SetBool("Play", true);
+    // Pass Beats
+    // Pass Attempts
+    // Pass Time
+    // Pass Kills
+    // Then finally play the animation: Start_UI
+
+    public void Pass_Bests(Vector3 _stats)
+    {
+        BestAttempts = _stats.x;
+        BestTime = _stats.y;
+        KillCount = _stats.z;
     }
 
-    public void End_UI()
-    {
-        UIAnimator.SetBool("Play", false);
-    }
-
-    public void Pass_Attempts(int attempts)
+    public void Pass_Attempts(float attempts)
     {
         overall_score = 0;
 
@@ -55,21 +56,38 @@ public class EndUI : MonoBehaviour
         overall_score += _value;
     }
 
-    public void Pass_Combos(int Combo)
+    public void Pass_Kills(float Kills)
     {
-        float _value = Combo / ComboCount;
+        float _value = Kills / KillCount;
         if (_value > 1) _value = 1;
 
-        Combos.Set_Score(_value);
+        this.Kills.Set_Score(_value);
 
         overall_score += _value;
     }
 
-    public void Pass_FinalScore()
+    public void FinalScore()
     {
         float _value = overall_score / 3;
-        if(_value > 1) _value = 1;
+        if (_value > 1) _value = 1;
 
         OverallScore.Set_Score(_value);
     }
+
+    public void Start_UI()
+    {
+        FinalScore();
+
+        if (overall_score < 1.2f) RetryAnimator.SetBool("Retry", true);
+        else RetryAnimator.SetBool("Retry", false);
+
+        UIAnimator.SetBool("Play", true);
+    }
+
+    public void End_UI()
+    {
+        UIAnimator.SetBool("Play", false);
+    }
+
+
 }

@@ -238,7 +238,11 @@ public class NewPlayerMovement : Entities
     {
         upper_cut = _upper_cut;
 
-        if(upper_cut) playerAnimator.Start_Uppercut();
+        if(upper_cut) 
+        {
+            playerAnimator.Start_Uppercut();
+            
+        }
         else playerAnimator.Start_Punch();
 
         held_punch_for = 0;
@@ -462,6 +466,8 @@ public class NewPlayerMovement : Entities
         if (held_punch_for <= 0)
         {
             punching = false;
+
+            if(upper_cut) playerVelocity.y = Mathf.Sqrt(jump_height * -2f * gravity);
         }
     }
 

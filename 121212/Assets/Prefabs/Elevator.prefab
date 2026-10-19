@@ -1359,7 +1359,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 67.49, y: -1.132, z: 55.72}
-  m_LocalScale: {x: 2.6, y: 1.3, z: 2.6}
+  m_LocalScale: {x: 5.2323556, y: 2, z: 5.2323556}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1410154642875179616}
@@ -1386,6 +1386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorAnimator
   animator: {fileID: 654250088819075708}
   deathText: {fileID: 316495157988868432}
+  startOpen: 0
 --- !u!65 &4583550186247423650
 BoxCollider:
   m_ObjectHideFlags: 0

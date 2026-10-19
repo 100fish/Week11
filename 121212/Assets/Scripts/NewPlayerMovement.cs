@@ -1,17 +1,12 @@
-using System;
-using System.Collections;
+using NUnit.Framework;
 using TMPro;
-using Unity.VectorGraphics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using static UnityEditor.FilePathAttribute;
+
 
 public class NewPlayerMovement : Entities
 {
+    bool check_framerate = false;
     [SerializeField] Material aliveMateral;
     [SerializeField] Material deadMateral;
     [SerializeField] Material controlledMateral;
@@ -51,6 +46,7 @@ public class NewPlayerMovement : Entities
     [Header("Camera")]
     //This player's camera
     [SerializeField] public Camera myCamera;
+    [SerializeField] public float min_FOV, max_FOV;
     //The highest angle the player can look
     [SerializeField] float camera_max = 80;
 
@@ -119,6 +115,22 @@ public class NewPlayerMovement : Entities
     public AnimationCurve PunchEvaluation;
     bool upper_cut = false;
 
+
+    bool can_jump = true;
+    public void Set_Jump(bool _can)
+    {
+        can_jump = _can;
+        print("hefffre 3: " + can_jump);
+    }
+    bool can_double_jump = true;
+    public void Set_DoubleJump(bool _can) => can_double_jump = _can;
+    bool can_slide= true;
+    public void Set_Slide(bool _can) => can_slide = _can;
+    bool can_punch = true;
+    public void Set_Punch(bool _can) => can_punch = _can;
+    bool can_uppercut = false;
+    public void Set_Uppercut(bool _can) => can_uppercut = _can;
+
     #endregion
 
     #region Punch Setup
@@ -147,6 +159,10 @@ public class NewPlayerMovement : Entities
         myCamera = GetComponentInChildren<Camera>();
 
         playerInput = new PlayerInput();
+
+        Application.targetFrameRate = 60;
+
+        print("hefffre 2");
     }
 
     protected override void OnEnable()
@@ -208,11 +224,11 @@ public class NewPlayerMovement : Entities
 
     private void LeftPunch(InputAction.CallbackContext context)
     {
+        if (!can_punch) return;
         if (!Can_LeftPunch()) return;
 
 
         ///Maybe Harry should check over this type stuff
-        StartUI.Move_Through_UI(3);
         //camera_shake.SetTrigger("Screenshake");
 
         // AudioManager.PlaySound(SFX.GunShot, 0.2f);
@@ -224,11 +240,11 @@ public class NewPlayerMovement : Entities
 
     private void RightPunch(InputAction.CallbackContext context)
     {
+        if (!can_uppercut) return;
         if (!Can_LeftPunch()) return;
 
 
-        ///Maybe Harry should check over this type stuff
-        StartUI.Move_Through_UI(3);
+        ///Maybe Harry should check over this type stuf
         //camera_shake.SetTrigger("Screenshake");
 
         // AudioManager.PlaySound(SFX.GunShot, 0.2f);
@@ -270,11 +286,11 @@ public class NewPlayerMovement : Entities
     private void Slide(InputAction.CallbackContext contex) => Slide();
     private void Slide()
     {
+        if (!can_slide) return;
+
         if (movementState == MovementState.Controlled)
         {
-            StartUI.Move_Through_UI(2);
-
-            if (!groundedPlayer) { slide_memory = slide_memory_max; return; }
+            if (!groundedPlayer && current_kyote_time <= 0) { slide_memory = slide_memory_max; return; }
             if (slide_delaying) return;
 
             AudioManager.PlaySound(SFX.SlideRoll, 0.2f);
@@ -305,6 +321,8 @@ public class NewPlayerMovement : Entities
     Vector3 previousCameraPos;
     Quaternion previousCameraRot;
 
+    int[] fps = new int[30];
+    int current_fps = 0;
 
     private void Update()
     {   
@@ -314,6 +332,8 @@ public class NewPlayerMovement : Entities
         {
             IDTexts[i].text = NumberToWords(id + 1).ToUpper();
         }
+
+        Check_FrameRate();
 
         if (movementState != MovementState.Controlled) return;
 
@@ -359,7 +379,38 @@ public class NewPlayerMovement : Entities
             player_collider.center = Vector3.zero;
         }
 
+        float _current_jump_mult = current_jump_multiplier - 1.5f;
+        if (_current_jump_mult <= 0) _current_jump_mult = 0;
+        if (_current_jump_mult > 2) _current_jump_mult = 2;
+
+        float _FOV = Mathf.Lerp(min_FOV, max_FOV, _current_jump_mult / 2);
+
+        myCamera.fieldOfView = _FOV;
+
         //cameraDistance = Vector3.Distance(myCamera.transform.position, transform.position);
+    }
+
+    public void Check_FrameRate()
+    {
+        IDTexts[2].gameObject.SetActive(check_framerate);
+
+        if (!check_framerate) return;
+
+        current_fps++;
+        if (current_fps >= fps.Length) current_fps = 0;
+
+        fps[current_fps] = Mathf.RoundToInt(1.0f / Time.deltaTime);
+
+        float _current_fps = 0;
+
+        for (int i = 0; i < fps.Length; i++)
+        {
+            _current_fps += fps[i];
+        }
+
+        _current_fps /= fps.Length;
+
+        IDTexts[2].text = (Mathf.RoundToInt(_current_fps)).ToString() + "fps";
     }
 
     private void CameraRaycast()
@@ -475,14 +526,22 @@ public class NewPlayerMovement : Entities
         held_punch_for -= Time.deltaTime;
 
         Debug.Log("Hi I'm " + id);
-        PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, punchRange);
-        punchType = PunchManager.PunchType.Left;
+        
+        if(upper_cut)
+        {
+            PunchManager.Punch(this, transform, PunchManager.PunchType.Right, true, punchRange);
+            punchType = PunchManager.PunchType.Right;
+        } else
+        {
+            PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, punchRange);
+            punchType = PunchManager.PunchType.Left;
+        }
 
         if (held_punch_for <= 0)
         {
             punching = false;
 
-            if(upper_cut) playerVelocity.y = Mathf.Sqrt(jump_height * -1f * gravity);
+            if (upper_cut) playerVelocity.y = Mathf.Sqrt(jump_height * -1f * gravity);
         }
     }
 
@@ -564,13 +623,11 @@ public class NewPlayerMovement : Entities
                 {
                     jumped = false;
                     double_jumped = true;
-                    StartUI.Move_Through_UI(1);
                     AudioManager.PlaySound(SFX.Jump, 0.1f);
                 }
                 else
                 {
                     jumped = true;
-                    StartUI.Move_Through_UI(0);
                     double_jumped = false;
                     AudioManager.PlaySound(SFX.DoubleJump, 0.25f);
 
@@ -625,10 +682,12 @@ public class NewPlayerMovement : Entities
 
     public bool Can_Jump()
     {
+        if (!can_jump) return false;
+
         if (!groundedPlayer)
         {
             if (current_kyote_time >= 0) return true;
-            else if (double_jumped) return false;
+            else if (!can_double_jump || double_jumped) return false;
         }
 
         return true;
@@ -730,7 +789,7 @@ public class NewPlayerMovement : Entities
             float _dist = Mathf.Round(_distance_between_y_pos * 500) / 500;
             print("distance: " + _dist);
 
-            if ((falling_time_to_reach_anim >= max_falling_time_to_reach_anim || falling_time_to_reach_anim >= 0.1f && _distance_between_y_pos > 0.75f) && _dist > 0.1f)
+            if ((falling_time_to_reach_anim >= max_falling_time_to_reach_anim || falling_time_to_reach_anim >= 0.1f && _dist > 0.075f) && _dist > 0.05f)
             {
                 if (double_jumped) playerAnimator.DoubleJump();
                 else playerAnimator.Falling();

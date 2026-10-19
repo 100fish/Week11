@@ -178,6 +178,8 @@ MonoBehaviour:
   leftFist: {fileID: 5920340936208318840}
   rightFist: {fileID: 5120473474204662150}
   myCamera: {fileID: 3449297769188403971}
+  min_FOV: 90
+  max_FOV: 120
   camera_max: 80
   camera_speed_x: 0
   camera_speed_y: 0
@@ -185,7 +187,7 @@ MonoBehaviour:
   slide_camera_y_change: 0
   cameraLayerMask:
     serializedVersion: 2
-    m_Bits: 1975
+    m_Bits: 1431
   cameraDistance: 3
   moveSpeed: 15
   lookSpeed: 0.3
@@ -991,9 +993,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: 1
@@ -1329,7 +1331,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1793676574489150802
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1337,16 +1339,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6938212927720633827}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000027716153}
-  m_LocalPosition: {x: 0, y: 0, z: 0.78962}
+  m_LocalRotation: {x: 0, y: 0.5, z: -0, w: -0.8660254}
+  m_LocalPosition: {x: 0, y: 0, z: 0.79}
   m_LocalScale: {x: 0.06575321, y: 0.06575321, z: 0.06575321}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4486808946240348731}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 300, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -949.17, y: -538.65}
+  m_AnchoredPosition: {x: -948.25, y: -538.65}
   m_SizeDelta: {x: 20, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8313728403248879821
@@ -1377,7 +1379,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ID
+  m_text: 60 fps
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1404,11 +1406,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
+  m_fontSize: 7.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 0
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1

@@ -232,6 +232,8 @@ public class Enemy : Entities
         ///Lives
         ///
 
+        StartUI.Punch_Hit_Enemy();
+
         enemyReplayState = EnemyReplayState.Active;
 
         if (enemyState != EnemyState.Dead)

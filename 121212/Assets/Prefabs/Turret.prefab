@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1493225532344331425}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Projectile Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 2344820363218039878}
   - component: {fileID: 4214285098205197134}
   - component: {fileID: 6149368784970132450}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 4806561078351318417}
   - component: {fileID: 1489228035880395409}
   - component: {fileID: 2574631417472587937}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Turret
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 2362731181570388798}
   - component: {fileID: 4171567830695051771}
   - component: {fileID: 5242414372780085571}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Base.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -591,7 +591,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 667348197567360773}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BarrelContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -624,7 +624,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4004622054685696639}
   - component: {fileID: 546725132545123614}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -673,7 +673,7 @@ GameObject:
   - component: {fileID: 713514118982673583}
   - component: {fileID: 310532630726771644}
   - component: {fileID: 6482966942344061214}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -811,7 +811,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2312239351280817891}
   - component: {fileID: 8330419756909084312}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: DummyTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -870,7 +870,7 @@ GameObject:
   - component: {fileID: 8561089625034810305}
   - component: {fileID: 1265931501661321568}
   - component: {fileID: 445751359041367502}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1112,6 +1112,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParticleSystem (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7043411277993212437, guid: ed712a41ea4584646bda0b95a4f0c40d, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1242,6 +1246,10 @@ PrefabInstance:
     - target: {fileID: 7043411277993212437, guid: ed712a41ea4584646bda0b95a4f0c40d, type: 3}
       propertyPath: m_Name
       value: ParticleSystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 7043411277993212437, guid: ed712a41ea4584646bda0b95a4f0c40d, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

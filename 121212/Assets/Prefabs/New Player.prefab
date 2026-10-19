@@ -204,6 +204,7 @@ MonoBehaviour:
   max_jump_input_storage: 0.1
   falling_time_to_reach_anim: 0
   max_falling_time_to_reach_anim: 0.075
+  animation_y_pos_dif: 0.17
   windup_punching: 0
   punching: 0
   cannot_punch_delay: 0.25

@@ -1860,6 +1860,10 @@ PrefabInstance:
       value: Ocean (1)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
       propertyPath: m_TagString
       value: Kill
       objectReference: {fileID: 0}
@@ -1957,6 +1961,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
       propertyPath: m_Name
       value: Ocean
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
       propertyPath: m_TagString
@@ -3170,7 +3178,7 @@ MonoBehaviour:
   elevatorAnimator: {fileID: 576573417}
   camTrans: {fileID: 1992550344}
   ocean: {fileID: 902355177}
-  oceanBump: {fileID: 2100000, guid: 36df384319b48ac439d3a9fb6adeddbc, type: 2}
+  oceanBump: {fileID: 0}
   menuCamera: {fileID: 1398905198}
   gameCamera: {fileID: 0}
   gameState: 0
@@ -3195,8 +3203,8 @@ MonoBehaviour:
   newReplayManager: {fileID: 0}
   runIndex: -1
   levels:
-  - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
   - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
+  - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
 --- !u!1 &1073875410
 GameObject:
   m_ObjectHideFlags: 0

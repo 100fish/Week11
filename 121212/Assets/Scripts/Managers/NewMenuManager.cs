@@ -8,6 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class NewMenuManager : MonoBehaviour
 {
+    [SerializeField] private EndUI endUI;
     [SerializeField] private ElevatorAnimator elevatorAnimator;
     [SerializeField] private CameraTransition camTrans;
     [SerializeField] private MeshRenderer ocean;
@@ -255,6 +256,7 @@ public class NewMenuManager : MonoBehaviour
 
                         //Keep track of game time for end stats
                         totalTime += Time.deltaTime;
+                        currentStats.y += Time.deltaTime;
 
                         //Keep track of round time 
                         gameTimer -= Time.deltaTime;
@@ -415,6 +417,8 @@ public class NewMenuManager : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    [SerializeField] Vector3[] levelBests;
+
     private void ChangeFromPlaying()
     {
         //Stop time
@@ -422,6 +426,13 @@ public class NewMenuManager : MonoBehaviour
         //Free the cursor
         //save mouse's position on UI
         mousePosOnUI = new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value);
+
+        elevatorClosed = true;
+        elevatorAnimator.Reset_Elevator();
+
+        newReplayManager.Stop();
+
+
     }
     private void ChangeToPlaying()
     {
@@ -429,6 +440,7 @@ public class NewMenuManager : MonoBehaviour
         if(!tutorialCompleted)
         {
             InitializePlayerAndEnemies();
+            endUI.End_UI();
         }
         Time.timeScale = 1;
 
@@ -449,34 +461,39 @@ public class NewMenuManager : MonoBehaviour
         {
             ChangeRoundState(RoundState.Tutorial);
         }
-        
+
+        currentStats.x = 0;
+        currentStats.y = 0;
+        currentStats.z = 0;
+
     }
     private void ChangeFromEnd()
     {
-        UnloadLevel(currentLevelObject);
-        currentLevel++;
+
     }
 
     private void ChangeToEnd()
     {
-        gameState = GameState.End;
 
-        //Play time for dynamic view at the end
-        Time.timeScale = 1;
-
-        //Stop the recordingandplayback
-        newReplayManager.Stop();
-
-        ///Turn stuff on that points the player back to the elevator here
     }
 
     private void ChangeFromElevator()
     {
 
     }
+    private Vector3 currentStats = new Vector3(0,0,0);
 
     private void ChangeToElevator()
     {
+
+        Time.timeScale = 1;
+
+        currentStats.x = runIndex + 1;
+        currentStats.z = enemyDeathCount;
+
+        UnloadLevel(currentLevelObject);
+        currentLevel++;
+
         //call this when the player walks back into the elevator
         FocusUIPanel(GameStateUIPanels[(int)GameState.Elevator]);
         if((int)currentLevel > levels.Length)
@@ -488,9 +505,17 @@ public class NewMenuManager : MonoBehaviour
             LoadLevel(currentLevel);
         }
 
-        elevatorText.text = "USED UP\n"
-            + (Mathf.Round(totalTime / 100) * 100).ToString() + " Seconds\n"
-            + (runIndex + 1) + " Lives\n";
+
+
+        endUI.Pass_Attempts(currentStats.x);
+        endUI.Pass_Time(currentStats.y);
+        endUI.Pass_Kills(currentStats.z);
+        endUI.Pass_Bests(levelBests[(int)currentLevel]);
+
+        currentStats = new Vector3(0, 0, 0);
+
+        Debug.Log("Starting ENDUI");
+        endUI.Start_UI();
     }
     #endregion
 
@@ -767,6 +792,8 @@ public class NewMenuManager : MonoBehaviour
         enemyDeathCount = 0;
         enemyDeathCounterText.text = enemyDeathCount.ToString() + " enemies";
 
+
+
         //Play/Start recording the tape
         newReplayManager.StartRoundPlaybackAndRecording(runIndex);
     }
@@ -774,9 +801,6 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeFromGameplay()
     {
         //newReplayManager.StopRound(runIndex);
-
-        elevatorClosed = true;
-        elevatorAnimator.Reset_Elevator();
     }
     private void ChangeToGameplay()
     {
@@ -848,6 +872,8 @@ public class NewMenuManager : MonoBehaviour
         //If the player that is meant to be controlled at this index hasn't been turned on already
 
 
+        elevatorClosed = true;
+        elevatorAnimator.Reset_Elevator();
 
         switch (roundEndCause)
         {

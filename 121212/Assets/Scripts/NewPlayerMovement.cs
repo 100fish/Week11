@@ -791,9 +791,12 @@ public class NewPlayerMovement : Entities
         {
             newMenuManager.PlayerDeath(gameObject, NewMenuManager.RoundEndCause.fall);
         }
-        else if(other.gameObject.tag == "Elevator" && movementState == MovementState.Controlled && newMenuManager.gameState == NewMenuManager.GameState.End)
+        else if(other.gameObject.tag == "Elevator" && movementState == MovementState.Controlled)
         {
-            newMenuManager.ChangeState(NewMenuManager.GameState.Elevator);
+            if(newMenuManager.gameState == NewMenuManager.GameState.End || newMenuManager.gameState == NewMenuManager.GameState.Playing)
+            {
+                newMenuManager.ChangeState(NewMenuManager.GameState.Elevator);
+            }
         }
     }
 

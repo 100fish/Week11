@@ -67,6 +67,7 @@ public class Enemy : Entities
     private EnemyTorsoRotator enemyTorsoRotator;
 
     private LineRenderer lineRenderer;
+    private SphereCollider sphereCollider;
 
     [SerializeField] float idleRotateSpeed;
 
@@ -77,6 +78,9 @@ public class Enemy : Entities
         Reset_Shot_Count();
 
         lineRenderer = GetComponent<LineRenderer>();
+        sphereCollider = GetComponent<SphereCollider>();
+        sphereCollider.radius = attacking_distance;
+
         lineRenderer.positionCount = 2;
         lineRenderer.SetPositions(new Vector3[2] { Vector3.zero, Vector3.zero });
     }

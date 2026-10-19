@@ -287,8 +287,8 @@ public class NewPlayerMovement : Entities
         }
     }
 
-         Vector3 previousCameraPos;
-        Quaternion previousCameraRot;
+    Vector3 previousCameraPos;
+    Quaternion previousCameraRot;
 
 
     private void Update()

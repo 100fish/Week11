@@ -131,7 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   myEntityType: 0
   aimingTime: 1
-  aimingSpeed: 5
+  aimingSpeed: 20
   firingSpeed: 200
   targetVector: {x: 0, y: 0, z: 0}
   aimingMaterial: {fileID: 2100000, guid: 27d242e9bff5f38499b90e0c1867fb6e, type: 2}

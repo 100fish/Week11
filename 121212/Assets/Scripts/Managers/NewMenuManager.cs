@@ -504,6 +504,7 @@ public class NewMenuManager : MonoBehaviour
     private GameObject currentLevelObject;
     [SerializeField] private GameObject[] levels;
 
+   
 
     private void LoadLevel(Levels newLevel)
     {

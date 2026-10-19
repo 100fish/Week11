@@ -103,10 +103,12 @@ public class NewPlayerMovement : Entities
     [SerializeField] private float max_jump_input_storage = 0.5f;
     [SerializeField] private float falling_time_to_reach_anim = 0.0f;
     [SerializeField] private float max_falling_time_to_reach_anim = 0.1f;
+    [SerializeField] private float animation_y_pos_dif = 0.0f;
 
     [Header("Punch Params")]
     [SerializeField] bool windup_punching = false;
     [SerializeField] bool punching = false;
+    private bool punched_in_air = false;
     bool stop_punch = false;
     [SerializeField] float cannot_punch_delay;
     private float current_cannot_punch_delay = 0;
@@ -195,6 +197,8 @@ public class NewPlayerMovement : Entities
         //If we're controlling this character, and we're in the correct movementstate
         ///I think the controlled check is unessary cause we setup the input so only the active character is on already right?
 
+        if (punched_in_air) return false;
+        if (punched_in_air) return false;
         if (punching) return false;
         if (current_cannot_punch_delay > 0) return false;
         if (movementState == MovementState.Controlled && (newMenuManager.roundState == NewMenuManager.RoundState.Gameplay || newMenuManager.roundState == NewMenuManager.RoundState.Tutorial || newMenuManager.roundState == NewMenuManager.RoundState.Countdown)) return true;
@@ -238,6 +242,11 @@ public class NewPlayerMovement : Entities
 
     private void Punch(bool _upper_cut)
     {
+        if(!groundedPlayer)
+        {
+            punched_in_air = true;
+        }
+
         upper_cut = _upper_cut;
 
         if(upper_cut) 
@@ -473,7 +482,7 @@ public class NewPlayerMovement : Entities
         {
             punching = false;
 
-            if(upper_cut) playerVelocity.y = Mathf.Sqrt(jump_height * -2f * gravity);
+            if(upper_cut) playerVelocity.y = Mathf.Sqrt(jump_height * -1f * gravity);
         }
     }
 
@@ -500,6 +509,7 @@ public class NewPlayerMovement : Entities
 
             double_jumped = false;
             jumped = false;
+            punched_in_air = false;
         } else
         {
             current_kyote_time -= Time.deltaTime;
@@ -542,6 +552,8 @@ public class NewPlayerMovement : Entities
         {
             if (Can_Jump())
             {
+                punched_in_air = false;
+
                 jump_input_storage = 0;
 
                 playerAnimator.Jump();
@@ -629,6 +641,7 @@ public class NewPlayerMovement : Entities
     //    if(hit.collider)
     //}
 
+    float _distance_between_y_pos = 0;
 
     public bool Can_Decrease_Slide()
     {
@@ -640,6 +653,8 @@ public class NewPlayerMovement : Entities
         _last_y_pos = _current_y_pos;
 
         print("slide_decrease: lsst_pos = " + Mathf.Round(_last_y_pos * 10) + ", new_pos: " + Mathf.Round(_current_y_pos * 5) + ", can_decrease_slide: " + _can_decrease_slide);
+
+        
 
         if (!_can_decrease_slide)
         {
@@ -683,11 +698,11 @@ public class NewPlayerMovement : Entities
     float current_walk_time = 0;
     float max_walk_time = 0.36f;
 
+    float _animation_last_y_pos = 0;
+
     public void AnimatingPlayer()
     {
         float _press_direction = playerInput.Standard.Movement.ReadValue<Vector2>().y;
-
-
 
         if (_press_direction > 0) current_walk_time += Time.deltaTime;
         else current_walk_time = 0;
@@ -708,7 +723,14 @@ public class NewPlayerMovement : Entities
 
             }
 
-            if(falling_time_to_reach_anim >= max_falling_time_to_reach_anim)
+
+            _distance_between_y_pos = Mathf.Abs(_animation_last_y_pos - transform.position.y);
+            _animation_last_y_pos = transform.position.y;
+
+            float _dist = Mathf.Round(_distance_between_y_pos * 500) / 500;
+            print("distance: " + _dist);
+
+            if ((falling_time_to_reach_anim >= max_falling_time_to_reach_anim || falling_time_to_reach_anim >= 0.1f && _distance_between_y_pos > 0.75f) && _dist > 0.1f)
             {
                 if (double_jumped) playerAnimator.DoubleJump();
                 else playerAnimator.Falling();

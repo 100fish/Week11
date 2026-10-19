@@ -3168,7 +3168,7 @@ MonoBehaviour:
   gameCamera: {fileID: 0}
   gameState: 0
   roundState: 0
-  runStartTimeMax: 5
+  runStartTimeMax: 3
   gameTimerLimit: 60
   enemyDeathCount: 0
   GameStateUIPanels:

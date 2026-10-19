@@ -29,7 +29,7 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     public void Idle() => PlayAnimation(PlayerAnimationState.Idle);
-    public void Move()
+    public void Walk()
     {
         if (_moving) return; 
 

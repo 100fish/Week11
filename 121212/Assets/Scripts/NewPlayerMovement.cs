@@ -37,6 +37,7 @@ public class NewPlayerMovement : Entities
 
     //Animator for the camera
     [SerializeField] private Animator camera_shake;
+    [SerializeField] public CapsuleCollider player_collider;
     [SerializeField] Transform leftFist;
     [SerializeField] Transform rightFist;
 
@@ -45,6 +46,16 @@ public class NewPlayerMovement : Entities
     [SerializeField] public Camera myCamera;
     //The highest angle the player can look
     [SerializeField] float camera_max = 80;
+
+    [SerializeField] float camera_speed_x = 0.0f;
+    [SerializeField] float camera_speed_y = 0.0f;
+    [SerializeField] float camera_speed_z = 0.0f;
+    [SerializeField] private float slide_camera_y_change = 0.0f;
+    private float current_slide_camera_y_change;
+
+    [SerializeField] private LayerMask cameraLayerMask;
+
+    [SerializeField] private float cameraDistance;
 
     [Header("Movement")]
     //This player's movespeed
@@ -66,18 +77,25 @@ public class NewPlayerMovement : Entities
     private bool slide_delaying = false;
     Vector3 slide_move = Vector3.zero;
     float slide_bump = 0;
-
-    bool zoom_in = false;
-    float base_FOV = 60, zoomed_FOV = 30, zoom_in_current = 0, time_mult = 10;
-    float base_gun_pos = 0.0f, new_gun_pos = 0.6f, current_gun_pos = 0.0f;
+    [SerializeField] private float max_can_decrease_slide_time = 0.0f;
+    float can_decrease_slide_time = 0.0f;
 
     #region Jump Setup
     [Header("Jump")]
     [SerializeField] private float jump_height = 1;
     [SerializeField] private float jump_multiplier = 0.3f;
-    private float current_jump_multiplier = 1;
+    public  float current_jump_multiplier = 1;
     private bool groundedPlayer;
-    private bool double_jumped = false;
+    [SerializeField] private float max_kyote_time = 0.5f;
+    private float current_kyote_time = 0;
+    [SerializeField] private bool double_jumped = false;
+    private bool jumped = false;
+    //[SerializeField] private LayerMask groundMask;
+    //[SerializeField] private float ground_distance = 0.5f;
+    private float jump_input_storage = 0;
+    [SerializeField] private float max_jump_input_storage = 0.5f;
+    [SerializeField] private float falling_time_to_reach_anim = 0.0f;
+    [SerializeField] private float max_falling_time_to_reach_anim = 0.1f;
 
     [Header("Punch Params")]
     [SerializeField] bool windup_punching = false;
@@ -90,6 +108,7 @@ public class NewPlayerMovement : Entities
     private float held_punch_for = 0;
     [SerializeField] private float punch_move_divide;
     public AnimationCurve PunchEvaluation;
+    bool upper_cut = false;
 
     #endregion
 
@@ -137,7 +156,6 @@ public class NewPlayerMovement : Entities
 
     #endregion Inputsetup
 
-    [SerializeField] private LayerMask cameraLayerMask;
 
     protected override void Start()
     {
@@ -208,7 +226,7 @@ public class NewPlayerMovement : Entities
         Punch(true);
     }
 
-    bool upper_cut = false;
+
 
     private void Punch(bool _upper_cut)
     {
@@ -240,11 +258,8 @@ public class NewPlayerMovement : Entities
 
             AudioManager.PlaySound(SFX.SlideRoll, 0.2f);
 
-            characterController.height = 1;
-
             slide_amount = slide_max;
             slide_move = Get_Movement_Direction(true);
-            myCamera.transform.localPosition = new Vector3(myCamera.transform.localPosition.x, myCamera.transform.localPosition.y - 0.55f, myCamera.transform.localPosition.z);
             slide_bump = 2;
         }
     }
@@ -258,11 +273,9 @@ public class NewPlayerMovement : Entities
             if (slide_amount <= 0) return;
 
             //AudioManager.PlaySound(SFX.SlideCymbol, 0.2f);
-
-            characterController.height = 2;
+            double_jumped = false;
 
             slide_amount = 0;
-            myCamera.transform.localPosition = new Vector3(myCamera.transform.localPosition.x, myCamera.transform.localPosition.y + 0.55f, myCamera.transform.localPosition.z);
             slide_delay = slide_delay_max;
             slide_delaying = true;
         }
@@ -271,18 +284,16 @@ public class NewPlayerMovement : Entities
          Vector3 previousCameraPos;
         Quaternion previousCameraRot;
 
-    [SerializeField] private float cameraDistance;
 
     private void Update()
-    {
-        
-        myCamera.transform.rotation = previousCameraRot;
-        myCamera.transform.position = previousCameraPos;
+    {   
+        //myCamera.transform.rotation = previousCameraRot;
+        //myCamera.transform.position = previousCameraPos;
 
         ///DEBUG
         for (int i = 0; i < IDTexts.Length; i++)
         {
-            IDTexts[i].text = id.ToString();
+            IDTexts[i].text = NumberToWords(id + 1).ToUpper();
         }
 
         if (movementState != MovementState.Controlled) return;
@@ -297,26 +308,32 @@ public class NewPlayerMovement : Entities
         //move character
         MovePlayer();
         //rotate character
-        RotateCamera();
+        //RotateCamera();
         transform.Rotate(new Vector3(0, playerInput.Standard.MouseLook.ReadValue<Vector2>().x, 0) * lookSpeed);
-
-        if (zoom_in) zoom_in_current += Time.deltaTime * time_mult;
-        else zoom_in_current -= Time.deltaTime * time_mult;
-
-        zoom_in_current = Mathf.Clamp01(zoom_in_current);
-
-       // myCamera.fieldOfView = Mathf.Lerp(base_FOV, zoomed_FOV, zoom_in_current);
-        float _gun_transform_z = Mathf.Lerp(base_gun_pos, new_gun_pos, zoom_in_current);
-        leftFist.localPosition = new Vector3(0, 0, _gun_transform_z);
-        rightFist.localPosition = new Vector3(0, 0, _gun_transform_z);
 
         AnimatingPlayer();
 
-        previousCameraRot = myCamera.transform.rotation;
-        previousCameraPos = myCamera.transform.position;
+        //previousCameraRot = myCamera.transform.rotation;
+        //previousCameraPos = myCamera.transform.position;
 
         CameraRaycast();
 
+        if (slide_amount > 0)
+        {
+            characterController.height = 1;
+            new_camera_position_change_y = -0.55f;
+
+            player_collider.height = 1;
+            player_collider.center = new Vector3(0, -0.499f, 0);
+        }
+        else
+        {
+            characterController.height = 2;
+            new_camera_position_change_y = 0.55f;
+
+            player_collider.height = 2;
+            player_collider.center = Vector3.zero;
+        }
 
         //cameraDistance = Vector3.Distance(myCamera.transform.position, transform.position);
     }
@@ -324,7 +341,11 @@ public class NewPlayerMovement : Entities
     private void CameraRaycast()
     {
         RaycastHit ray;
-        if(Physics.Raycast(transform.position, (myCamera.transform.position - transform.position).normalized, out ray, cameraDistance, cameraLayerMask))
+
+        Vector3 _camera_pos = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y + current_camera_position_change_y, myCamera.transform.position.z);
+        print("camerapos: " + _camera_pos);
+
+        if (Physics.Raycast(transform.position, (_camera_pos - transform.position).normalized, out ray, cameraDistance, cameraLayerMask))
         {
             myCamera.transform.position = ray.point;
         }
@@ -333,12 +354,28 @@ public class NewPlayerMovement : Entities
 
     #region Camera and Zoom
 
+    Vector3 current_camera_rotation = Vector3.zero;
+    float current_camera_position_change_y = 0;
+    float new_camera_position_change_y = 0;
+
     void RotateCamera()
     {
         Vector3 rot = myCamera.transform.localRotation.eulerAngles + new Vector3(-playerInput.Standard.MouseLook.ReadValue<Vector2>().y * lookSpeed, 0f, 0f); //use local if your char is not always oriented Vector3.up
         rot.x = ClampAngle(rot.x, -camera_max, camera_max);
 
-        myCamera.transform.localEulerAngles = rot;
+        current_camera_rotation = rot;
+
+        if (current_camera_rotation == Vector3.zero) current_camera_rotation = rot;
+
+        float _x_camera_pos_lerp = Mathf.Lerp(current_camera_rotation.x, rot.x, camera_speed_x / 1);
+        float _y_camera_pos_lerp = Mathf.Lerp(current_camera_rotation.y, rot.y, camera_speed_x / 1);
+        float _z_camera_pos_lerp = Mathf.Lerp(current_camera_rotation.z, rot.y, camera_speed_x / 1);
+
+        current_camera_rotation = new Vector3(_x_camera_pos_lerp, _y_camera_pos_lerp, _z_camera_pos_lerp);
+        myCamera.transform.localEulerAngles = current_camera_rotation;
+
+        //current_camera_position_change_y = Mathf.Lerp(current_camera_position_change_y, new_camera_position_change_y, camera_speed_x / 1);
+        //myCamera.transform.localPosition = new Vector3(myCamera.transform.localPosition.x, myCamera.transform.localPosition.y + current_camera_position_change_y, myCamera.transform.localPosition.z);
     }
 
     float ClampAngle(float angle, float from, float to)
@@ -355,15 +392,6 @@ public class NewPlayerMovement : Entities
     {
         camera_shake.SetTrigger("Screenshake");
     }
-
-    //Called by input when zooming
-    private void Start_ZoomIn(InputAction.CallbackContext contex)
-    {
-        zoom_in = true;
-        //Why move the ui when zooming?
-        StartUI.Move_Through_UI(4);
-    }
-    private void Stop_ZoomIn(InputAction.CallbackContext contex) => zoom_in = false;
 
     #endregion
 
@@ -429,9 +457,6 @@ public class NewPlayerMovement : Entities
         {
             punching = false;
         }
-
-
-
     }
 
     public void MovePlayer()
@@ -447,8 +472,19 @@ public class NewPlayerMovement : Entities
             if (playerVelocity.y < -2f)
                 playerVelocity.y = -2f;
 
-            current_jump_multiplier -= Time.deltaTime / 2;
+            float _jump_mult_mult = 0.5f;
+            if (groundedPlayer) _jump_mult_mult = 1;
+
+            current_jump_multiplier -= Time.deltaTime * _jump_mult_mult;
             if (current_jump_multiplier <= 1) current_jump_multiplier = 1;
+
+            current_kyote_time = max_kyote_time;
+
+            double_jumped = false;
+            jumped = false;
+        } else
+        {
+            current_kyote_time -= Time.deltaTime;
         }
 
         if (slide_move != Vector3.zero && slide_amount > 0)
@@ -461,7 +497,10 @@ public class NewPlayerMovement : Entities
             else _moveAxis = Vector3.Lerp(slide_move, _moveAxis, _lerp_amount);
 
             _moveSpeed *= slide_increase;
-            slide_amount -= Time.deltaTime;
+
+            if (Can_Decrease_Slide()) slide_amount -= Time.deltaTime;
+
+
             if (slide_amount <= 0)
             {
                 StopSlide();
@@ -481,31 +520,47 @@ public class NewPlayerMovement : Entities
         }
 
         // Jump using WasPressedThisFrame()
-        if (playerInput.Standard.Jump.WasPressedThisFrame() && (groundedPlayer || !double_jumped))
+        if (playerInput.Standard.Jump.WasPressedThisFrame() || jump_input_storage > 0)
         {
-            playerAnimator.Jump();
-            playerVelocity.y = Mathf.Sqrt(jump_height * -2f * gravity);
-            wallJump();
-
-            if (!groundedPlayer)
+            if (Can_Jump())
             {
-                double_jumped = true;
-                StartUI.Move_Through_UI(1);
-                AudioManager.PlaySound(SFX.Jump, 0.1f);
-            }
-            else
+                jump_input_storage = 0;
+
+                playerAnimator.Jump();
+                playerVelocity.y = Mathf.Sqrt(jump_height * -2f * gravity);
+                wallJump();
+
+                if ((!groundedPlayer && current_kyote_time <= 0) || jumped == true)
+                {
+                    jumped = false;
+                    double_jumped = true;
+                    StartUI.Move_Through_UI(1);
+                    AudioManager.PlaySound(SFX.Jump, 0.1f);
+                }
+                else
+                {
+                    jumped = true;
+                    StartUI.Move_Through_UI(0);
+                    double_jumped = false;
+                    AudioManager.PlaySound(SFX.DoubleJump, 0.25f);
+
+                    current_kyote_time = 0;
+                }
+
+                if (slide_amount > 0) current_jump_multiplier = slide_increase;
+
+                StopSlide();
+
+                current_jump_multiplier += jump_multiplier;
+            } else if (jump_input_storage == 0)
             {
-                StartUI.Move_Through_UI(0);
-                double_jumped = false;
-                AudioManager.PlaySound(SFX.DoubleJump, 0.25f);
+                jump_input_storage = max_jump_input_storage;
             }
 
-            if (slide_amount > 0) current_jump_multiplier = slide_increase;
-
-            StopSlide();
-
-            current_jump_multiplier += jump_multiplier;
+            jump_input_storage -= Time.deltaTime;
+            if (jump_input_storage < 0) jump_input_storage = 0;
         }
+        
 
         // Apply gravity
         playerVelocity.y += gravity * Time.deltaTime;
@@ -536,6 +591,51 @@ public class NewPlayerMovement : Entities
         velocity = finalMove;
     }
 
+    float _last_y_pos = 0;
+
+    public bool Can_Jump()
+    {
+        if (!groundedPlayer)
+        {
+            if (current_kyote_time >= 0) return true;
+            else if (double_jumped) return false;
+        }
+
+        return true;
+    }
+
+    //public bool Close_Enough_To_Floor()
+    //{
+    //    RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector3.up, ground_distance, groundMask);
+
+    //    if(hit.collider)
+    //}
+
+
+    public bool Can_Decrease_Slide()
+    {
+        float _current_y_pos = transform.position.y;
+
+        bool _can_decrease_slide = true;
+        if (Mathf.Round(_current_y_pos * 5) != Mathf.Round(_last_y_pos * 5)) _can_decrease_slide = false;
+ 
+        _last_y_pos = _current_y_pos;
+
+        print("slide_decrease: lsst_pos = " + Mathf.Round(_last_y_pos * 5) + ", new_pos: " + Mathf.Round(_current_y_pos * 5) + ", can_decrease_slide: " + _can_decrease_slide);
+
+        if (!_can_decrease_slide)
+        {
+            can_decrease_slide_time = 0;
+            return false;
+        }
+
+        can_decrease_slide_time += Time.deltaTime;
+
+        if (can_decrease_slide_time < max_can_decrease_slide_time) return false;
+
+        return true;
+    }
+
     Vector3 velocity;
 
     int wall_jump_dir = 1;
@@ -562,12 +662,19 @@ public class NewPlayerMovement : Entities
         }
     }
 
-   
+    float current_walk_time = 0;
+    float max_walk_time = 0.36f;
 
     public void AnimatingPlayer()
     {
-        if (PunchHappening()) return;
+        float _press_direction = playerInput.Standard.Movement.ReadValue<Vector2>().y;
 
+
+
+        if (_press_direction > 0) current_walk_time += Time.deltaTime;
+        else current_walk_time = 0;
+
+        if (PunchHappening()) return;
 
         if (slide_amount > 0)
         {
@@ -577,15 +684,35 @@ public class NewPlayerMovement : Entities
 
         if (!groundedPlayer)
         {
-            if(double_jumped) playerAnimator.DoubleJump();
-            else playerAnimator.Falling();
+            if(falling_time_to_reach_anim < max_falling_time_to_reach_anim)
+            {
+                falling_time_to_reach_anim += Time.deltaTime;
+
+            }
+
+            if(falling_time_to_reach_anim >= max_falling_time_to_reach_anim)
+            {
+                if (double_jumped) playerAnimator.DoubleJump();
+                else playerAnimator.Falling();
+            }
+
             return;
         }
+        else falling_time_to_reach_anim = 0;
+
+        if (jumped || double_jumped) return;
 
         Vector3 _moveAxis = Get_Movement_Direction();
 
-        if(_moveAxis != Vector3.zero) playerAnimator.Move();
-        else playerAnimator.Idle();
+        if (_moveAxis != Vector3.zero)
+        { 
+            if(current_walk_time < max_walk_time) playerAnimator.Walk();
+            else playerAnimator.Run();
+        }
+        else
+        {
+            playerAnimator.Idle();
+        }
     }
 
     #endregion
@@ -740,4 +867,53 @@ public class NewPlayerMovement : Entities
 
     #endregion
 
+
+    public static string NumberToWords(int number)
+    {
+        if (number == 0)
+            return "zero";
+
+        if (number < 0)
+            return "minus " + NumberToWords(Mathf.Abs(number));
+
+        string words = "";
+
+        if ((number / 1000000) > 0)
+        {
+            words += NumberToWords(number / 1000000) + " million ";
+            number %= 1000000;
+        }
+
+        if ((number / 1000) > 0)
+        {
+            words += NumberToWords(number / 1000) + " thousand ";
+            number %= 1000;
+        }
+
+        if ((number / 100) > 0)
+        {
+            words += NumberToWords(number / 100) + " hundred ";
+            number %= 100;
+        }
+
+        if (number > 0)
+        {
+            if (words != "")
+                words += "and ";
+
+            var unitsMap = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+            var tensMap = new[] { "zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+
+            if (number < 20)
+                words += unitsMap[number];
+            else
+            {
+                words += tensMap[number / 10];
+                if ((number % 10) > 0)
+                    words += "-" + unitsMap[number % 10];
+            }
+        }
+
+        return words;
+    }
 }

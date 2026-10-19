@@ -64,4 +64,12 @@ public class EndUI : MonoBehaviour
 
         overall_score += _value;
     }
+
+    public void Pass_FinalScore()
+    {
+        float _value = overall_score / 3;
+        if(_value > 1) _value = 1;
+
+        OverallScore.Set_Score(_value);
+    }
 }

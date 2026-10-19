@@ -106,20 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecbba965cef2ad341887311823c1ea0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  id: 0
-  movementState: 0
-  myCamera: {fileID: 3449297769188403971}
-  myAudioListener: {fileID: 7065209693510022154}
-  camera_shake: {fileID: 7654422803517320495}
-  moveSpeed: 8
-  lookSpeed: 1
-  gravity: -26
-  slide_max: 1
-  slide_increase: 1.5
-  slide_delay_max: 0.15
-  slide_memory_max: 0.1
-  jump_height: 2.5
-  jump_multiplier: 0.2
+  myEntityType: 0
 --- !u!136 &6060176376403210024
 CapsuleCollider:
   m_ObjectHideFlags: 0

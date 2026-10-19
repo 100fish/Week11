@@ -192,7 +192,7 @@ MonoBehaviour:
   slide_delay_max: 0.5
   slide_memory_max: 0.1
   max_can_decrease_slide_time: 0.2
-  jump_height: 3
+  jump_height: 3.5
   jump_multiplier: 0.1
   current_jump_multiplier: 1
   max_kyote_time: 0.75

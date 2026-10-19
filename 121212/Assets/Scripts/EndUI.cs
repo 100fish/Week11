@@ -56,12 +56,12 @@ public class EndUI : MonoBehaviour
         overall_score += _value;
     }
 
-    public void Pass_Kills(float Kills)
+    public void Pass_Kills(float kills)
     {
-        float _value = Kills / KillCount;
+        float _value = kills / KillCount;
         if (_value > 1) _value = 1;
 
-        this.Kills.Set_Score(_value);
+        Kills.Set_Score(_value);
 
         overall_score += _value;
     }

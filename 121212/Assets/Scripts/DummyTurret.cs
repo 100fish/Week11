@@ -39,6 +39,8 @@ public class DummyTurret : MonoBehaviour
     }
     public void DectivateDummy()
     {
+       // StartUI.Punch_Hit_Enemy();
+
         d_barrelmr.enabled = false;
         d_basemr.enabled = false;
 

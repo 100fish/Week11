@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Harry 2 Scene - 121212.unity
+    guid: 7e48ef0faefda0f4b8a34fb8f85187fd
+  - enabled: 1
     path: Assets/Scenes/Griffin I Merged Scene.unity
     guid: 794d76d132583bb4894817269dfe0ca1
   - enabled: 1

@@ -15,6 +15,15 @@ public class ElevatorAnimator : MonoBehaviour
         }
     }
 
-    public void Open_Elevator() => animator.SetBool("Open", true);
+    public void Open_Elevator()
+    {
+        animator.SetBool("Open", true);
+        StartUI.Play_WatchYourself();
+        StartUI.Play_WatchYourself();
+        StartUI.Play_WatchYourself();
+        StartUI.Play_WatchYourself();
+
+        StartUI.Play_WatchYourself();
+    }
     public void Reset_Elevator() => animator.SetBool("Open", false);
 }

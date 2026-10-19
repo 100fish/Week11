@@ -403,6 +403,8 @@ public class NewMenuManager : MonoBehaviour
     public void ButtonChangeGameState(int newState)
     {
         ChangeState((GameState)newState);
+
+        StartUI.First_Player();
     }
 
     private void ChangeFromMenu() 
@@ -453,7 +455,7 @@ public class NewMenuManager : MonoBehaviour
         Mouse.current.WarpCursorPosition(mousePosOnUI);
 
         //Change the roundstate to tutorial, which is what actually begins the game
-        if(tutorialCompleted || StartUI.Instance.NoTutorial)
+        if(tutorialCompleted /*|| StartUI.Instance.NoTutorial*/)
         {
             ChangeRoundState(RoundState.Countdown);
         }

@@ -1,9 +1,6 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 public class NewReplayManager : MonoBehaviour
 {
@@ -100,9 +97,6 @@ public class NewReplayManager : MonoBehaviour
     //Resets the playback and recording
     public void StartRoundPlaybackAndRecording(int runIndex)
     {
-
-
-
         currentState = State.Active; //turns it on
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning

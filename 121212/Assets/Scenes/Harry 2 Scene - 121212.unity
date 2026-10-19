@@ -93,8 +93,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: ee06195925668154bbdec73c74d196b5, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3285,8 +3285,9 @@ MonoBehaviour:
   newReplayManager: {fileID: 0}
   runIndex: -1
   levelBests:
-  - {x: 4, y: 60, z: 3}
-  - {x: 3, y: 3, z: 3}
+  - {x: 3, y: 30, z: 3}
+  - {x: 3, y: 30, z: 3}
+  currentLevel: 0
   levels:
   - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
   - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
@@ -5682,6 +5683,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1517723635}
     m_Modifications:
+    - target: {fileID: 316495157988868432, guid: f79a34430268b714fa833f2631833b1f, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 316495157988868432, guid: f79a34430268b714fa833f2631833b1f, type: 3}
+      propertyPath: m_fontSize
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 316495157988868432, guid: f79a34430268b714fa833f2631833b1f, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.03232511
+      objectReference: {fileID: 0}
+    - target: {fileID: 316495157988868432, guid: f79a34430268b714fa833f2631833b1f, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.008009953
+      objectReference: {fileID: 0}
+    - target: {fileID: 316495157988868432, guid: f79a34430268b714fa833f2631833b1f, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0.5660378
+      objectReference: {fileID: 0}
     - target: {fileID: 3869930039382203147, guid: f79a34430268b714fa833f2631833b1f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.6

@@ -1,5 +1,7 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class CameraTransition : MonoBehaviour
 {
@@ -41,11 +43,21 @@ public class CameraTransition : MonoBehaviour
         Shader.SetGlobalFloat("_MyFireProgress", 2);
     }
 
+    private Vector3 camASavedPos;
+    private Quaternion camASavedRot;
+
+    private Transform camATransform;
+
     public void StartTransition(Camera camA, Camera camB, NewMenuManager.RoundEndCause cause)
     {
         Debug.Log("CAMERAGO!!!");
         camA.targetTexture = camART;
         camB.targetTexture = camBRT;
+
+        camATransform = camA.transform;
+
+        camASavedPos = camA.transform.position;
+        camASavedRot = camA.transform.rotation;
 
         switch (cause)
         {
@@ -74,6 +86,9 @@ public class CameraTransition : MonoBehaviour
     {
         if (transitionCause == TransitionCause.None)
             return;
+
+        camATransform.position = camASavedPos;
+        camATransform.rotation = camASavedRot;
 
         camART.Update();
 

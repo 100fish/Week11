@@ -117,7 +117,7 @@ public class NewReplayManager : MonoBehaviour
     public void StopRound(int runIndex)
     {
         currentState = State.Idle;//leaves replaymanage to sit and wait
-        /*
+        
         Debug.Log("...................");
         Debug.Log("//START " + runIndex + "th RECOUNT//");
         for (int i = 0; i < newReplayContainer.m_snapshots.Count; i++)
@@ -129,7 +129,7 @@ public class NewReplayManager : MonoBehaviour
                 Debug.Log("Enemy's Position this frame " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_position);
                 Debug.Log("Enemy's Punch this frame: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_wasPunched);
             }
-        }*/
+        }
         Debug.Log("//END  " + runIndex + "th RECOUNT//");
 
         EndReplay?.Invoke();
@@ -144,6 +144,7 @@ public class NewReplayManager : MonoBehaviour
     //Ends the recording and playback
     public void Stop()
     {
+        Debug.Log("stopping in script");
         currentState = State.Idle;//leaves replaymanage to sit and wait
         newReplayContainer.Init();
 
@@ -164,6 +165,9 @@ public class NewReplayManager : MonoBehaviour
         else
         {
             players[newPlayerIndex].gameObject.SetActive(true);
+            players[newPlayerIndex].transform.position = playerSpawn.position;
+            players[newPlayerIndex].transform.rotation = Quaternion.identity;
+            players[newPlayerIndex].transform.Rotate(new Vector3(0,90,0));
         }
 
         //Activate the new player script
@@ -195,6 +199,7 @@ public class NewReplayManager : MonoBehaviour
 
                 //Take a new snapshot AND
                 //Load all the data for objects set to replay
+
                 TakeAndLoadSnapshots();
 
                 //reset the counter for the next frame

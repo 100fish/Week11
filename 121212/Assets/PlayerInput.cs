@@ -190,6 +190,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RedoLevel"",
+                    ""type"": ""Button"",
+                    ""id"": ""77738d92-3993-4821-ba0b-8769018eacd4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -350,11 +359,22 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3c913767-b4cc-4b24-8446-4973f3ff1e29"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""NextLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2fc65cb-9d4a-47ba-8a0e-f0c1bcd58338"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RedoLevel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -376,6 +396,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Standard_ZoomIn = m_Standard.FindAction("ZoomIn", throwIfNotFound: true);
         m_Standard_ESC = m_Standard.FindAction("ESC", throwIfNotFound: true);
         m_Standard_NextLevel = m_Standard.FindAction("NextLevel", throwIfNotFound: true);
+        m_Standard_RedoLevel = m_Standard.FindAction("RedoLevel", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -467,6 +488,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Standard_ZoomIn;
     private readonly InputAction m_Standard_ESC;
     private readonly InputAction m_Standard_NextLevel;
+    private readonly InputAction m_Standard_RedoLevel;
     /// <summary>
     /// Provides access to input actions defined in input action map "Standard".
     /// </summary>
@@ -522,6 +544,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Standard/NextLevel".
         /// </summary>
         public InputAction @NextLevel => m_Wrapper.m_Standard_NextLevel;
+        /// <summary>
+        /// Provides access to the underlying input action "Standard/RedoLevel".
+        /// </summary>
+        public InputAction @RedoLevel => m_Wrapper.m_Standard_RedoLevel;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -581,6 +607,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @NextLevel.started += instance.OnNextLevel;
             @NextLevel.performed += instance.OnNextLevel;
             @NextLevel.canceled += instance.OnNextLevel;
+            @RedoLevel.started += instance.OnRedoLevel;
+            @RedoLevel.performed += instance.OnRedoLevel;
+            @RedoLevel.canceled += instance.OnRedoLevel;
         }
 
         /// <summary>
@@ -625,6 +654,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @NextLevel.started -= instance.OnNextLevel;
             @NextLevel.performed -= instance.OnNextLevel;
             @NextLevel.canceled -= instance.OnNextLevel;
+            @RedoLevel.started -= instance.OnRedoLevel;
+            @RedoLevel.performed -= instance.OnRedoLevel;
+            @RedoLevel.canceled -= instance.OnRedoLevel;
         }
 
         /// <summary>
@@ -742,5 +774,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnNextLevel(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RedoLevel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRedoLevel(InputAction.CallbackContext context);
     }
 }

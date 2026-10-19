@@ -29,8 +29,6 @@ public class PunchManager : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(gameObject);
-
 
         newMenuManager = NewMenuManager.instance;
     }
@@ -56,18 +54,21 @@ public class PunchManager : MonoBehaviour
                         Debug.Log("BANG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                         Debug.Log("///////////////");
 
-                        Entities.EntityType hitType = instance.entities[i].myEntityType;
-
-                        if (hitType != Entities.EntityType.Player)
+                        if (instance.entities[i] != null)
                         {
+                            Entities.EntityType hitType = instance.entities[i].myEntityType;
 
-                            instance.entities[i].Hit_Entity(puncher, punchType);
-                        }
+                            if (hitType != Entities.EntityType.Player)
+                            {
 
-                        if(puncher.newMenuManager.enemyDeathCount != puncher.newMenuManager.newReplayManager.enemies.Count
-                            && hitType != Entities.EntityType.Projectile)
-                        {
-                            puncher.Hit_Entity(puncher, PunchType.None);
+                                instance.entities[i].Hit_Entity(puncher, punchType);
+                            }
+
+                            if (puncher.newMenuManager.enemyDeathCount != puncher.newMenuManager.newReplayManager.enemies.Count
+                                && hitType == Entities.EntityType.Enemy)
+                            {
+                                puncher.Hit_Entity(puncher, PunchType.None);
+                            }
                         }
                     }
                 }

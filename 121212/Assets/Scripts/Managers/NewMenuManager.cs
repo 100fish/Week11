@@ -28,6 +28,7 @@ public class NewMenuManager : MonoBehaviour
         playerControls.Standard.Reset.started += ResetScene;
         playerControls.Standard.Pause.started += PauseButtonPressed;
         playerControls.Standard.NextLevel.started += NextLevel;
+        playerControls.Standard.RedoLevel.started += RedoLevel;
 
     }
 
@@ -38,6 +39,7 @@ public class NewMenuManager : MonoBehaviour
         playerControls.Standard.Reset.started -= ResetScene;
         playerControls.Standard.Pause.started -= PauseButtonPressed;
         playerControls.Standard.NextLevel.started -= NextLevel;
+        playerControls.Standard.RedoLevel.started -= RedoLevel;
     }
 
     private void Awake()
@@ -50,8 +52,6 @@ public class NewMenuManager : MonoBehaviour
 
 
         instance = this;
-
-        DontDestroyOnLoad(gameObject);
 
         playerControls = new PlayerInput();
     }
@@ -199,7 +199,7 @@ public class NewMenuManager : MonoBehaviour
 
         oceanBump = ocean.material;
 
-        LoadLevel(0);
+        //LoadLevel(0);
 
         //Timer setup
         gameTimer = gameTimerLimit;
@@ -389,7 +389,45 @@ public class NewMenuManager : MonoBehaviour
                 ChangeToMenu();
                 break;
             case GameState.Playing:
-                ChangeToPlaying();
+                ChangeToPlaying(currentLevel);
+                break;
+            case GameState.End:
+                ChangeToEnd();
+                break;
+            case GameState.Elevator:
+                ChangeToElevator();
+                break;
+        }
+    }
+    public void ChangeState(GameState newState, Levels newLevel)
+    {
+        //Exit functions
+        switch (gameState)
+        {
+            case GameState.Menu: //explicit cast from Enum to Int (in-class technique) (haha look its a comment from when this was an assignment from semester 3)
+                ChangeFromMenu();
+                break;
+            case GameState.Playing:
+                ChangeFromPlaying();
+                break;
+            case GameState.End:
+                ChangeFromEnd();
+                break;
+            case GameState.Elevator:
+                ChangeFromElevator();
+                break;
+        }
+
+        gameState = newState;
+
+        //Entrance functions
+        switch (newState) 
+        {
+            case GameState.Menu: //explicit cast from Enum to Int (in-class technique) (haha look its a comment from when this was an assignment from semester 3)
+                ChangeToMenu();
+                break;
+            case GameState.Playing:
+                ChangeToPlaying(newLevel);
                 break;
             case GameState.End:
                 ChangeToEnd();
@@ -423,8 +461,6 @@ public class NewMenuManager : MonoBehaviour
 
     private void ChangeFromPlaying()
     {
-        //Stop time
-        Time.timeScale = 0;
         //Free the cursor
         //save mouse's position on UI
         mousePosOnUI = new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value);
@@ -432,18 +468,26 @@ public class NewMenuManager : MonoBehaviour
         elevatorClosed = true;
         elevatorAnimator.Reset_Elevator();
 
+        Debug.Log("stopping");
         newReplayManager.Stop();
 
 
     }
-    private void ChangeToPlaying()
+    private void ChangeToPlaying(Levels newLevel)
     {
-        //Setup players and time
-        if(!tutorialCompleted)
+        if ((int)currentLevel > levels.Length)
         {
-            InitializePlayerAndEnemies();
-            endUI.End_UI();
+            Debug.Log("oops, no more levels!");
+            return;
         }
+        else
+        {
+
+            LoadLevel(newLevel);
+        }
+
+
+        InitializePlayerAndEnemies();
         Time.timeScale = 1;
 
         //Turn the gameplay UI on
@@ -482,8 +526,10 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeFromElevator()
     {
 
+        endUI.End_UI();
     }
     private Vector3 currentStats = new Vector3(0,0,0);
+    private float finalScore = 0;
 
     private void ChangeToElevator()
     {
@@ -493,31 +539,56 @@ public class NewMenuManager : MonoBehaviour
         currentStats.x = runIndex + 1;
         currentStats.z = enemyDeathCount;
 
+        if(enemyDeathCount == 0)
+        {
+
+        }
+
         UnloadLevel(currentLevelObject);
         currentLevel++;
 
         //call this when the player walks back into the elevator
         FocusUIPanel(GameStateUIPanels[(int)GameState.Elevator]);
-        if((int)currentLevel > levels.Length)
-        {
-            Debug.Log("oops, no more levels!");
-        }
-        else
-        {
-            LoadLevel(currentLevel);
-        }
 
+        Debug.Log("Total Time: " + currentStats.y);
+        endUI.Pass_Bests(new Vector3(levelBests[(int)currentLevel].x - currentStats.z,
+        levelBests[(int)currentLevel].y -
+        (levelBests[(int)currentLevel].y / levelBests[(int)currentLevel].x) *
+        (levelBests[(int)currentLevel].x - currentStats.x),
+        levelBests[(int)currentLevel].z));
 
-
-        endUI.Pass_Attempts(currentStats.x);
+        endUI.Pass_Attempts(currentStats.x - currentStats.z);
         endUI.Pass_Time(currentStats.y);
         endUI.Pass_Kills(currentStats.z);
-        endUI.Pass_Bests(levelBests[(int)currentLevel]);
 
-        currentStats = new Vector3(0, 0, 0);
+
+
+        if (enemyDeathCount == 0)
+        {
+            finalScore = 0;
+        }
+
+        Debug.Log("Final Score: " + finalScore);
+        //Debug.Log("//// //// ////");
+
+        Debug.Log("My Stats: " + currentStats);
+
+        Debug.Log("Best stats: " + new Vector3(levelBests[(int)currentLevel].x - currentStats.z,
+        levelBests[(int)currentLevel].y -
+        (levelBests[(int)currentLevel].y / levelBests[(int)currentLevel].x) *
+        (levelBests[(int)currentLevel].x - currentStats.x)));
+
+        Debug.Log("My Stats: " + currentStats);
+
+        Debug.Log("Final Score: " + finalScore);
+        //Debug.Log("//// //// ////");
+
 
         Debug.Log("Starting ENDUI");
-        endUI.Start_UI();
+        finalScore = endUI.Start_UI();
+
+
+        currentStats = new Vector3(0, 0, 0);
     }
     #endregion
 
@@ -527,15 +598,25 @@ public class NewMenuManager : MonoBehaviour
         Two
     }
 
-    private Levels currentLevel = Levels.One;
+    [SerializeField] private Levels currentLevel = Levels.One;
     private GameObject currentLevelObject;
     [SerializeField] private GameObject[] levels;
 
    
-
+    private LevelInfo levelInfo;
     private void LoadLevel(Levels newLevel)
     {
         currentLevelObject = Instantiate(levels[(int)newLevel]);
+        levelInfo = currentLevelObject.GetComponent<LevelInfo>();
+
+        for (int i = 0; i < levelInfo.levelEnemies.Length; i++)
+        {
+            newReplayManager.enemies.Add(levelInfo.levelEnemies[i]);
+            newReplayManager.enemies[i].id = i;
+            Debug.Log("Hi I'm: " + newReplayManager.enemies[i].gameObject.name + " and my ID is: " + newReplayManager.enemies[i].id);
+        }
+
+        currentLevel = newLevel;
     }
 
     private void UnloadLevel(GameObject oldLevel)
@@ -554,13 +635,14 @@ public class NewMenuManager : MonoBehaviour
         {
             newReplayManager.players[i].transform.position = newReplayManager.playerSpawn.position;
             newReplayManager.players[i].transform.rotation = newReplayManager.playerSpawn.rotation;
+            newReplayManager.players[i].transform.Rotate(new Vector3(0, 90, 0));
             newReplayManager.players[i].gameObject.SetActive(false);
         }
 
         //Moves the first player to the position of the current player
         ///Have to change the first player's texture as well
 
-        InitializePlayerAndEnemies();
+
         //Reset the player to the first one
         //We keep the old players, deactivated
 
@@ -762,6 +844,7 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeToTutorial()
     {
         StartUI.StartTutorial();
+        ChangeRoundState(NewMenuManager.RoundState.Countdown);
     }
 
     private void ChangeFromCountdown()
@@ -802,6 +885,7 @@ public class NewMenuManager : MonoBehaviour
 
     private void ChangeFromGameplay()
     {
+        elevatorAnimator.deathText.text = "";
         //newReplayManager.StopRound(runIndex);
     }
     private void ChangeToGameplay()
@@ -870,9 +954,7 @@ public class NewMenuManager : MonoBehaviour
         //We set the text depending on the death type
         //Then, it calls back to the menuManager and sets it back to countdown (in DEATHUIOUT)
 
-        Debug.Log("RunIndex: " + runIndex);
         //If the player that is meant to be controlled at this index hasn't been turned on already
-
 
         elevatorClosed = true;
         elevatorAnimator.Reset_Elevator();
@@ -986,9 +1068,16 @@ public class NewMenuManager : MonoBehaviour
 
     private void NextLevel(CallbackContext context)
     {
+        if(gameState == GameState.Elevator && finalScore > 0.4f)
+        {
+            ChangeState(GameState.Playing, currentLevel);
+        }
+    }
+    private void RedoLevel(CallbackContext context)
+    {
         if(gameState == GameState.Elevator)
         {
-            ChangeState(GameState.Playing);
+            ChangeState(GameState.Playing, currentLevel-1);
         }
     }
 
@@ -1011,12 +1100,16 @@ public class NewMenuManager : MonoBehaviour
     ///Will change a lot with dynamic players
     private void InitializePlayerAndEnemies()
     {
+
         //Foreach enemy give the enemy an ID
         /*for (int i = 0; i < newReplayManager.enemies.Count; i++)
         {
             ///newReplayManager.enemies[i].id = i;
         }*/// COME BACK
         ///COME BACK AND TURN ENEMIES ON
+        ///
+        newReplayManager.newReplayContainer.Init();
+
         runIndex = -1;
         newReplayManager.NextActivePlayer(runIndex);
         gameCamera = newReplayManager.players[0].myCamera;
@@ -1028,7 +1121,7 @@ public class NewMenuManager : MonoBehaviour
     {
         enemyDeathCount++;
 
-        enemyDeathCounterText.text = enemyDeathCount.ToString() + " enemies";
+        enemyDeathCounterText.text = enemyDeathCount.ToString() + "/" + newReplayManager.enemies.Count + " Kills";
     }
 
 #endregion

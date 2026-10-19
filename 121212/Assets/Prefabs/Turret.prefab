@@ -174,6 +174,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   myEntityType: 0
+  startHealth: 1
+  health: 0
   barrel: {fileID: 667348197567360773}
   enemyRigidBody: {fileID: 3871457546657152799}
   attacking_distance: 25
@@ -199,6 +201,11 @@ MonoBehaviour:
   - {fileID: 6149368784970132450}
   - {fileID: 1265931501661321568}
   enemyTorsoRotator: {fileID: 546725132545123614}
+  materials:
+  - {fileID: 2100000, guid: 84c9b86f99d21fe4c9a78abfb7a6fd52, type: 2}
+  - {fileID: 2100000, guid: 4ae3e71b63c57d54ab5ed63d181ff45e, type: 2}
+  - {fileID: 2100000, guid: 7510d3e2e506a894e86a657b2ff2314e, type: 2}
+  - {fileID: 2100000, guid: f75ade3cc92339546a95e4b1bee4fa01, type: 2}
   idleRotateSpeed: 20
   idleMaterial: {fileID: 2100000, guid: 4ae3e71b63c57d54ab5ed63d181ff45e, type: 2}
   activeMaterial: {fileID: 2100000, guid: 43c7558ea993dda43992f43579a6f93c, type: 2}
@@ -232,6 +239,8 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  pushStrength: 1
+  flyStrength: 30
   punched: 0
   dummyTurret: {fileID: 8330419756909084312}
   dummyFlyStrength: 1
@@ -240,7 +249,7 @@ MonoBehaviour:
     m_Bits: 1024
   projectileSpawn: {fileID: 1493225532344331425}
   projectile: {fileID: 2495954065950604686, guid: 4b19a800cedc2fb448d58fe0e1dda3ef, type: 3}
-  shootTime: 1.5
+  shootTime: 0.5
 --- !u!65 &5662471101290131797
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -270,7 +279,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2282942889569997478}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 0.49
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -287,7 +296,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!65 &4806561078351318417
 BoxCollider:

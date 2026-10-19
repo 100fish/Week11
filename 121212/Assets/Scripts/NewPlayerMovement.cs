@@ -128,7 +128,7 @@ public class NewPlayerMovement : Entities
     public void Set_Slide(bool _can) => can_slide = _can;
     bool can_punch = true;
     public void Set_Punch(bool _can) => can_punch = _can;
-    bool can_uppercut = false;
+    bool can_uppercut = true;
     public void Set_Uppercut(bool _can) => can_uppercut = _can;
 
     #endregion
@@ -251,6 +251,9 @@ public class NewPlayerMovement : Entities
 
         // CameraShake();
 
+        Debug.Log("starting Righpunch func1");
+
+
         Punch(true);
     }
 
@@ -258,7 +261,10 @@ public class NewPlayerMovement : Entities
 
     private void Punch(bool _upper_cut)
     {
-        if(!groundedPlayer)
+        Debug.Log("starting punch func0");
+
+
+        if (!groundedPlayer)
         {
             punched_in_air = true;
         }
@@ -267,6 +273,7 @@ public class NewPlayerMovement : Entities
 
         if(upper_cut) 
         {
+            Debug.Log("starting uppercut");
             playerAnimator.Start_Uppercut();
             
         }
@@ -711,7 +718,7 @@ public class NewPlayerMovement : Entities
  
         _last_y_pos = _current_y_pos;
 
-        print("slide_decrease: lsst_pos = " + Mathf.Round(_last_y_pos * 10) + ", new_pos: " + Mathf.Round(_current_y_pos * 5) + ", can_decrease_slide: " + _can_decrease_slide);
+        //print("slide_decrease: lsst_pos = " + Mathf.Round(_last_y_pos * 10) + ", new_pos: " + Mathf.Round(_current_y_pos * 5) + ", can_decrease_slide: " + _can_decrease_slide);
 
         
 
@@ -787,7 +794,7 @@ public class NewPlayerMovement : Entities
             _animation_last_y_pos = transform.position.y;
 
             float _dist = Mathf.Round(_distance_between_y_pos * 500) / 500;
-            print("distance: " + _dist);
+            //print("distance: " + _dist);
 
             if ((falling_time_to_reach_anim >= max_falling_time_to_reach_anim || falling_time_to_reach_anim >= 0.1f && _dist > 0.075f) && _dist > 0.05f)
             {
@@ -823,7 +830,7 @@ public class NewPlayerMovement : Entities
 
         if (movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
         {
-            Debug.Log("Hi I'm: " + id + "And I'm: " + movementState);
+            //Debug.Log("Hi I'm: " + id + "And I'm: " + movementState);
             CameraShake();
 
             switch (perpetrator.myEntityType)

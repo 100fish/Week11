@@ -51,7 +51,7 @@ public class StartUI : MonoBehaviour
 
     public static void Play_WatchYourself()
     {
-        print("WatchYourself 2: + " + _punch_hit_enemy);
+        //print("WatchYourself 2: + " + _punch_hit_enemy);
         if (!_punch_hit_enemy) return;
 
         Set_UI(4);
@@ -163,7 +163,7 @@ public class StartUI : MonoBehaviour
 
     public static void Start_Countdown()
     {
-        Instance.newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
+        //Instance.newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
     }
 
     public static void Open_Elevator()

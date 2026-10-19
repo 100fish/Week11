@@ -66,22 +66,27 @@ public class EndUI : MonoBehaviour
         overall_score += _value;
     }
 
-    public void FinalScore()
+    public float FinalScore()
     {
         float _value = overall_score / 3;
         if (_value > 1) _value = 1;
 
         OverallScore.Set_Score(_value);
+
+        return _value;
     }
 
-    public void Start_UI()
+    public float Start_UI()
     {
-        FinalScore();
+        float final = FinalScore();
+
 
         if (overall_score < 1.2f) RetryAnimator.SetBool("Retry", true);
         else RetryAnimator.SetBool("Retry", false);
 
         UIAnimator.SetBool("Play", true);
+
+        return final;
     }
 
     public void End_UI()

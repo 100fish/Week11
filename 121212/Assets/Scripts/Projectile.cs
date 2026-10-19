@@ -106,7 +106,10 @@ public class Projectile : Entities
 
                 previousMaterial = firingMaterial;
                 mr.material = firingMaterial;
-                ps.Play();
+                //ps.Play();
+
+                transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z * 1.5f);
+
                 fired = true;
             }
 
@@ -134,7 +137,7 @@ public class Projectile : Entities
         newMenuManager.newReplayManager.EndReplay -= Deactivate;
         mr.enabled = false;
         sc.enabled = false;
-        ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        //ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     public override void Hit_Entity(Entities perp, PunchManager.PunchType punchType)

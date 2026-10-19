@@ -11,6 +11,9 @@ public class Enemy : Entities
 
     private NewMenuManager newMenuManager;
 
+    [SerializeField] private int startHealth;
+    public int health;
+
     [SerializeField] private Transform barrel;
 
     [SerializeField] public Rigidbody enemyRigidBody;
@@ -66,6 +69,8 @@ public class Enemy : Entities
     [SerializeField]
     private EnemyTorsoRotator enemyTorsoRotator;
 
+    [SerializeField] Material[] materials;
+
     private LineRenderer lineRenderer;
     private SphereCollider sphereCollider;
 
@@ -74,6 +79,8 @@ public class Enemy : Entities
     protected void Awake()
     {
         myEntityType = EntityType.Enemy;
+
+        health = startHealth;
 
         Reset_Shot_Count();
 
@@ -93,7 +100,7 @@ public class Enemy : Entities
         newMenuManager = NewMenuManager.instance;
 
         newReplayManager = NewReplayManager.instance;
-        newReplayManager.RegisterEnemy(this);
+        //newReplayManager.RegisterEnemy(this);
 
 
         renderers = new Renderer[meshRenderers.Length];
@@ -101,6 +108,11 @@ public class Enemy : Entities
         for (int i = 0; i < meshRenderers.Length; i++)
         {
             renderers[i] = meshRenderers[i].gameObject.GetComponent<Renderer>();
+        }
+
+        for (int i = 0; i < meshRenderers.Length; i++)
+        {
+            meshRenderers[i].material = materials[health];
         }
 
         shootTimer = shootTime;
@@ -121,11 +133,11 @@ public class Enemy : Entities
     
     void Update()
     {
-        SetMaterial(idleMaterial);
+        //SetMaterial(idleMaterial);
 
         if (myPlayerList.Count <= 0)
         {
-            SetMaterial(activeMaterial);
+            //SetMaterial(activeMaterial);
             barrel.transform.Rotate(0, idleRotateSpeed * Time.deltaTime, 0);
         }
 
@@ -144,8 +156,8 @@ public class Enemy : Entities
             //Debug.Log("Enemy playerList:" + myPlayerList.Count);
             if (myPlayerList.Count > 0)
             {
-                Debug.Log("Runindex: " + newMenuManager.runIndex);
-                Debug.Log("Roundstate: " + newMenuManager.roundState);
+                //.Log("Runindex: " + newMenuManager.runIndex);
+                //Debug.Log("Roundstate: " + newMenuManager.roundState);
                 if(myPlayerList.Contains(newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform))
                 {
                     //Debug.Log("Enemy SHOOTCHECK:" + id);
@@ -220,10 +232,15 @@ public class Enemy : Entities
         }
     }
 
+    [SerializeField] private float pushStrength;
+    [SerializeField] private float flyStrength;
+
     public PunchManager.PunchType punched = PunchManager.PunchType.None;
 
     [SerializeField] private DummyTurret dummyTurret;
     [SerializeField] private float dummyFlyStrength;
+
+    bool replayHit = false;
 
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
@@ -234,33 +251,61 @@ public class Enemy : Entities
 
         StartUI.Punch_Hit_Enemy();
 
-        enemyReplayState = EnemyReplayState.Active;
+        if(!replayHit) enemyReplayState = EnemyReplayState.Active;
 
         if (enemyState != EnemyState.Dead)
         {
-            enemyState = EnemyState.Dead;
+            health--;
 
-
-            dummyTurret.ActivateDummy(dummyFlyStrength, perpetrator.transform.position, barrel.position, transform.position, barrel.rotation, transform.rotation);
-
-            punched = PunchManager.PunchType.Left;
-            lineRenderer.enabled = false;
-
-            SaveSnapshot();
-            NewMenuManager newMenuManager = NewMenuManager.instance;
-
-            newMenuManager.EnemyDeath();
-
-            foreach (var meshRenderer in meshRenderers)
+            if(health > 0)
             {
-                meshRenderer.enabled = false;
+                for (int i = 0; i < meshRenderers.Length; i++)
+                {
+                    meshRenderers[i].material = materials[health];
+                }
+
+                if(punchType == PunchType.Left)
+                {
+                    enemyRigidBody.AddForce((transform.position - perpetrator.transform.position).normalized * pushStrength, ForceMode.Impulse);
+                    punched = PunchManager.PunchType.Left;
+                }
+                else if(punchType == PunchType.Right)
+                {
+                    enemyRigidBody.AddForce(transform.up * flyStrength, ForceMode.Impulse);
+                    punched = PunchManager.PunchType.Right;
+                }
+
+                SaveSnapshot();
+            }
+            else
+            {
+                enemyState = EnemyState.Dead;
+
+
+                dummyTurret.ActivateDummy(dummyFlyStrength, perpetrator.transform.position, barrel.position, transform.position, barrel.rotation, transform.rotation);
+
+                punched = PunchManager.PunchType.Left;
+                lineRenderer.enabled = false;
+
+                SaveSnapshot();
+                NewMenuManager newMenuManager = NewMenuManager.instance;
+
+                newMenuManager.EnemyDeath();
+
+                foreach (var meshRenderer in meshRenderers)
+                {
+                    meshRenderer.enabled = false;
+                }
             }
         }
+        replayHit = false;
     }
 
     public void ReviveEnemy()
     {
         enemyState = EnemyState.Alive;
+
+        health = startHealth;
 
         punched = PunchManager.PunchType.None;
         lineRenderer.enabled = true;
@@ -270,6 +315,7 @@ public class Enemy : Entities
         foreach (var meshRenderer in meshRenderers)
         {
             meshRenderer.enabled = true;
+            meshRenderer.material = materials[health];
         }
     }
 
@@ -353,6 +399,8 @@ public class Enemy : Entities
         if (info.replay_wasPunched != PunchManager.PunchType.None)
         {
             Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
+
+            replayHit = true;
             Hit_Entity(this, info.replay_wasPunched);
         }
     }

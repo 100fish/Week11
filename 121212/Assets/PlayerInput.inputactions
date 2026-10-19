@@ -104,6 +104,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "RedoLevel",
+                    "type": "Button",
+                    "id": "77738d92-3993-4821-ba0b-8769018eacd4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -264,11 +273,22 @@
                 {
                     "name": "",
                     "id": "3c913767-b4cc-4b24-8446-4973f3ff1e29",
-                    "path": "<Keyboard>/x",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "NextLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d2fc65cb-9d4a-47ba-8a0e-f0c1bcd58338",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RedoLevel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

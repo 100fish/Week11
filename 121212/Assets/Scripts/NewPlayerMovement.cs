@@ -287,8 +287,8 @@ public class NewPlayerMovement : Entities
 
     private void Update()
     {   
-        //myCamera.transform.rotation = previousCameraRot;
-        //myCamera.transform.position = previousCameraPos;
+        myCamera.transform.rotation = previousCameraRot;
+        myCamera.transform.position = previousCameraPos;
 
         ///DEBUG
         for (int i = 0; i < IDTexts.Length; i++)
@@ -308,13 +308,13 @@ public class NewPlayerMovement : Entities
         //move character
         MovePlayer();
         //rotate character
-        //RotateCamera();
+        RotateCamera();
         transform.Rotate(new Vector3(0, playerInput.Standard.MouseLook.ReadValue<Vector2>().x, 0) * lookSpeed);
 
         AnimatingPlayer();
 
-        //previousCameraRot = myCamera.transform.rotation;
-        //previousCameraPos = myCamera.transform.position;
+        previousCameraRot = myCamera.transform.rotation;
+        previousCameraPos = myCamera.transform.position;
 
         CameraRaycast();
 

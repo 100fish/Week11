@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class NewMenuManager : MonoBehaviour
 {
     [SerializeField] private ElevatorAnimator elevatorAnimator;
     [SerializeField] private CameraTransition camTrans;
+    [SerializeField] private MeshRenderer ocean;
+    [SerializeField] private Material oceanBump;
 
     #region Input and Singleton setup
 
@@ -193,6 +196,8 @@ public class NewMenuManager : MonoBehaviour
     {
         newReplayManager = NewReplayManager.instance;
 
+        oceanBump = ocean.material;
+
         LoadLevel(0);
 
         //Timer setup
@@ -256,6 +261,10 @@ public class NewMenuManager : MonoBehaviour
 
                         //Set and format timer text
                         gameTimerText.text = Mathf.Round(gameTimer).ToString() + " seconds";
+
+                        Debug.Log("Runindex player position: " + new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
+                        //Shader.SetGlobalVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 1000);
+                        oceanBump.SetVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
 
                         #region Round / Game end checks
                         ///Win condition should be dynamic

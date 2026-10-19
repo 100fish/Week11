@@ -2438,10 +2438,15 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 2000, y: 600, z: 2000}
   m_Center: {x: 0, y: -1000, z: 0}
+--- !u!23 &902355177 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: a43bbd7eab99ffe42b484e6780614a89, type: 3}
+  m_PrefabInstance: {fileID: 770885732}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &951980402
 GameObject:
   m_ObjectHideFlags: 0
@@ -3164,6 +3169,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NewMenuManager
   elevatorAnimator: {fileID: 576573417}
   camTrans: {fileID: 1992550344}
+  ocean: {fileID: 902355177}
+  oceanBump: {fileID: 2100000, guid: 36df384319b48ac439d3a9fb6adeddbc, type: 2}
   menuCamera: {fileID: 1398905198}
   gameCamera: {fileID: 0}
   gameState: 0
@@ -3188,7 +3195,7 @@ MonoBehaviour:
   newReplayManager: {fileID: 0}
   runIndex: -1
   levels:
-  - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
+  - {fileID: 3579740394190914425, guid: f39726c47c9c206498af26ab26975639, type: 3}
   - {fileID: 3618490597446698003, guid: 3b51f67768fd91a45921c4018e313cdf, type: 3}
 --- !u!1 &1073875410
 GameObject:

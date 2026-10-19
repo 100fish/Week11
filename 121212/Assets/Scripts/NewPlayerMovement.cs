@@ -343,7 +343,7 @@ public class NewPlayerMovement : Entities
         RaycastHit ray;
 
         Vector3 _camera_pos = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y + current_camera_position_change_y, myCamera.transform.position.z);
-        print("camerapos: " + _camera_pos);
+        //print("camerapos: " + _camera_pos);
 
         if (Physics.Raycast(transform.position, (_camera_pos - transform.position).normalized, out ray, cameraDistance, cameraLayerMask))
         {

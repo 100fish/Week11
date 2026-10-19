@@ -12,5 +12,6 @@ public class NewSnapshotInfoEnemy
     public Vector3 replay_angularVelocity = Vector3.zero;
 
     public PunchManager.PunchType replay_wasPunched = PunchManager.PunchType.None;
+    public bool replay_health = false;
     public List<Entities> affectedObjects = new List<Entities>();
 }

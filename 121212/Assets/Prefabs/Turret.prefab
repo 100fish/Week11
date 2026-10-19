@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   myEntityType: 0
-  startHealth: 1
+  startHealth: 0
   health: 0
   barrel: {fileID: 667348197567360773}
   enemyRigidBody: {fileID: 3871457546657152799}
@@ -202,10 +202,8 @@ MonoBehaviour:
   - {fileID: 1265931501661321568}
   enemyTorsoRotator: {fileID: 546725132545123614}
   materials:
-  - {fileID: 2100000, guid: 84c9b86f99d21fe4c9a78abfb7a6fd52, type: 2}
   - {fileID: 2100000, guid: 4ae3e71b63c57d54ab5ed63d181ff45e, type: 2}
   - {fileID: 2100000, guid: 7510d3e2e506a894e86a657b2ff2314e, type: 2}
-  - {fileID: 2100000, guid: f75ade3cc92339546a95e4b1bee4fa01, type: 2}
   idleRotateSpeed: 20
   idleMaterial: {fileID: 2100000, guid: 4ae3e71b63c57d54ab5ed63d181ff45e, type: 2}
   activeMaterial: {fileID: 2100000, guid: 43c7558ea993dda43992f43579a6f93c, type: 2}

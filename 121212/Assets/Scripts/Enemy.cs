@@ -11,8 +11,8 @@ public class Enemy : Entities
 
     private NewMenuManager newMenuManager;
 
-    [SerializeField] private int startHealth;
-    public int health;
+    [SerializeField] private bool startHealth;
+    public bool health;
 
     [SerializeField] private Transform barrel;
 
@@ -112,7 +112,14 @@ public class Enemy : Entities
 
         for (int i = 0; i < meshRenderers.Length; i++)
         {
-            meshRenderers[i].material = materials[health];
+            if(health)
+            {
+                meshRenderers[i].material = materials[1];
+            }
+            else
+            {
+                meshRenderers[i].material = materials[0];
+            }
         }
 
         shootTimer = shootTime;
@@ -255,27 +262,33 @@ public class Enemy : Entities
 
         if (enemyState != EnemyState.Dead)
         {
-            health--;
+            
 
-            if(health > 0)
+            if(health)
             {
-                for (int i = 0; i < meshRenderers.Length; i++)
-                {
-                    meshRenderers[i].material = materials[health];
-                }
+
 
                 if(punchType == PunchType.Left)
                 {
-                    enemyRigidBody.AddForce((transform.position - perpetrator.transform.position).normalized * pushStrength, ForceMode.Impulse);
-                    punched = PunchManager.PunchType.Left;
+                    //enemyRigidBody.AddForce((transform.position - perpetrator.transform.position).normalized * pushStrength, ForceMode.Impulse);
+                    //punched = PunchManager.PunchType.Left;
+                    //SaveSnapshot();
                 }
                 else if(punchType == PunchType.Right)
                 {
-                    enemyRigidBody.AddForce(transform.up * flyStrength, ForceMode.Impulse);
+
+                    for (int i = 0; i < meshRenderers.Length; i++)
+                    {
+                        meshRenderers[i].material = materials[0];
+                    }
+
+                    health = false;
+                    enemyRigidBody.AddForce(transform.up * (flyStrength /2), ForceMode.Impulse);
                     punched = PunchManager.PunchType.Right;
+                    SaveSnapshot();
                 }
 
-                SaveSnapshot();
+
             }
             else
             {
@@ -315,7 +328,17 @@ public class Enemy : Entities
         foreach (var meshRenderer in meshRenderers)
         {
             meshRenderer.enabled = true;
-            meshRenderer.material = materials[health];
+
+            if(health)
+            {
+
+                meshRenderer.material = materials[1];
+            }
+            else
+            {
+
+                meshRenderer.material = materials[0];
+            }
         }
     }
 
@@ -380,7 +403,8 @@ public class Enemy : Entities
             replay_linearVelocity = enemyRigidBody.linearVelocity,
             replay_rotation = transform.rotation,
             replay_angularVelocity = enemyRigidBody.angularVelocity,
-            replay_wasPunched = punched
+            replay_wasPunched = punched,
+            replay_health = health
         };
 
         //if (punched != PunchManager.PunchType.None)
@@ -394,7 +418,10 @@ public class Enemy : Entities
         enemyRigidBody.linearVelocity = info.replay_linearVelocity;
         transform.rotation = info.replay_rotation;
         enemyRigidBody.angularVelocity = info.replay_angularVelocity;
-        
+        health = info.replay_health;
+
+
+        Debug.Log("I'm: " + id + " and I'm now: " + info.replay_wasPunched);
 
         if (info.replay_wasPunched != PunchManager.PunchType.None)
         {

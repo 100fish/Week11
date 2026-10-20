@@ -124,7 +124,14 @@ public class Projectile : Entities
     {
         if (other.gameObject == targetPlayer.gameObject)
         {
-            targetPlayer.Hit_Entity(this, PunchManager.PunchType.None);
+            if(targetPlayer.PunchHappening())
+            {
+                Deactivate();
+            }
+            else
+            {
+                targetPlayer.Hit_Entity(this, PunchManager.PunchType.None);
+            }
         }
         else if(other.gameObject.tag != "Enemy" && other.gameObject.tag != "Player")
         {

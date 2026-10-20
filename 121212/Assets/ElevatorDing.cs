@@ -7,6 +7,7 @@ public class ElevatorDing : StateMachineBehaviour
     {
         ElevatorAnimator EA = animator.transform.parent.GetComponent<ElevatorAnimator>();
         if (EA._mute) return;
+        if (NewMenuManager.instance.runIndex <= 0) return;
         AudioManager.PlaySound(SFX.ElevatorDing);
     }
 

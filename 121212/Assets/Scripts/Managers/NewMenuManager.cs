@@ -106,7 +106,8 @@ public class NewMenuManager : MonoBehaviour
         fall,
         projectile,
         player,
-        time
+        time,
+        bigEnemy
     }
 
     //the game's state
@@ -261,7 +262,7 @@ public class NewMenuManager : MonoBehaviour
                             //turn off the countdown Panel
                             gameStartTimerPanel.SetActive(false);
                             //start the round
-                            Debug.Log(1);
+                            //Debug.Log(1);
 
                             ChangeRoundState(RoundState.Gameplay);
                         }
@@ -992,6 +993,10 @@ public class NewMenuManager : MonoBehaviour
             case RoundEndCause.time:
                 PlayerTransition(RoundEndCause.time);
                 elevatorAnimator.deathText.text = "WATCH\nTHE CLOCK"; 
+                break;
+            case RoundEndCause.bigEnemy:
+                PlayerTransition(RoundEndCause.bigEnemy);
+                elevatorAnimator.deathText.text = "MUST UPPERCUT\nYELLOW";
                 break;
             default:
                 break;

@@ -7,7 +7,7 @@ public class StartUiColliders : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("on enter; 1");
+        //print("on enter; 1");
         if (other.tag != "Player") return;
         //print("trig: " + other.tag);
 
@@ -17,11 +17,11 @@ public class StartUiColliders : MonoBehaviour
             return;
         }
 
-        print("on enter; 2");
+        //print("on enter; 2");
 
         if (UI_int == 5)
         {
-            print("on enter; 3");
+            //print("on enter; 3");
 
             StartUI.Set_UI(UI_int);
             NewMenuManager.instance.Uppercut_On();

@@ -162,7 +162,7 @@ public class NewPlayerMovement : Entities
 
         Application.targetFrameRate = 60;
 
-        print("hefffre 2");
+        //print("hefffre 2");
     }
 
     protected override void OnEnable()
@@ -902,7 +902,14 @@ public class NewPlayerMovement : Entities
                     newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.player);
                     break;
                 case EntityType.Enemy:
-                    newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.projectile);
+                    if (perpetrator.GetComponent<Enemy>().startHealth)
+                    {
+                        newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.bigEnemy);
+                    }
+                    else
+                    {
+                        newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.projectile);
+                    }
                     break;
                 case EntityType.Projectile:
                     newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.projectile);

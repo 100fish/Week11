@@ -75,7 +75,7 @@ public class NewReplayManager : MonoBehaviour
     //Resets the playback and recording
     public void StartRoundPlaybackAndRecording(int runIndex)
     {
-        Debug.Log("...................");
+        /*Debug.Log("...................");
         Debug.Log("//START " + runIndex + "th RECOUNT//");
         for (int i = 0; i < newReplayContainer.m_snapshots.Count; i++)
         {
@@ -87,7 +87,7 @@ public class NewReplayManager : MonoBehaviour
                 Debug.Log("Enemy's Punch this frame: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_wasPunched);
             }
         }
-        Debug.Log("//END  " + runIndex + "th RECOUNT//");
+        Debug.Log("//END  " + runIndex + "th RECOUNT//");*/
 
         EndReplay?.Invoke();
         currentState = State.Active; //turns it on
@@ -178,6 +178,7 @@ public class NewReplayManager : MonoBehaviour
         }
     }
 
+    
 
     private void FixedUpdate()
     {
@@ -326,7 +327,7 @@ public class NewReplayManager : MonoBehaviour
                     if (currentSnapshotData.enemySnapshots.Count <= i)
                     {
                         enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
-                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot(m_time));
                     }
                     else
                     {
@@ -334,7 +335,7 @@ public class NewReplayManager : MonoBehaviour
                         //enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
 
                         enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
-                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot(m_time));
                     }
 
                     break;                  
@@ -346,7 +347,7 @@ public class NewReplayManager : MonoBehaviour
                     {
                         if(currentSnapshotData.frameTime != 0)
                         {
-                            currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot());
+                            currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot(m_time));
                             enemies[i].enemyReplayState = Enemy.EnemyReplayState.Active;
                         }
                         ///If you want to turn the replayed players off when they die, this is a good place
@@ -365,7 +366,7 @@ public class NewReplayManager : MonoBehaviour
                             frameToLoad = FindEnemyNonNullFrame(newReplayContainer, snapshotIndex, i - 1);
                         }
 
-                        enemies[i].LoadSnapshot(frameToLoad);
+                        enemies[i].LoadSnapshot(frameToLoad, m_time);
 
                     }
                     break;

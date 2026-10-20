@@ -3347,10 +3347,10 @@ MonoBehaviour:
   myEndUI: {fileID: 846859043}
   currentLevel: 0
   levels:
-  - {fileID: 3579740394190914425, guid: 305ab872eddfc584ea8cf59d5b376294, type: 3}
   - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
   - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
   - {fileID: 3579740394190914425, guid: 3cf86eaf0ae854846b0dfb5cf4cf5b4e, type: 3}
+  - {fileID: 3579740394190914425, guid: 305ab872eddfc584ea8cf59d5b376294, type: 3}
 --- !u!1 &1073875410
 GameObject:
   m_ObjectHideFlags: 0
@@ -4832,7 +4832,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2001206435717657080, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: NoTutorial
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2001206435717657080, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: StartUI_Animator_p

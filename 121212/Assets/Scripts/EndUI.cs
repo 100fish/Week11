@@ -60,6 +60,7 @@ public class EndUI : MonoBehaviour
 
     public void Pass_Kills(float kills)
     {
+        print("Kills stuff: " + kills + ", kill count: " + KillCount);
         float _value = kills / KillCount;
         if (_value > 1) _value = 1;
 

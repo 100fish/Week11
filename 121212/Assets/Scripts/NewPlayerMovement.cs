@@ -127,7 +127,12 @@ public class NewPlayerMovement : Entities
     bool can_slide= true;
     public void Set_Slide(bool _can) => can_slide = _can;
     bool can_punch = true;
-    public void Set_Punch(bool _can) => can_punch = _can;
+    public void Set_Punch(bool _can)
+    {
+        can_punch = _can;
+
+        print("set_punch 2");
+    }
     bool can_uppercut = true;
     public void Set_Uppercut(bool _can) => can_uppercut = _can;
 
@@ -951,8 +956,6 @@ public class NewPlayerMovement : Entities
     {
         playerInput = new PlayerInput();
 
-        
-
         //myCamera.transform.position = startCameraPos;
         myAudioListener.enabled = true;
 
@@ -967,8 +970,6 @@ public class NewPlayerMovement : Entities
 
         playerInput.Standard.Slide.started += Slide;
         playerInput.Standard.Slide.canceled += StopSlide;
-
-
 
         playerInput.Standard.ESC.started += Exit;
 

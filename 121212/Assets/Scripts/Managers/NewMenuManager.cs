@@ -555,6 +555,7 @@ public class NewMenuManager : MonoBehaviour
         currentStats.z = enemyDeathCount;
 
         UnloadLevel(currentLevelObject);
+        if ((int)currentLevel < 4) endUI.Pass_Bests(levelBests[(int)currentLevel]);
         currentLevel++;
 
         //call this when the player walks back into the elevator
@@ -567,9 +568,7 @@ public class NewMenuManager : MonoBehaviour
         //(levelBests[(int)currentLevel].x - currentStats.x),
         //levelBests[(int)currentLevel].z));
 
-        if((int)currentLevel < 4) endUI.Pass_Bests(levelBests[(int)currentLevel]);
-
-        endUI.Pass_Attempts(currentStats.x - currentStats.z);
+        endUI.Pass_Attempts(currentStats.x);
         endUI.Pass_Time(currentStats.y);
         endUI.Pass_Kills(currentStats.z);
 
@@ -971,7 +970,8 @@ public class NewMenuManager : MonoBehaviour
 
     private void ChangeFromDeathUI()
     {
-        ///Maybe do some stuff about resetting the player here too, maybeeeee ee e ee e e !
+        elevatorClosed = false;
+        elevatorAnimator.Open_Elevator();
     }
     private void ChangeToDeathUI(RoundEndCause roundEndCause)
     {

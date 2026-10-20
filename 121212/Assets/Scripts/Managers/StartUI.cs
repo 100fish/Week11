@@ -112,7 +112,11 @@ public class StartUI : MonoBehaviour
         if(UID == 0) new_player_movement.Set_Jump(true);
         else if (UID == 1) new_player_movement.Set_DoubleJump(true);
         else if (UID == 2) new_player_movement.Set_Slide(true);
-        else if (UID == 3) new_player_movement.Set_Punch(true);
+        else if (UID == 3)
+        {
+            print("set_punch 1");
+            new_player_movement.Set_Punch(true);
+        }
     }
 
     public static void Set_UI(int num)

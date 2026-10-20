@@ -536,7 +536,7 @@ public class NewPlayerMovement : Entities
         
         if(upper_cut)
         {
-            PunchManager.Punch(this, transform, PunchManager.PunchType.Right, true, punchRange);
+            PunchManager.Punch(this, transform, PunchManager.PunchType.Right, true, punchRange + 3);
             punchType = PunchManager.PunchType.Right;
         } else
         {

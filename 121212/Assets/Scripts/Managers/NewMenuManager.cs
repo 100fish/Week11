@@ -282,7 +282,7 @@ public class NewMenuManager : MonoBehaviour
                         gameTimer -= Time.deltaTime;
 
                         //Set and format timer text
-                        gameTimerText.text = Mathf.Round(totalTime).ToString();
+                        gameTimerText.text = (Mathf.Round(totalTime * 100) / 100).ToString();
                         oceanBump.SetVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
 
                         #region Round / Game end checks
@@ -567,13 +567,11 @@ public class NewMenuManager : MonoBehaviour
         //(levelBests[(int)currentLevel].x - currentStats.x),
         //levelBests[(int)currentLevel].z));
 
-        endUI.Pass_Bests(levelBests[(int)currentLevel]);
+        if((int)currentLevel < 4) endUI.Pass_Bests(levelBests[(int)currentLevel]);
 
         endUI.Pass_Attempts(currentStats.x - currentStats.z);
         endUI.Pass_Time(currentStats.y);
         endUI.Pass_Kills(currentStats.z);
-
-
 
         if (enemyDeathCount == 0)
         {
@@ -623,6 +621,7 @@ public class NewMenuManager : MonoBehaviour
         if(newLevel == Levels.None)
         {
             FinalScreen.instance.Activate_FinalScreen();
+            AudioManager.Stop_LevelSound();
             return;
         }
 
@@ -902,7 +901,7 @@ public class NewMenuManager : MonoBehaviour
 
         //Reset enemy death counter
         enemyDeathCount = 0;
-        enemyDeathCounterText.text = enemyDeathCount.ToString() + " enemies";
+        enemyDeathCounterText.text = "0/" + enemyDeathCount.ToString() + " kills";
 
 
 

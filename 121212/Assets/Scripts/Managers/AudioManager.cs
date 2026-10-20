@@ -64,6 +64,8 @@ public class AudioManager : MonoBehaviour
 
     public static void Play_LevelMusic(int _level)
     {
+        if (_level > 3) return;
+
         if (_waiting_to_start_level_music || _playing_level_sound) return;
         //print("ffffAudio: 3");
         PlayMusic(MUSIC.Applause, 0, false, true);

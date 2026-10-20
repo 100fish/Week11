@@ -165,7 +165,7 @@ public class Enemy : Entities
 
         float _enemy_distance = Vector3.Distance(transform.position, newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform.position);
         //print("enemy distane: " + _enemy_distance);
-        if (_enemy_distance < 9) return;
+        if (_enemy_distance < Firerate_NoFireDist) return;
 
         if (shootTimer > 0)
         {
@@ -192,7 +192,7 @@ public class Enemy : Entities
 
     }
 
-    public float Firerate_NoFireDist;
+    float Firerate_NoFireDist = 9;
 
     public void Fire_Bullet()
     {

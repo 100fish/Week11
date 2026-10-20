@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class FinalScreen : MonoBehaviour
 {
+    public GameObject All;
     public TMP_Text time;
     public EndCanvasScore _overall_score;
 
@@ -11,11 +12,13 @@ public class FinalScreen : MonoBehaviour
     public void Awake()
     {
         instance = this;
+
+        All.SetActive(false);
     }
 
     public void Activate_FinalScreen()
     {
-        gameObject.SetActive(true);
+        All.SetActive(true);
 
         Pass_FinalTime(NewMenuManager.instance.total_time);
         Pass_FinalScore(NewMenuManager.instance.total_score);

@@ -227,6 +227,9 @@ public class NewReplayManager : MonoBehaviour
         Debug.Log("//SNAPSHOT FRAME INFO//");
         Debug.Log("Oldest Frame Is at " + newReplayContainer.m_snapshots[^1].frameTime + " and is smaller than " + m_time);*/
         ///If you get errors in this section the <= is why
+        //Debug.Log("SnapshotIndex: " + snapshotIndex);
+        //Debug.Log("Frametime: " + newReplayContainer.m_snapshots[^1].frameTime);
+        //Debug.Log("M_Time: " + m_time);
             if (newReplayContainer.m_snapshots[^1].frameTime <= m_time)
             {
                 //then make a new snapshot (all defaulted up)

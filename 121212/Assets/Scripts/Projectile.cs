@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Animations;
 
-public class Projectile : Entities
+public class Projectile : MonoBehaviour
 {
 
     private NewMenuManager newMenuManager;
@@ -28,18 +28,10 @@ public class Projectile : Entities
     [SerializeField] Gradient inactiveGradient;
     [SerializeField] Gradient activeGradient;
 
-
     private bool fired;
 
-    private void Awake()
+    protected void Start()
     {
-        myEntityType = EntityType.Projectile;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
         newMenuManager = NewMenuManager.instance;
         targetPlayer = newMenuManager.newReplayManager.players[newMenuManager.runIndex];
 
@@ -62,6 +54,7 @@ public class Projectile : Entities
         lr.colorGradient = inactiveGradient;
     }
 
+    public Enemy myEnemy;
     public enum ProjectileState
     {
         Aiming,
@@ -130,7 +123,7 @@ public class Projectile : Entities
             }
             else
             {
-                targetPlayer.Hit_Entity(this, PunchManager.PunchType.None);
+                targetPlayer.Hit_Entity(myEnemy, PunchManager.PunchType.None);
             }
         }
         else if(other.gameObject.tag != "Enemy" && other.gameObject.tag != "Player")
@@ -147,8 +140,8 @@ public class Projectile : Entities
         //ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
-    public override void Hit_Entity(Entities perp, PunchManager.PunchType punchType)
-    {
-        Deactivate();
-    }
+    ///public override void Hit_Entity(Entities perp, PunchManager.PunchType punchType)
+    ///{
+    ///    Deactivate();
+    ///}
 }

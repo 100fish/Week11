@@ -166,6 +166,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a2cbc40c2c5c5ba45a42c006615b598e, type: 2}
   - {fileID: 2100000, guid: 29b0ea55cc500c34f9d190e106f827d3, type: 2}
   - {fileID: 2100000, guid: 5ecc454e27f560f498889b9fb2ec1386, type: 2}
+  - {fileID: 2100000, guid: 5ecc454e27f560f498889b9fb2ec1386, type: 2}
+  - {fileID: 2100000, guid: 5ecc454e27f560f498889b9fb2ec1386, type: 2}
+  - {fileID: 2100000, guid: 5ecc454e27f560f498889b9fb2ec1386, type: 2}
   meshRenderer: {fileID: 6810903480793881792}
   movementState: 0
   id: 0

@@ -833,12 +833,8 @@ public class NewPlayerMovement : Entities
 
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
-
-        
-
         if (movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
         {
-            //Debug.Log("Hi I'm: " + id + "And I'm: " + movementState);
             CameraShake();
 
             switch (perpetrator.myEntityType)
@@ -847,6 +843,7 @@ public class NewPlayerMovement : Entities
                     newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.player);
                     break;
                 case EntityType.Enemy:
+                    newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.projectile);
                     break;
                 case EntityType.Projectile:
                     newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.projectile);

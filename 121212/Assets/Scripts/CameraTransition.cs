@@ -7,6 +7,7 @@ public class CameraTransition : MonoBehaviour
 {
     private NewMenuManager newMenuManager;
 
+    [SerializeField] public AudioListener realCamera;
     [SerializeField] private LayerMask camACullMask;
 
     [SerializeField] private float sceneTransitionTime;
@@ -101,10 +102,13 @@ public class CameraTransition : MonoBehaviour
         }
         else
         {
+            Debug.Log(0);
 
-            newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
-
-
+            if(newMenuManager.roundState == NewMenuManager.RoundState.DeathUI)
+            {
+                Debug.Log(00);
+                newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
+            }
 
             sceneTransitionTimer = sceneTransitionTime;
             Shader.SetGlobalFloat("_MyFireProgress", 1);

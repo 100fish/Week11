@@ -92,9 +92,9 @@ public class StartUI : MonoBehaviour
 
     public static void Move_Through_UI(int UID)
     {
-        print("movethroughUI: current -  " + Instance.current_ID + ", new - " + UID);
+        //print("movethroughUI: current -  " + Instance.current_ID + ", new - " + UID);
         if (Instance.current_ID > UID) return;
-        print("movethroughUI 2");
+        //print("movethroughUI 2");
         Instance.alpha_direction = -1;
         Instance.delay_betwee_text = 0;
         Instance.alpha = 0;

@@ -248,6 +248,8 @@ public class NewMenuManager : MonoBehaviour
                             //turn off the countdown Panel
                             gameStartTimerPanel.SetActive(false);
                             //start the round
+                            Debug.Log(1);
+
                             ChangeRoundState(RoundState.Gameplay);
                         }
 
@@ -263,9 +265,6 @@ public class NewMenuManager : MonoBehaviour
 
                         //Set and format timer text
                         gameTimerText.text = Mathf.Round(gameTimer).ToString() + " seconds";
-
-                        //Debug.Log("Runindex player position: " + new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
-                        //Shader.SetGlobalVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 1000);
                         oceanBump.SetVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
 
                         #region Round / Game end checks
@@ -280,7 +279,7 @@ public class NewMenuManager : MonoBehaviour
                             //If the timer runs out on a regular run then end the round
                             //With cause for the killcam and reset screen text
                             //And what state to be in cause idk ///tell me
-                            EndRound(RoundEndCause.time, null);
+                            //EndRound(RoundEndCause.time, null);
                         }
                         #endregion
 
@@ -319,12 +318,6 @@ public class NewMenuManager : MonoBehaviour
                             killcamHoverTimer = killcamHoverTime;
 
                             Time.timeScale = 1;
-
-                            if (runIndex >= 9)
-                            {
-                                ChangeState(GameState.End);
-                                return;
-                            }
 
                             //Once the killcam is done we start the new round
                             ChangeRoundState(RoundState.DeathUI, RoundEndCause.projectile);
@@ -494,6 +487,8 @@ public class NewMenuManager : MonoBehaviour
         //Change the roundstate to tutorial, which is what actually begins the game
         if(tutorialCompleted /*|| StartUI.Instance.NoTutorial*/)
         {
+            Debug.Log(2);
+
             ChangeRoundState(RoundState.Countdown);
         }
         else
@@ -519,6 +514,7 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeFromElevator()
     {
 
+        camTrans.realCamera.enabled = false;
         endUI.End_UI();
     }
     private Vector3 currentStats = new Vector3(0,0,0);
@@ -526,6 +522,8 @@ public class NewMenuManager : MonoBehaviour
 
     private void ChangeToElevator()
     {
+
+        camTrans.realCamera.enabled = true;
 
         Time.timeScale = 1;
 
@@ -608,7 +606,7 @@ public class NewMenuManager : MonoBehaviour
         {
             newReplayManager.enemies.Add(levelInfo.levelEnemies[i]);
             newReplayManager.enemies[i].id = i;
-            Debug.Log("Hi I'm: " + newReplayManager.enemies[i].gameObject.name + " and my ID is: " + newReplayManager.enemies[i].id);
+            //Debug.Log("Hi I'm: " + newReplayManager.enemies[i].gameObject.name + " and my ID is: " + newReplayManager.enemies[i].id);
         }
 
         currentLevel = newLevel;
@@ -838,6 +836,8 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeToTutorial()
     {
         StartUI.StartTutorial();
+        Debug.Log(3);
+
         ChangeRoundState(NewMenuManager.RoundState.Countdown);
     }
 
@@ -965,7 +965,7 @@ public class NewMenuManager : MonoBehaviour
                 break;
             case RoundEndCause.player:
                 PlayerTransition(RoundEndCause.player);
-                elevatorAnimator.deathText.text = (newReplayManager.enemies.Count - enemyDeathCount).ToSafeString() +"ENEMIES\nUNPUNCHED";
+                elevatorAnimator.deathText.text = (newReplayManager.enemies.Count - enemyDeathCount).ToSafeString() +" ENEMIES\nUNPUNCHED";
                 break;
             case RoundEndCause.time:
                 PlayerTransition(RoundEndCause.time);
@@ -1024,12 +1024,7 @@ public class NewMenuManager : MonoBehaviour
     //Called by the player movement script when the player is shot or falls into the water
     public void PlayerDeath(GameObject perpetrator, RoundEndCause roundEndCause)
     {
-        if (runIndex >= 9)
-        {
-            //ChangeState(GameState.End);
-            return;
-        }
-
+        Debug.Log("PlayerDeath"); 
         EndRound(roundEndCause, perpetrator);
     }
 

@@ -5582,7 +5582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5832031838676645943, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
       propertyPath: sceneTransitionTime
-      value: 3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 9164467451677598742, guid: e13b4d0c4789bc84d80e47d56261317d, type: 3}
       propertyPath: m_CullingMask.m_Bits

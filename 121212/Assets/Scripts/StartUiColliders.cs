@@ -9,7 +9,7 @@ public class StartUiColliders : MonoBehaviour
     {
         
         if (other.tag != "Player") return;
-        print("trig: " + other.tag);
+        //print("trig: " + other.tag);
         StartUI.Move_Through_UI(UI_int);
     }
 }

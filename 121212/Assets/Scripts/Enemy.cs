@@ -180,8 +180,9 @@ public class Enemy : Entities
 
     public void Fire_Bullet()
     {
-        print("fire! 3");
-        Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+        //print("fire! 3");
+        Projectile newProjectile = Instantiate(projectile, projectileSpawn.position, Quaternion.identity).GetComponent<Projectile>();
+        newProjectile.myEnemy = this;
     }
 
     public Gradient LineColor;
@@ -414,11 +415,11 @@ public class Enemy : Entities
         health = info.replay_health;
 
 
-        Debug.Log("I'm: " + id + " and I'm now: " + info.replay_wasPunched);
+        //Debug.Log("I'm: " + id + " and I'm now: " + info.replay_wasPunched);
 
         if (info.replay_wasPunched != PunchManager.PunchType.None)
         {
-            Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
+            //Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
 
             replayHit = true;
             Hit_Entity(this, info.replay_wasPunched);

@@ -80,6 +80,8 @@ public class EndUI : MonoBehaviour
     {
         float final = FinalScore();
 
+        AudioManager.PlayMusic(MUSIC.Applause);
+        AudioManager.PlayMusic(MUSIC.EndMusic);
 
         if (overall_score < 1.2f) RetryAnimator.SetBool("Retry", true);
         else RetryAnimator.SetBool("Retry", false);

@@ -51,11 +51,14 @@ public class StartUI : MonoBehaviour
              //print("WatchYourself 1: + " + _punch_hit_enemy);
     }
 
+   static bool _set = false;
+
     public static void Play_WatchYourself()
     {
         //print("WatchYourself 2: + " + _punch_hit_enemy);
         if (!_punch_hit_enemy) return;
-
+        if (_set) return;
+        _set = true;
         Set_UI(4);
     }
 
@@ -118,7 +121,7 @@ public class StartUI : MonoBehaviour
 
         _set_ui = true;
         Instance.current_ID = num + 1;
-
+        _overlap_alpha = 0;
         Instance.alpha_direction = 1;
         Instance.delay_betwee_text = 0;
         Instance.alpha = -3;
@@ -145,22 +148,23 @@ public class StartUI : MonoBehaviour
 
         alpha += alpha_direction * (Time.deltaTime * 10);
         _overlap_alpha += Time.deltaTime;
-        float _alpha = Mathf.Clamp01(alpha);
+        alpha = Mathf.Clamp01(alpha);
 
-        print("ssssasasrarfs: " + alpha);
+        print("ssssasasrarfs: " + alpha + ", oa: " + _overlap_alpha);
 
-        text_UI[current_ID].color = new Color32(255, 255, 255, (byte)(255 * _alpha));
+        text_UI[current_ID].color = new Color32(255, 255, 255, (byte)(255 * alpha));
 
         if(current_ID > 2 && _overlap_alpha > 2.25f) Instance.alpha_direction = -1;
 
-        if (_alpha <= 0 && alpha_direction == -1)
+        if (_set_ui) return;
+
+        if (alpha <= 0 && alpha_direction == -1)
         {
             delay_betwee_text += Time.deltaTime;
             if (delay_betwee_text >= delay_betwee_text_max)
             {
                 delay_betwee_text = 0;
                 alpha_direction = 1;
-                if (_set_ui) return;
                 Next_Text();
             }
         }

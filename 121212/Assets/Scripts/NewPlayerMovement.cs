@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections.Specialized;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -249,7 +250,7 @@ public class NewPlayerMovement : Entities
 
         // CameraShake();
 
-        Debug.Log("starting Righpunch func1");
+        //Debug.Log("starting Righpunch func1");
 
 
         Punch(true);
@@ -337,7 +338,7 @@ public class NewPlayerMovement : Entities
         slide_amount = 0;
         groundedPlayer = true;
         current_jump_multiplier = 1;
-
+        transform.position = new Vector3(0, 0, 0);
     }
 
     private void Update()
@@ -543,7 +544,7 @@ public class NewPlayerMovement : Entities
         characterController.Move(finalMove * Time.deltaTime);
         held_punch_for -= Time.deltaTime;
 
-        Debug.Log("Hi I'm " + id);
+        //Debug.Log("Hi I'm " + id);
         
         if(upper_cut)
         {
@@ -964,14 +965,26 @@ public class NewPlayerMovement : Entities
     private PlayerAnimationState previousReplayState;
     public void LoadSnapshot(NewPlayerSnapshotInfo info)
     {
-        if(newMenuManager.runIndex - id < 10)
+        Debug.Log("I'm: " + id + " and I'm: " + (newMenuManager.runIndex - id));
+        if(newMenuManager.runIndex - id < materials.Length && newMenuManager.runIndex - id < -1)
         {
             meshRenderer.material = materials[newMenuManager.runIndex - id];
+
         }
         else
         {
             meshRenderer.material = materials[^1];
         }
+
+
+        //if (newMenuManager.runIndex - id < 10 && newMenuManager.runIndex >= 0)
+        //{
+         //   meshRenderer.material = materials[newMenuManager.runIndex - id];
+        //}
+        //else
+        //{
+        //    meshRenderer.material = materials[^1];
+        //}
 
         transform.position = info.replay_position;
         transform.rotation = info.replay_rotation;

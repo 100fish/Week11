@@ -48,7 +48,7 @@ public class StartUI : MonoBehaviour
     public static void Punch_Hit_Enemy()
     {
         _punch_hit_enemy = true;
-             print("WatchYourself 1: + " + _punch_hit_enemy);
+             //print("WatchYourself 1: + " + _punch_hit_enemy);
     }
 
     public static void Play_WatchYourself()

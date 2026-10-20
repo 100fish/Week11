@@ -253,7 +253,15 @@ public class Enemy : Entities
 
         StartUI.Punch_Hit_Enemy();
 
+
+        if(perpetrator.myEntityType == EntityType.Player && enemyReplayState == EnemyReplayState.Playback)
+        {
+
+        }
+
         if(!replayHit) enemyReplayState = EnemyReplayState.Active;
+
+        
 
         if (enemyState != EnemyState.Dead)
         {
@@ -421,8 +429,8 @@ public class Enemy : Entities
         {
             //Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
 
-            replayHit = true;
-            Hit_Entity(this, info.replay_wasPunched);
+            //replayHit = true;
+            //Hit_Entity(this, info.replay_wasPunched);
         }
     }
 

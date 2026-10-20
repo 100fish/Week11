@@ -20,7 +20,7 @@ public class StartUiColliders : MonoBehaviour
             return;
         }
 
-        print("on enter; 2");
+        //print("on enter; 2");
 
         if (UI_int == 5)
         {

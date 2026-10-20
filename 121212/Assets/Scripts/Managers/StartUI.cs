@@ -117,7 +117,7 @@ public class StartUI : MonoBehaviour
 
     public static void Set_UI(int num)
     {
-        print("UISET: " + num);
+        //print("UISET: " + num);
 
         _set_ui = true;
         Instance.current_ID = num + 1;
@@ -150,7 +150,7 @@ public class StartUI : MonoBehaviour
         _overlap_alpha += Time.deltaTime;
         alpha = Mathf.Clamp01(alpha);
 
-        print("ssssasasrarfs: " + alpha + ", oa: " + _overlap_alpha);
+        //print("ssssasasrarfs: " + alpha);
 
         text_UI[current_ID].color = new Color32(255, 255, 255, (byte)(255 * alpha));
 

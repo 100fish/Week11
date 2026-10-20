@@ -11,12 +11,22 @@ public class Enemy : Entities
 
     private NewMenuManager newMenuManager;
 
-    [SerializeField] private bool startHealth;
+    [SerializeField] public bool startHealth;
     public bool health;
 
     [SerializeField] private Transform barrel;
 
     [SerializeField] public Rigidbody enemyRigidBody;
+
+    // We make a list of each punch that the thing records
+    //and save the timestamp of each punch
+
+    //then when recording, if we pass that timestamp we run the punch
+
+    ////HONEY FLASH ! ! ! ! !////
+   
+    //X IS PUNCHTYPE Y IS PUNCHTIME
+    private List<Vector3> myScuffedPunches = new List<Vector3>();
 
     #region Shot Setup
     [SerializeField] private float attacking_distance = 20f;
@@ -252,6 +262,7 @@ public class Enemy : Entities
 
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
+        Debug.Log(health);
         if(!replayHit) enemyReplayState = EnemyReplayState.Active;
 
         if (enemyState != EnemyState.Dead)
@@ -261,8 +272,9 @@ public class Enemy : Entities
                 if(punchType == PunchType.Left)
                 {
                     //enemyRigidBody.AddForce((transform.position - perpetrator.transform.position).normalized * pushStrength, ForceMode.Impulse);
-                    punched = PunchManager.PunchType.Left;
-                    SaveSnapshot();
+                    if (!replayHit) punched = PunchManager.PunchType.Left;
+                    if(!replayHit)SaveSnapshot(newReplayManager.m_time);
+                    Debug.Log("I got bunched by a beft");
                 }
                 else if(punchType == PunchType.Right)
                 {
@@ -272,17 +284,21 @@ public class Enemy : Entities
                         meshRenderers[i].material = materials[0];
                     }
 
-                    health = false;
+                    
                     enemyRigidBody.AddForce(transform.up * (flyStrength /4), ForceMode.Impulse);
                     enemyRigidBody.useGravity = false;
-                    punched = PunchManager.PunchType.Right;
-                    SaveSnapshot();
+                    if (!replayHit) punched = PunchManager.PunchType.Right;
+                    if (!replayHit) SaveSnapshot(newReplayManager.m_time);
+                    health = false;
+                    Debug.Log("I got bunched by a bight");
                 }
-                
+
 
             }
             else
             {
+                Debug.Log("I fucking died");
+
                 StartUI.Punch_Hit_Enemy();
                 AudioManager.PlaySound(SFX.Punch_Hit);
 
@@ -295,7 +311,7 @@ public class Enemy : Entities
                 punched = PunchManager.PunchType.Left;
                 lineRenderer.enabled = false;
 
-                SaveSnapshot();
+                if (!replayHit) SaveSnapshot(newReplayManager.m_time);
                 NewMenuManager newMenuManager = NewMenuManager.instance;
 
                 newMenuManager.EnemyDeath();
@@ -311,6 +327,7 @@ public class Enemy : Entities
 
     public void ReviveEnemy()
     {
+        Debug.Log("Hi I'm getting revived: " + id);
         enemyState = EnemyState.Alive;
 
         health = startHealth;
@@ -389,7 +406,7 @@ public class Enemy : Entities
         //ShootManager.Shoot(transform, direction, transform, new Color(255, 0, 0, 255), gameObject, (newMenuManager.roundState != NewMenuManager.RoundState.DeathUI));
     }
 
-    public NewSnapshotInfoEnemy SaveSnapshot()
+    public NewSnapshotInfoEnemy SaveSnapshot(float snapShotTime)
     {
 
         NewSnapshotInfoEnemy NewSnapshotInfo = new NewSnapshotInfoEnemy()
@@ -403,12 +420,26 @@ public class Enemy : Entities
             replay_health = health
         };
 
-        if (punched != PunchManager.PunchType.None)
+        if (punched != PunchManager.PunchType.None && startHealth == true)
+        {
+            
+            myScuffedPunches.Add(new Vector2((float)punched, snapShotTime));
+
+            Debug.Log("/////////State: " + enemyReplayState);
+            Debug.Log("New member!: here's everyone: ");
+            for (int i = 0; i < myScuffedPunches.Count; i++)
+            {
+                Debug.Log(myScuffedPunches[i]);
+                Debug.Log(health);
+            }
+
             punched = PunchManager.PunchType.None;
+        }
+
 
         return NewSnapshotInfo;
     }
-    public void LoadSnapshot(NewSnapshotInfoEnemy info)
+    public void LoadSnapshot(NewSnapshotInfoEnemy info, float snapshotTime)
     {
         transform.position = info.replay_position;
         enemyRigidBody.linearVelocity = info.replay_linearVelocity;
@@ -417,14 +448,35 @@ public class Enemy : Entities
         health = info.replay_health;
 
 
-        Debug.Log("I'm: " + id + " and I'm now loading: " + info.replay_wasPunched + "at " + newReplayManager.snapshotIndex);
+        //Debug.Log("I'm: " + id + " and I'm now loading: " + info.replay_wasPunched + "at " + newReplayManager.snapshotIndex);
 
-        if (info.replay_wasPunched != PunchManager.PunchType.None)
+        if(startHealth == true)
         {
-            //Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
+            for (int i = 0; i < myScuffedPunches.Count; i++)
+            {
+                Debug.Log("///State: " + enemyReplayState);
+                Debug.Log("Loading%Checking: " + myScuffedPunches[i]);
+                Debug.Log("against: " + snapshotTime);
+                Debug.Log("health: " + health);
 
-            replayHit = true;
-            Hit_Entity(this, info.replay_wasPunched);
+                if (myScuffedPunches[i].y < snapshotTime)
+                {
+                    Debug.Log(myScuffedPunches[i] + "SUCCEEEEEDSSSS!!! OOOOOOO");
+                    replayHit = true;
+
+                    if(i == 0 && (PunchType)myScuffedPunches[i].x == PunchType.Right)
+                    {
+                        health = true;
+                    }
+                    Hit_Entity(this, (PunchType)myScuffedPunches[i].x);
+                    myScuffedPunches.Remove(myScuffedPunches[i]);
+                }
+                else
+                {
+                    //Debug.Log(myScuffedPunches[i] + "FAILS!!! XXX");
+
+                }
+            }
         }
     }
 

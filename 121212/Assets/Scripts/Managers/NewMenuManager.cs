@@ -211,7 +211,7 @@ public class NewMenuManager : MonoBehaviour
         //gimme that
         UnityEngine.Cursor.lockState = CursorLockMode.Confined;
     }
-
+    [SerializeField] Animator endScreen;
     private bool elevatorClosed;
     private void Update()
     {
@@ -516,12 +516,15 @@ public class NewMenuManager : MonoBehaviour
     }
     private void ChangeFromEnd()
     {
-
+        myEndUI.SetActive(false);
     }
+
+    [SerializeField] private GameObject myEndUI;
 
     private void ChangeToEnd()
     {
-
+        FocusUIPanel(GameStateUIPanels[(int)GameState.End]);
+        endScreen.Play("FinishText");
     }
 
     private void ChangeFromElevator()

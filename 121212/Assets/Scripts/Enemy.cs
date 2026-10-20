@@ -181,8 +181,11 @@ public class Enemy : Entities
     public void Fire_Bullet()
     {
         //print("fire! 3");
-        Projectile newProjectile = Instantiate(projectile, projectileSpawn.position, Quaternion.identity).GetComponent<Projectile>();
-        newProjectile.myEnemy = this;
+        if (Vector3.Distance(transform.position, newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform.position) >2.5f)
+        {
+            Projectile newProjectile = Instantiate(projectile, projectileSpawn.position, Quaternion.identity).GetComponent<Projectile>();
+            newProjectile.myEnemy = this;
+        }    
     }
 
     public Gradient LineColor;
@@ -429,8 +432,8 @@ public class Enemy : Entities
         {
             //Debug.Log("Killing enemy while loading -----------------------  ------------------------------------------------------- ----------------");
 
-            //replayHit = true;
-            //Hit_Entity(this, info.replay_wasPunched);
+            replayHit = true;
+            Hit_Entity(this, info.replay_wasPunched);
         }
     }
 

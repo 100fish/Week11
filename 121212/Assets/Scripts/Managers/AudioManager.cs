@@ -65,7 +65,7 @@ public class AudioManager : MonoBehaviour
     public static void Play_LevelMusic(int _level)
     {
         if (_waiting_to_start_level_music || _playing_level_sound) return;
-        print("ffffAudio: 3");
+        //print("ffffAudio: 3");
         PlayMusic(MUSIC.Applause, 0, false, true);
         PlayMusic(MUSIC.EndMusic, 0, false, true);
 
@@ -89,7 +89,7 @@ public class AudioManager : MonoBehaviour
 
     public static void Start_Level_Music()
     {
-        print("ffffAudio: start level music");
+        //print("ffffAudio: start level music");
         Level_Sound_Volume = instance.AudioSources[level_sound].volume;
         _playing_level_sound = true;
         PlayMusic((MUSIC)level_sound);
@@ -97,9 +97,9 @@ public class AudioManager : MonoBehaviour
 
     public void Update()
     {
-        print("ffffAudio: 1");
+        //print("ffffAudio: 1");
         if (!_waiting_to_start_level_music) return;
-        print("ffffAudio: 2");
+        //print("ffffAudio: 2");
         _time_before_level_music -= Time.deltaTime;
 
         if (_time_before_level_music <= 0 && !_playing_level_sound) Start_Level_Music();
@@ -111,7 +111,7 @@ public class AudioManager : MonoBehaviour
 
         
         instance.AudioSources[level_sound].volume = Level_Sound_Volume * current_Level_Sound_Volume_Divide;
-        print("ffffAudio: volume divide " + current_Level_Sound_Volume_Divide + ", original volume: " + Level_Sound_Volume + ", new volume: " + instance.AudioSources[level_sound].volume);
+        //print("ffffAudio: volume divide " + current_Level_Sound_Volume_Divide + ", original volume: " + Level_Sound_Volume + ", new volume: " + instance.AudioSources[level_sound].volume);
 
         if (current_Level_Sound_Volume_Divide <= 0) Stop_LevelSound();
     }

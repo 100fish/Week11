@@ -262,9 +262,10 @@ public class Enemy : Entities
 
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
-        Debug.Log(health);
+        Debug.Log("hi I'm: " + id);
         if(!replayHit) enemyReplayState = EnemyReplayState.Active;
 
+        Debug.Log("hi I'm: " + id);
         if (enemyState != EnemyState.Dead)
         {
             if(health)
@@ -279,6 +280,7 @@ public class Enemy : Entities
                 else if(punchType == PunchType.Right)
                 {
 
+                    Debug.Log("hi I'm: " + id + punchType);
                     for (int i = 0; i < meshRenderers.Length; i++)
                     {
                         meshRenderers[i].material = materials[0];
@@ -446,7 +448,7 @@ public class Enemy : Entities
         transform.rotation = info.replay_rotation;
         enemyRigidBody.angularVelocity = info.replay_angularVelocity;
         health = info.replay_health;
-
+        
 
         //Debug.Log("I'm: " + id + " and I'm now loading: " + info.replay_wasPunched + "at " + newReplayManager.snapshotIndex);
 
@@ -468,6 +470,8 @@ public class Enemy : Entities
                     {
                         health = true;
                     }
+
+                    Debug.Log("hi I'm: " + id);
                     Hit_Entity(this, (PunchType)myScuffedPunches[i].x);
                     myScuffedPunches.Remove(myScuffedPunches[i]);
                 }
@@ -477,6 +481,10 @@ public class Enemy : Entities
 
                 }
             }
+        }
+        else if(info.replay_wasPunched!= PunchType.None)
+        {
+            Hit_Entity(this, info.replay_wasPunched);
         }
     }
 

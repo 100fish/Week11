@@ -5617,6 +5617,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 709044117}
     m_Modifications:
+    - target: {fileID: 3249608379507942908, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 2a01415848316c944930ecf1ece3e5e4, type: 3}
     - target: {fileID: 3560435170638273604, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Volume
       value: 0.244
@@ -5661,6 +5665,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7751926446260337675, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e00c24f94a8a67458713bd8ed6d3a3c, type: 3}
     - target: {fileID: 8872786764463540138, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Name
       value: AudioManager

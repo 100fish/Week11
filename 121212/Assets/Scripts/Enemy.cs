@@ -153,6 +153,10 @@ public class Enemy : Entities
 
         if (enemyState == EnemyState.Dead || newMenuManager.roundState != NewMenuManager.RoundState.Gameplay) return;
 
+        float _enemy_distance = Vector3.Distance(transform.position, newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform.position);
+        print("enemy distane: " + _enemy_distance);
+        if (_enemy_distance < Firerate_NoFireDist) return;
+
         if (shootTimer > 0)
         {
             shootTimer -= Time.deltaTime;
@@ -178,14 +182,13 @@ public class Enemy : Entities
 
     }
 
+    public float Firerate_NoFireDist;
+
     public void Fire_Bullet()
     {
         //print("fire! 3");
-        if (Vector3.Distance(transform.position, newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform.position) >2.5f)
-        {
-            Projectile newProjectile = Instantiate(projectile, projectileSpawn.position, Quaternion.identity).GetComponent<Projectile>();
-            newProjectile.myEnemy = this;
-        }    
+        Projectile newProjectile = Instantiate(projectile, projectileSpawn.position, Quaternion.identity).GetComponent<Projectile>();
+        newProjectile.myEnemy = this;
     }
 
     public Gradient LineColor;

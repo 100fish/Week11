@@ -154,8 +154,8 @@ public class Enemy : Entities
         if (enemyState == EnemyState.Dead || newMenuManager.roundState != NewMenuManager.RoundState.Gameplay) return;
 
         float _enemy_distance = Vector3.Distance(transform.position, newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform.position);
-        print("enemy distane: " + _enemy_distance);
-        if (_enemy_distance < Firerate_NoFireDist) return;
+        //print("enemy distane: " + _enemy_distance);
+        if (_enemy_distance < 9) return;
 
         if (shootTimer > 0)
         {
@@ -403,8 +403,8 @@ public class Enemy : Entities
             replay_health = health
         };
 
-        //if (punched != PunchManager.PunchType.None)
-            //punched = PunchManager.PunchType.None;
+        if (punched != PunchManager.PunchType.None)
+            punched = PunchManager.PunchType.None;
 
         return NewSnapshotInfo;
     }
@@ -417,7 +417,7 @@ public class Enemy : Entities
         health = info.replay_health;
 
 
-        //Debug.Log("I'm: " + id + " and I'm now: " + info.replay_wasPunched);
+        Debug.Log("I'm: " + id + " and I'm now loading: " + info.replay_wasPunched + "at " + newReplayManager.snapshotIndex);
 
         if (info.replay_wasPunched != PunchManager.PunchType.None)
         {

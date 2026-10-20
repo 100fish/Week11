@@ -86,7 +86,7 @@ public class AudioManager : MonoBehaviour
 
     public static void Start_Level_Music()
     {
-        print("ffffAudio: start level music");
+        //print("ffffAudio: start level music");
         _playing_level_sound = true;
         PlayMusic((MUSIC)level_sound);
     }
@@ -94,7 +94,7 @@ public class AudioManager : MonoBehaviour
     public void Update()
     {
         if (!_waiting_to_start_level_music) return;
-        print("ffffAudio: 2: " + level_sound);
+        //print("ffffAudio: 2: " + level_sound);
         _time_before_level_music -= Time.deltaTime;
 
         if (_time_before_level_music <= 0 && !_playing_level_sound) Start_Level_Music();

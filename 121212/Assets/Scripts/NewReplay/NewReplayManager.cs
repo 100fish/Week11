@@ -71,32 +71,25 @@ public class NewReplayManager : MonoBehaviour
     private float m_nextSnapshotTime;
     private bool m_hasNextSnapshot = true;
 
-    //Called by enemies in their start function
-    public void RegisterEnemy(Enemy enemy)
-    {
-        enemies.Add(enemy);
-    }
-
-    public void ClearEnemies()
-    {
-        enemies.Clear();
-    }
-
-    //Called by resettableobjects in their start function
-    public void RegisterResettableObject(ResettableObject newEntry)
-    {
-        resettableObjects.Add(newEntry);
-    }
-
-    public void ClearResettableObjects()
-    {
-        resettableObjects.Clear();
-    }
-
     //Called by menumanager at the very start of a run
     //Resets the playback and recording
     public void StartRoundPlaybackAndRecording(int runIndex)
     {
+        Debug.Log("...................");
+        Debug.Log("//START " + runIndex + "th RECOUNT//");
+        for (int i = 0; i < newReplayContainer.m_snapshots.Count; i++)
+        {
+            Debug.Log("Frame at: " + newReplayContainer.m_snapshots[i].frameTime);
+            for (int ii = 0; ii < newReplayContainer.m_snapshots[i].enemySnapshots.Count; ii++)
+            {
+                Debug.Log("Enemy: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_id + " of " + newReplayContainer.m_snapshots[i].enemySnapshots.Count);
+                Debug.Log("Enemy's Position this frame " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_position);
+                Debug.Log("Enemy's Punch this frame: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_wasPunched);
+            }
+        }
+        Debug.Log("//END  " + runIndex + "th RECOUNT//");
+
+        EndReplay?.Invoke();
         currentState = State.Active; //turns it on
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning
@@ -122,7 +115,7 @@ public class NewReplayManager : MonoBehaviour
         Debug.Log("//START " + runIndex + "th RECOUNT//");
         for (int i = 0; i < newReplayContainer.m_snapshots.Count; i++)
         {
-            Debug.Log("Frame at: " + newReplayContainer.m_snapshots[i].frameTime);
+            Debug.Log("Frame at: " + newReplayContainer.m_snapshots[i].frameTime + " is: " + snapshotIndex);
             for (int ii = 0; ii < newReplayContainer.m_snapshots[i].enemySnapshots.Count; ii++)
             {
                 Debug.Log("Enemy: " + newReplayContainer.m_snapshots[i].enemySnapshots[ii].replay_id + " of " + newReplayContainer.m_snapshots[i].enemySnapshots.Count);

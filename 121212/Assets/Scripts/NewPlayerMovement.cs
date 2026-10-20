@@ -351,6 +351,23 @@ public class NewPlayerMovement : Entities
         current_jump_multiplier = 1;
         transform.position = new Vector3(0, 0, 0);
 
+        newMenuManager = NewMenuManager.instance;
+
+        Debug.Log(newMenuManager.runIndex);
+        Debug.Log(id);
+        Debug.Log(newMenuManager.runIndex - id);
+        int backwardsIndex = (newMenuManager.runIndex - id) + 1;
+
+        if (backwardsIndex < materials.Length && backwardsIndex > -1)
+        {
+            meshRenderer.material = materials[backwardsIndex];
+        }
+        else
+        {
+            meshRenderer.material = materials[^1];
+        }
+
+
         _slide_sfx = false;
         _no_ground_slide = false;
         Slide_Roll(false);
@@ -861,6 +878,8 @@ public class NewPlayerMovement : Entities
 
     #endregion
 
+
+
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
         if (movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
@@ -937,9 +956,6 @@ public class NewPlayerMovement : Entities
     {
         //myCamera.enabled = false;
         myAudioListener.enabled = false;
-
-
-
         movementState = MovementState.Playback;
 
         //playerInput.Disable();
@@ -992,17 +1008,6 @@ public class NewPlayerMovement : Entities
     public void LoadSnapshot(NewPlayerSnapshotInfo info)
     {
         //Debug.Log("I'm: " + id + " and I'm: " + (newMenuManager.runIndex - id));
-        if(newMenuManager.runIndex - id < materials.Length && newMenuManager.runIndex - id < -1)
-        {
-            meshRenderer.material = materials[newMenuManager.runIndex - id];
-
-        }
-        else
-        {
-            meshRenderer.material = materials[^1];
-        }
-
-
         //if (newMenuManager.runIndex - id < 10 && newMenuManager.runIndex >= 0)
         //{
          //   meshRenderer.material = materials[newMenuManager.runIndex - id];
@@ -1026,7 +1031,7 @@ public class NewPlayerMovement : Entities
             ///So when an enemy is set to playback, then they shouldn't get affected by punches, atleast in a force way
             ///They'll push themselves back / kill themselves
             ///UNLESSTHISPUNCHISOVERWRITTENINWHICHCASENEVERMIND
-            PunchManager.Punch(this, transform, info.replay_punched, true, punchRange);
+            //PunchManager.Punch(this, transform, info.replay_punched, true, punchRange);
         }
 
         if(newMenuManager.newReplayManager.m_time < 0.2f)

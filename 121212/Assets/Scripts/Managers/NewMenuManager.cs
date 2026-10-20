@@ -510,6 +510,7 @@ public class NewMenuManager : MonoBehaviour
         //    ChangeRoundState(RoundState.Tutorial);
         //}
 
+        Debug.Log("Change to countdown");
         ChangeRoundState(RoundState.Countdown);
 
         currentStats.x = 0;
@@ -602,7 +603,8 @@ public class NewMenuManager : MonoBehaviour
     {
         One,
         Two,
-        Three
+        Three,
+        Four
     }
 
     [SerializeField] private Levels currentLevel = Levels.One;

@@ -209,6 +209,7 @@ MonoBehaviour:
   animator: {fileID: 445751359041367502}
   idleMaterial: {fileID: 2100000, guid: 4ae3e71b63c57d54ab5ed63d181ff45e, type: 2}
   activeMaterial: {fileID: 2100000, guid: 43c7558ea993dda43992f43579a6f93c, type: 2}
+  Firerate_NoFireDist: 5
   LineColor:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}

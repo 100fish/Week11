@@ -63,7 +63,6 @@ public class PunchManager : MonoBehaviour
 
                             if (hitType != Entities.EntityType.Player)
                             {
-
                                 instance.entities[i].Hit_Entity(puncher, punchType);
                             }
 

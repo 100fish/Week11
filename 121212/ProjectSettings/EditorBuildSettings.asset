@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Harry 2 Scene - 121212.unity
     guid: 7e48ef0faefda0f4b8a34fb8f85187fd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Griffin I Merged Scene.unity
     guid: 794d76d132583bb4894817269dfe0ca1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: e0200b0ae63448441b9f5ac7c2f622eb
   m_configObjects:

@@ -282,7 +282,7 @@ public class NewMenuManager : MonoBehaviour
                         gameTimer -= Time.deltaTime;
 
                         //Set and format timer text
-                        gameTimerText.text = Mathf.Round(totalTime).ToString();
+                        gameTimerText.text = (Mathf.Round(totalTime*100)/100).ToString();
                         oceanBump.SetVector("_Offset", new Vector2(newReplayManager.players[runIndex].transform.position.x, newReplayManager.players[runIndex].transform.position.z) / 2000);
 
                         #region Round / Game end checks

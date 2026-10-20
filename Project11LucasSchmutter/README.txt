@@ -6,8 +6,7 @@ Made by Griffin Schmutter and Harry Lucas
 
 -I-IIIIIIIIIIIIIIIIIIIII-I-
 
-
-[Put description here]
+Run and jump and punch to win :) go as fast as you can!!!! and have fun!!!!!
 
 --IIIIIIIIIIIIIIIIIIIII--
 

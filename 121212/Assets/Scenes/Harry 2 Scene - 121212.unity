@@ -3265,7 +3265,7 @@ MonoBehaviour:
   gameCamera: {fileID: 0}
   gameState: 0
   roundState: 0
-  runStartTimeMax: 3
+  runStartTimeMax: 1.5
   gameTimerLimit: 60
   enemyDeathCount: 0
   GameStateUIPanels:
@@ -3289,7 +3289,7 @@ MonoBehaviour:
   - {x: 3, y: 30, z: 3}
   currentLevel: 0
   levels:
-  - {fileID: 3579740394190914425, guid: 3cf86eaf0ae854846b0dfb5cf4cf5b4e, type: 3}
+  - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
   - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
 --- !u!1 &1073875410
 GameObject:
@@ -5617,13 +5617,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 709044117}
     m_Modifications:
-    - target: {fileID: 3249608379507942908, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+    - target: {fileID: 1688143346892527595, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1688143346892527595, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: 2a01415848316c944930ecf1ece3e5e4, type: 3}
+      objectReference: {fileID: 8300000, guid: f1cd2102c09b3d64e91fe0ac2ca33231, type: 3}
     - target: {fileID: 3560435170638273604, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Volume
-      value: 0.244
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4639348880672186596, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5665,17 +5669,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7751926446260337675, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Resource
-      value: 
-      objectReference: {fileID: 8300000, guid: 8e00c24f94a8a67458713bd8ed6d3a3c, type: 3}
     - target: {fileID: 8872786764463540138, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Name
       value: AudioManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 9219098145032470946, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Volume
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -298,6 +298,7 @@ public class NewPlayerMovement : Entities
             if (!groundedPlayer && current_kyote_time <= 0) { slide_memory = slide_memory_max; return; }
             if (slide_delaying) return;
 
+            AudioManager.PlaySound(SFX.StartSlide, 0.1f);
             AudioManager.PlaySound(SFX.SlideRoll, 0.2f);
 
             slide_amount = slide_max;
@@ -316,6 +317,8 @@ public class NewPlayerMovement : Entities
 
             //AudioManager.PlaySound(SFX.SlideCymbol, 0.2f);
             double_jumped = false;
+
+            AudioManager.PlaySound(SFX.EndSlide, 0.1f);
 
             slide_amount = 0;
             slide_delay = slide_delay_max;

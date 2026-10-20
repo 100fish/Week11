@@ -47,5 +47,7 @@ public enum SFX
     SlideRoll,
     SlideCymbol,
     Shot,
-    LockOn
+    LockOn,
+    StartSlide,
+    EndSlide
 }

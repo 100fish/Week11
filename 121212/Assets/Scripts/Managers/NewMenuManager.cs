@@ -238,7 +238,7 @@ public class NewMenuManager : MonoBehaviour
 
                             //This is the line that makes the countdown as long as the amount of lives you have left
                             ///we aren't doing lives anymore so change this
-                            gameStartTimerText.text = Mathf.Abs(Mathf.CeilToInt(runStartTimer / runStartTimeMax * (10))).ToString();
+                            gameStartTimerText.text = Mathf.Abs(Mathf.CeilToInt(runStartTimer / runStartTimeMax * (3))).ToString();
 
                             ///????
                             return;

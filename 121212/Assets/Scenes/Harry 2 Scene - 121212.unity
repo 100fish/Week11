@@ -3319,9 +3319,9 @@ MonoBehaviour:
   myEndUI: {fileID: 846859043}
   currentLevel: 0
   levels:
-  - {fileID: 3579740394190914425, guid: 3cf86eaf0ae854846b0dfb5cf4cf5b4e, type: 3}
-  - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
   - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
+  - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
+  - {fileID: 3579740394190914425, guid: 3cf86eaf0ae854846b0dfb5cf4cf5b4e, type: 3}
 --- !u!1 &1073875410
 GameObject:
   m_ObjectHideFlags: 0

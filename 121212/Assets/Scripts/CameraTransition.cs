@@ -102,11 +102,11 @@ public class CameraTransition : MonoBehaviour
         }
         else
         {
-            Debug.Log(0);
+            //Debug.Log(0);
 
             if(newMenuManager.roundState == NewMenuManager.RoundState.DeathUI)
             {
-                Debug.Log(00);
+                //Debug.Log(00);
                 newMenuManager.ChangeRoundState(NewMenuManager.RoundState.Countdown);
             }
 

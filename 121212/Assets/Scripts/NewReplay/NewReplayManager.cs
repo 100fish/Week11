@@ -170,6 +170,8 @@ public class NewReplayManager : MonoBehaviour
             players[newPlayerIndex].transform.Rotate(new Vector3(0,90,0));
         }
 
+        players[newPlayerIndex].Reset_Player();
+
         //Activate the new player script
         //Debug.Log("Recent player's ID: " + players[newPlayerIndex].id);
         players[newPlayerIndex].SetStateControlled();

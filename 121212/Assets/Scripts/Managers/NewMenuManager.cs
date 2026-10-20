@@ -487,7 +487,7 @@ public class NewMenuManager : MonoBehaviour
         //Change the roundstate to tutorial, which is what actually begins the game
         if(tutorialCompleted /*|| StartUI.Instance.NoTutorial*/)
         {
-            Debug.Log(2);
+            //Debug.Log(2);
 
             ChangeRoundState(RoundState.Countdown);
         }
@@ -529,11 +529,6 @@ public class NewMenuManager : MonoBehaviour
 
         currentStats.x = runIndex + 1;
         currentStats.z = enemyDeathCount;
-
-        if(enemyDeathCount == 0)
-        {
-
-        }
 
         UnloadLevel(currentLevelObject);
         currentLevel++;
@@ -587,7 +582,8 @@ public class NewMenuManager : MonoBehaviour
     public enum Levels
     {
         One,
-        Two
+        Two,
+        Three
     }
 
     [SerializeField] private Levels currentLevel = Levels.One;

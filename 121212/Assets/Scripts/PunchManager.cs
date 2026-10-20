@@ -50,8 +50,8 @@ public class PunchManager : MonoBehaviour
                     //And there's nothing blocking the punch
                     if (Physics.Linecast(punchPosition.position, instance.entities[i].transform.position))
                     {
-                        Debug.Log("Puncher: " + puncher.id);
-                        Debug.Log("Instance: " + instance.entities[i]);
+                        //Debug.Log("Puncher: " + puncher.id);
+                        //Debug.Log("Instance: " + instance.entities[i]);
 
                         Debug.Log("///////////////");
                         Debug.Log("BANG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

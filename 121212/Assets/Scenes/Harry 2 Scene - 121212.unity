@@ -3340,10 +3340,10 @@ MonoBehaviour:
   runIndex: -1
   endScreen: {fileID: 846859047}
   levelBests:
-  - {x: 3, y: 30, z: 3}
-  - {x: 6, y: 60, z: 4}
-  - {x: 12, y: 120, z: 9}
-  - {x: 12, y: 120, z: 9}
+  - {x: 3, y: 90, z: 3}
+  - {x: 5, y: 120, z: 4}
+  - {x: 10, y: 120, z: 9}
+  - {x: 7, y: 150, z: 6}
   myEndUI: {fileID: 846859043}
   currentLevel: 0
   levels:
@@ -4832,7 +4832,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2001206435717657080, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: NoTutorial
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2001206435717657080, guid: 8ad65dd79a12ef04b8b973bd8a8f1afd, type: 3}
       propertyPath: StartUI_Animator_p
@@ -5811,7 +5811,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4860822506612532025, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Volume
-      value: 0.45
+      value: 0.55
       objectReference: {fileID: 0}
     - target: {fileID: 8872786764463540138, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Name

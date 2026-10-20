@@ -72,7 +72,12 @@ public class StartUI : MonoBehaviour
 
         Start_Room();
 
-        if (s_NoTutorial) Set_UI(50);
+        if (s_NoTutorial)
+        {
+            Set_UI(50);
+            NewMenuManager.instance.Uppercut_On();
+        }
+
     }
 
     [System.Obsolete]

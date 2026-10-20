@@ -965,7 +965,7 @@ public class NewMenuManager : MonoBehaviour
                 break;
             case RoundEndCause.player:
                 PlayerTransition(RoundEndCause.player);
-                elevatorAnimator.deathText.text = (newReplayManager.enemies.Count - enemyDeathCount).ToSafeString() +"\nREMAINING";
+                elevatorAnimator.deathText.text = (newReplayManager.enemies.Count - enemyDeathCount).ToSafeString() +"ENEMIES\nUNPUNCHED";
                 break;
             case RoundEndCause.time:
                 PlayerTransition(RoundEndCause.time);

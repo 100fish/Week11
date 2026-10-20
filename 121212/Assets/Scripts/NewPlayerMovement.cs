@@ -355,12 +355,12 @@ public class NewPlayerMovement : Entities
 
         //Punch
         if (punching) Punching();
-        else if (windup_punching) WindUpPunch();
-
+        else if (windup_punching)
+        {
+            WindUpPunch();
+        }
 
         if (movementState != MovementState.Controlled) return;
-
-
 
         //move character
         MovePlayer();

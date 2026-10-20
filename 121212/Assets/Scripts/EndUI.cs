@@ -54,6 +54,8 @@ public class EndUI : MonoBehaviour
         Times.Set_Score(_value);
 
         overall_score += _value;
+
+        NewMenuManager.instance.total_time += time;
     }
 
     public void Pass_Kills(float kills)
@@ -72,6 +74,8 @@ public class EndUI : MonoBehaviour
         if (_value > 1) _value = 1;
 
         OverallScore.Set_Score(_value);
+
+        NewMenuManager.instance.total_score += (_value / 4);
 
         return _value;
     }

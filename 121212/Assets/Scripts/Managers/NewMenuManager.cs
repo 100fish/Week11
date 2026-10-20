@@ -14,6 +14,9 @@ public class NewMenuManager : MonoBehaviour
     [SerializeField] private MeshRenderer ocean;
     [SerializeField] private Material oceanBump;
 
+    public float total_time = 0;
+    public float total_score = 0;
+
     #region Input and Singleton setup
 
     //singleton
@@ -605,7 +608,8 @@ public class NewMenuManager : MonoBehaviour
         One,
         Two,
         Three,
-        Four
+        Four,
+        None
     }
 
     [SerializeField] private Levels currentLevel = Levels.One;
@@ -616,6 +620,12 @@ public class NewMenuManager : MonoBehaviour
     private LevelInfo levelInfo;
     private void LoadLevel(Levels newLevel)
     {
+        if(newLevel == Levels.None)
+        {
+            FinalScreen.instance.Activate_FinalScreen();
+            return;
+        }
+
         currentLevelObject = Instantiate(levels[(int)newLevel]);
         levelInfo = currentLevelObject.GetComponent<LevelInfo>();
 

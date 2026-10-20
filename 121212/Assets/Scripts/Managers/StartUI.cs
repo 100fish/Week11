@@ -109,6 +109,8 @@ public class StartUI : MonoBehaviour
 
     public static void Set_UI(int num)
     {
+        print("UISET: " + num);
+
         _set_ui = true;
         Instance.current_ID = num + 1;
 
@@ -134,11 +136,13 @@ public class StartUI : MonoBehaviour
     public void Update()
     {
         if(_no_play) return;
-        if (current_ID >= text_UI.Length || !startTutorial) return;
+        if (current_ID >= text_UI.Length) return;
 
         alpha += alpha_direction * (Time.deltaTime * 10);
         _overlap_alpha += Time.deltaTime;
         float _alpha = Mathf.Clamp01(alpha);
+
+        print("ssssasasrarfs: " + alpha);
 
         text_UI[current_ID].color = new Color32(255, 255, 255, (byte)(255 * _alpha));
 

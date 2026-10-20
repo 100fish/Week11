@@ -257,10 +257,11 @@ public class Enemy : Entities
         ///Lives
         ///
 
-        StartUI.Punch_Hit_Enemy();
+        
+       
 
 
-        if(perpetrator.myEntityType == EntityType.Player && enemyReplayState == EnemyReplayState.Playback)
+        if (perpetrator.myEntityType == EntityType.Player && enemyReplayState == EnemyReplayState.Playback)
         {
 
         }
@@ -302,6 +303,9 @@ public class Enemy : Entities
             }
             else
             {
+                StartUI.Punch_Hit_Enemy();
+                AudioManager.PlaySound(SFX.Punch_Hit);
+
                 enemyState = EnemyState.Dead;
 
                 enemyRigidBody.useGravity = true;

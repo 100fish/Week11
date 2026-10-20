@@ -1944,6 +1944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   CurrentState: 0
+  _set: 0
 --- !u!4 &3305624891052637877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: edfbf0bd0f888574599a27889df67a6e, type: 3}

@@ -832,6 +832,10 @@ public class NewMenuManager : MonoBehaviour
 
     }
 
+    bool _uppercut_on = false;
+
+    public void Uppercut_On() => _uppercut_on = true;
+    public bool is_UpperCut_On() => _uppercut_on;
     private void ChangeRoundFromMenu()
     {
         ///menu functions are empty cause its a dummy state that might change or be removed
@@ -849,7 +853,7 @@ public class NewMenuManager : MonoBehaviour
     }
     private void ChangeToTutorial()
     {
-        StartUI.StartTutorial();
+        //StartUI.StartTutorial();
         Debug.Log(3);
 
         ChangeRoundState(NewMenuManager.RoundState.Countdown);
@@ -1047,28 +1051,18 @@ public class NewMenuManager : MonoBehaviour
     //Input function for pausing the game
     private void PauseButtonPressed(CallbackContext context)
     {
-        if (gameState == GameState.Playing)
-        {
-            if (roundState != RoundState.Pause)
-            {
-                stateBeforePause = roundState;
-                ChangeRoundState(RoundState.Pause);
-            }
-            else
-            {
-                ChangeRoundState(stateBeforePause);
-            }
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void ResetScene(CallbackContext context)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reset scene
+        ChangeState(GameState.Playing, currentLevel - 1);
+       // SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reset scene
     }
 
     public void ResetScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reset scene
+       // SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reset scene
     }
 
     private void NextLevel(CallbackContext context)

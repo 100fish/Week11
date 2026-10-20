@@ -159,9 +159,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NewPlayerMovement
   myEntityType: 0
   materials:
-  - {fileID: 2100000, guid: d6f6ad72929b6fa4fa80eb4b319bb25d, type: 2}
-  - {fileID: 2100000, guid: 36b7bb36147deb54aa356e6ad1d5ab66, type: 2}
-  - {fileID: 2100000, guid: 07747fb1fcd4e6044bdbeb1c7de1555c, type: 2}
   - {fileID: 2100000, guid: 2b1925b9c3203164ca2daf82811dcade, type: 2}
   - {fileID: 2100000, guid: 0d8e35d0097b58248a19248d375c59e0, type: 2}
   - {fileID: 2100000, guid: ef1d7412359eacf4bbc87533dd305fd3, type: 2}

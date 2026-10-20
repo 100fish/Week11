@@ -19,7 +19,6 @@ public class AudioManager : MonoBehaviour
 
     public static void PlaySound(SFX sound, float _pitch_randomness = 0, bool _check_playing = false, bool _stop = false)
     {
-        return;
         int _sound = (int) sound;
 
         if(_stop)

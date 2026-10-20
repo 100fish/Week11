@@ -8,6 +8,7 @@ using static UnityEngine.Rendering.ReloadAttribute;
 public class StartUI : MonoBehaviour
 {
     public bool NoTutorial;
+    static bool s_NoTutorial;
 
     NewMenuManager newMenuManager;
 
@@ -32,6 +33,7 @@ public class StartUI : MonoBehaviour
 
     void Awake()
     {
+        s_NoTutorial = NoTutorial;
         Instance = this;
 
         current_ID = 0;
@@ -70,12 +72,13 @@ public class StartUI : MonoBehaviour
 
         Start_Room();
 
-
+        if (s_NoTutorial) Set_UI(50);
     }
 
     [System.Obsolete]
     public static void First_Player()
     {
+        if(s_NoTutorial) return;
         new_player_movement = (NewPlayerMovement)FindObjectOfType(typeof(NewPlayerMovement));
         print("hefffre"); 
 

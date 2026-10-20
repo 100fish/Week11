@@ -5,6 +5,8 @@ public class ElevatorDing : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        ElevatorAnimator EA = animator.transform.parent.GetComponent<ElevatorAnimator>();
+        if (EA._mute) return;
         AudioManager.PlaySound(SFX.ElevatorDing);
     }
 

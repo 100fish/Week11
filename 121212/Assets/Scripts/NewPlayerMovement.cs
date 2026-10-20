@@ -1001,7 +1001,7 @@ public class NewPlayerMovement : Entities
     private PlayerAnimationState previousReplayState;
     public void LoadSnapshot(NewPlayerSnapshotInfo info)
     {
-        Debug.Log("I'm: " + id + " and I'm: " + (newMenuManager.runIndex - id));
+        //Debug.Log("I'm: " + id + " and I'm: " + (newMenuManager.runIndex - id));
         if(newMenuManager.runIndex - id < materials.Length && newMenuManager.runIndex - id < -1)
         {
             meshRenderer.material = materials[newMenuManager.runIndex - id];

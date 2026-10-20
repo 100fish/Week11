@@ -252,37 +252,17 @@ public class Enemy : Entities
 
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
-        ///Add punch behaviour here 
-        ///Explosions and physics
-        ///Lives
-        ///
-
-        
-       
-
-
-        if (perpetrator.myEntityType == EntityType.Player && enemyReplayState == EnemyReplayState.Playback)
-        {
-
-        }
-
         if(!replayHit) enemyReplayState = EnemyReplayState.Active;
-
-        
 
         if (enemyState != EnemyState.Dead)
         {
-            
-
             if(health)
             {
-
-
                 if(punchType == PunchType.Left)
                 {
                     //enemyRigidBody.AddForce((transform.position - perpetrator.transform.position).normalized * pushStrength, ForceMode.Impulse);
-                    //punched = PunchManager.PunchType.Left;
-                    //SaveSnapshot();
+                    punched = PunchManager.PunchType.Left;
+                    SaveSnapshot();
                 }
                 else if(punchType == PunchType.Right)
                 {
@@ -298,7 +278,7 @@ public class Enemy : Entities
                     punched = PunchManager.PunchType.Right;
                     SaveSnapshot();
                 }
-
+                
 
             }
             else

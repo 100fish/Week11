@@ -247,7 +247,7 @@ MonoBehaviour:
     m_Bits: 1024
   projectileSpawn: {fileID: 1493225532344331425}
   projectile: {fileID: 2495954065950604686, guid: 4b19a800cedc2fb448d58fe0e1dda3ef, type: 3}
-  shootTime: 0.5
+  shootTime: 0.8
 --- !u!65 &5662471101290131797
 BoxCollider:
   m_ObjectHideFlags: 0

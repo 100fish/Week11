@@ -89,8 +89,8 @@ public class Projectile : Entities
         }*/
 
 
-        Vector3[] newTargets = new Vector3[2] { transform.position, targetPlayer.transform.position };
-        lr.SetPositions(newTargets);
+        //Vector3[] newTargets = new Vector3[2] { transform.position, targetPlayer.transform.position };
+        //lr.SetPositions(newTargets);
 
         if (!fired)
         {
@@ -102,7 +102,7 @@ public class Projectile : Entities
             }
             else
             {
-                lr.colorGradient = activeGradient;
+                //lr.colorGradient = activeGradient;
 
                 previousMaterial = firingMaterial;
                 mr.material = firingMaterial;
@@ -126,7 +126,7 @@ public class Projectile : Entities
         {
             targetPlayer.Hit_Entity(this, PunchManager.PunchType.None);
         }
-        else if(other.gameObject.tag != "Enemy")
+        else if(other.gameObject.tag != "Enemy" && other.gameObject.tag != "Player")
         {
             Deactivate();
         }

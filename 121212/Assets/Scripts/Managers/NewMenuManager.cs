@@ -544,11 +544,13 @@ public class NewMenuManager : MonoBehaviour
         FocusUIPanel(GameStateUIPanels[(int)GameState.Elevator]);
 
         Debug.Log("Total Time: " + currentStats.y);
-        endUI.Pass_Bests(new Vector3(levelBests[(int)currentLevel].x - currentStats.z,
-        levelBests[(int)currentLevel].y -
-        (levelBests[(int)currentLevel].y / levelBests[(int)currentLevel].x) *
-        (levelBests[(int)currentLevel].x - currentStats.x),
-        levelBests[(int)currentLevel].z));
+        //endUI.Pass_Bests(new Vector3(levelBests[(int)currentLevel].x - currentStats.z,
+        //levelBests[(int)currentLevel].y -
+        //(levelBests[(int)currentLevel].y / levelBests[(int)currentLevel].x) *
+        //(levelBests[(int)currentLevel].x - currentStats.x),
+        //levelBests[(int)currentLevel].z));
+
+        endUI.Pass_Bests(levelBests[(int)currentLevel]);
 
         endUI.Pass_Attempts(currentStats.x - currentStats.z);
         endUI.Pass_Time(currentStats.y);
@@ -561,19 +563,19 @@ public class NewMenuManager : MonoBehaviour
             finalScore = 0;
         }
 
-        Debug.Log("Final Score: " + finalScore);
+        //Debug.Log("Final Score: " + finalScore);
         //Debug.Log("//// //// ////");
 
-        Debug.Log("My Stats: " + currentStats);
+        //Debug.Log("My Stats: " + currentStats);
 
-        Debug.Log("Best stats: " + new Vector3(levelBests[(int)currentLevel].x - currentStats.z,
-        levelBests[(int)currentLevel].y -
-        (levelBests[(int)currentLevel].y / levelBests[(int)currentLevel].x) *
-        (levelBests[(int)currentLevel].x - currentStats.x)));
+        //Debug.Log("Best stats: " + new Vector3(levelBests[(int)currentLevel].x - currentStats.z,
+        //levelBests[(int)currentLevel].y -
+        //(levelBests[(int)currentLevel].y / levelBests[(int)currentLevel].x) *
+        //(levelBests[(int)currentLevel].x - currentStats.x)));
 
-        Debug.Log("My Stats: " + currentStats);
+        //Debug.Log("My Stats: " + currentStats);
 
-        Debug.Log("Final Score: " + finalScore);
+        //Debug.Log("Final Score: " + finalScore);
         //Debug.Log("//// //// ////");
 
 
@@ -628,7 +630,6 @@ public class NewMenuManager : MonoBehaviour
         {
             newReplayManager.players[i].transform.position = newReplayManager.playerSpawn.position;
             newReplayManager.players[i].transform.rotation = newReplayManager.playerSpawn.rotation;
-            newReplayManager.players[i].transform.Rotate(new Vector3(0, 90, 0));
             newReplayManager.players[i].gameObject.SetActive(false);
         }
 

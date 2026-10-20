@@ -7,9 +7,7 @@ using UnityEngine.InputSystem;
 public class NewPlayerMovement : Entities
 {
     bool check_framerate = false;
-    [SerializeField] Material aliveMateral;
-    [SerializeField] Material deadMateral;
-    [SerializeField] Material controlledMateral;
+    [SerializeField] Material[] materials;
 
     [SerializeField] SkinnedMeshRenderer meshRenderer;
 
@@ -503,6 +501,8 @@ public class NewPlayerMovement : Entities
         return false;
     }
 
+    
+
     public void Punching()
     {
         //print("Punching: " + held_punch_for);
@@ -536,7 +536,7 @@ public class NewPlayerMovement : Entities
         
         if(upper_cut)
         {
-            PunchManager.Punch(this, transform, PunchManager.PunchType.Right, true, punchRange);
+            PunchManager.Punch(this, transform, PunchManager.PunchType.Right, true, punchRange + 3);
             punchType = PunchManager.PunchType.Right;
         } else
         {
@@ -826,7 +826,7 @@ public class NewPlayerMovement : Entities
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
 
-        meshRenderer.material = deadMateral;
+        
 
         if (movementState == MovementState.Controlled && newMenuManager.roundState == NewMenuManager.RoundState.Gameplay)
         {
@@ -873,7 +873,7 @@ public class NewPlayerMovement : Entities
     {
         playerInput = new PlayerInput();
 
-        meshRenderer.material = controlledMateral;
+        
 
         //myCamera.transform.position = startCameraPos;
         myAudioListener.enabled = true;
@@ -904,7 +904,6 @@ public class NewPlayerMovement : Entities
         myAudioListener.enabled = false;
 
 
-        meshRenderer.material = aliveMateral;
 
         movementState = MovementState.Playback;
 
@@ -957,6 +956,15 @@ public class NewPlayerMovement : Entities
     private PlayerAnimationState previousReplayState;
     public void LoadSnapshot(NewPlayerSnapshotInfo info)
     {
+        if(newMenuManager.runIndex - id < 10)
+        {
+            meshRenderer.material = materials[newMenuManager.runIndex - id];
+        }
+        else
+        {
+            meshRenderer.material = materials[^1];
+        }
+
         transform.position = info.replay_position;
         transform.rotation = info.replay_rotation;
 

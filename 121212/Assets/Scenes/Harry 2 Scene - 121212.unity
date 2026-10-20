@@ -3340,7 +3340,7 @@ MonoBehaviour:
   runIndex: -1
   endScreen: {fileID: 846859047}
   levelBests:
-  - {x: 3, y: 90, z: 3}
+  - {x: 4, y: 90, z: 3}
   - {x: 5, y: 120, z: 4}
   - {x: 10, y: 120, z: 9}
   - {x: 7, y: 150, z: 6}

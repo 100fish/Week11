@@ -75,6 +75,7 @@ public class Enemy : Entities
     private SphereCollider sphereCollider;
 
     [SerializeField] float idleRotateSpeed;
+    [SerializeField] Animator animator;
 
     protected void Awake()
     {
@@ -152,8 +153,7 @@ public class Enemy : Entities
 
         if (enemyState == EnemyState.Dead || newMenuManager.roundState != NewMenuManager.RoundState.Gameplay) return;
 
-
-        if(shootTimer > 0)
+        if (shootTimer > 0)
         {
             shootTimer -= Time.deltaTime;
         }
@@ -165,29 +165,23 @@ public class Enemy : Entities
             {
                 //.Log("Runindex: " + newMenuManager.runIndex);
                 //Debug.Log("Roundstate: " + newMenuManager.roundState);
-                if(myPlayerList.Contains(newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform))
+                if (myPlayerList.Contains(newMenuManager.newReplayManager.players[newMenuManager.runIndex].transform))
                 {
                     //Debug.Log("Enemy SHOOTCHECK:" + id);
 
                     shootTimer = UnityEngine.Random.Range(shootTime - .5f, shootTime + .5f);
-                    Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+                    //Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
+                    animator.SetTrigger("Shoot");
                 }
             }
         }
 
-        /*if (shooting == true && shootDelayTimer > 0)
-        {
-            shootDelayTimer -= Time.deltaTime;
-        }
-        else if (shooting == true && shootDelayTimer <= 0)
-        {
-            ///Shoot here once that works
-            shooting = false;
-        }
-        else
-        {
-            Shoot_Countdown();
-        }*/
+    }
+
+    public void Fire_Bullet()
+    {
+        print("fire! 3");
+        Instantiate(projectile, projectileSpawn.position, Quaternion.identity);
     }
 
     public Gradient LineColor;
@@ -390,7 +384,6 @@ public class Enemy : Entities
 
         AudioManager.PlaySound(SFX.Shot, 0.1f);
         //ShootManager.Shoot(transform, direction, transform, new Color(255, 0, 0, 255), gameObject, (newMenuManager.roundState != NewMenuManager.RoundState.DeathUI));
-
     }
 
     public NewSnapshotInfoEnemy SaveSnapshot()

@@ -638,13 +638,13 @@ public class NewPlayerMovement : Entities
                 {
                     jumped = false;
                     double_jumped = true;
-                    AudioManager.PlaySound(SFX.Jump, 0.1f);
+                    AudioManager.PlaySound(SFX.DoubleJump, 0.1f);
                 }
                 else
                 {
                     jumped = true;
                     double_jumped = false;
-                    AudioManager.PlaySound(SFX.DoubleJump, 0.25f);
+                    AudioManager.PlaySound(SFX.Jump, 0.25f);
 
                     current_kyote_time = 0;
                 }

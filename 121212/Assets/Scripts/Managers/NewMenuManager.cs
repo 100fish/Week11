@@ -203,7 +203,7 @@ public class NewMenuManager : MonoBehaviour
 
         //Timer setup
         gameTimer = gameTimerLimit;
-        runStartTimer = runStartTimeMax;
+        runStartTimer = 6.5f;
 
         killcamLerpTimer = killcamLerpTime;
         killcamHoverTimer = killcamHoverTime;
@@ -234,17 +234,29 @@ public class NewMenuManager : MonoBehaviour
 
                         if (runStartTimer > 0)
                         {//keep counting until round starts
+                            AudioManager.Play_LevelMusic(0);
+                            print("ffffAudio: 5");
                             runStartTimer -= Time.unscaledDeltaTime;
+
+                            if (runStartTimer > runStartTimeMax) return;
 
                             //This is the line that makes the countdown as long as the amount of lives you have left
                             ///we aren't doing lives anymore so change this
-                            gameStartTimerText.text = Mathf.Abs(Mathf.CeilToInt(runStartTimer / runStartTimeMax * (3))).ToString();
+                            int _num = Mathf.Abs(Mathf.FloorToInt(runStartTimer / runStartTimeMax * (3))) + 1;
+                            if (_num <= 0)
+                            {
+                                gameStartTimerText.text = "";
+                                return;
+                            }
+
+                            gameStartTimerText.text = _num.ToString();
 
                             ///????
                             return;
                         }
                         else if (runStartTimer < 0)
                         {//final round setup
+                            gameStartTimerText.text = "";
                             //turn off the countdown Panel
                             gameStartTimerPanel.SetActive(false);
                             //start the round
@@ -256,6 +268,7 @@ public class NewMenuManager : MonoBehaviour
                         break;
                     case RoundState.Gameplay:
 
+                        gameStartTimerText.text = "";
                         //Keep track of game time for end stats
                         totalTime += Time.deltaTime;
                         currentStats.y += Time.deltaTime;
@@ -862,6 +875,8 @@ public class NewMenuManager : MonoBehaviour
         //Reset countdown Timer 
         gameStartTimerPanel.SetActive(true);
         runStartTimer = runStartTimeMax;
+
+        if (runIndex <= 0) runStartTimer = 4.2f;
 
         //Reset game Timer
         gameTimer = gameTimerLimit;

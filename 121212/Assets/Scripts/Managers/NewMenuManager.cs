@@ -234,7 +234,7 @@ public class NewMenuManager : MonoBehaviour
 
                         if (runStartTimer > 0)
                         {//keep counting until round starts
-                            AudioManager.Play_LevelMusic(0);
+                            AudioManager.Play_LevelMusic((int)currentLevel);
                             print("ffffAudio: 5");
                             runStartTimer -= Time.unscaledDeltaTime;
 

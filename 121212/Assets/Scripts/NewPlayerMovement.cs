@@ -331,6 +331,14 @@ public class NewPlayerMovement : Entities
     int[] fps = new int[30];
     int current_fps = 0;
 
+    public void Reset_Player()
+    {
+        slide_amount = 0;
+        groundedPlayer = true;
+        current_jump_multiplier = 1;
+
+    }
+
     private void Update()
     {   
 

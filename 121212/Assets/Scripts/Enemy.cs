@@ -292,7 +292,8 @@ public class Enemy : Entities
                     }
 
                     health = false;
-                    enemyRigidBody.AddForce(transform.up * (flyStrength /2), ForceMode.Impulse);
+                    enemyRigidBody.AddForce(transform.up * (flyStrength /4), ForceMode.Impulse);
+                    enemyRigidBody.useGravity = false;
                     punched = PunchManager.PunchType.Right;
                     SaveSnapshot();
                 }
@@ -303,6 +304,7 @@ public class Enemy : Entities
             {
                 enemyState = EnemyState.Dead;
 
+                enemyRigidBody.useGravity = true;
 
                 dummyTurret.ActivateDummy(dummyFlyStrength, perpetrator.transform.position, barrel.position, transform.position, barrel.rotation, transform.rotation);
 
@@ -328,6 +330,8 @@ public class Enemy : Entities
         enemyState = EnemyState.Alive;
 
         health = startHealth;
+
+        enemyRigidBody.useGravity = true;
 
         punched = PunchManager.PunchType.None;
         lineRenderer.enabled = true;

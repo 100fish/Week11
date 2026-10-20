@@ -418,7 +418,7 @@ public class NewPlayerMovement : Entities
 
         if (slide_amount > 0)
         {
-            if (!groundedPlayer && current_kyote_time <= max_kyote_time - 0.05f && !_no_ground_slide)
+            if (!groundedPlayer && current_kyote_time <= max_kyote_time - 0.05f && !_no_ground_slide && _slide_time_without_ground >= 0.25f)
             {
                 _no_ground_slide = true;
                 Slide_Roll(false);
@@ -831,6 +831,8 @@ public class NewPlayerMovement : Entities
 
     float _animation_last_y_pos = 0;
 
+    float _slide_time_without_ground = 0;
+
     public void AnimatingPlayer()
     {
         float _press_direction = playerInput.Standard.Movement.ReadValue<Vector2>().y;
@@ -843,6 +845,11 @@ public class NewPlayerMovement : Entities
         if (slide_amount > 0)
         {
             playerAnimator.Slide();
+
+            if (groundedPlayer) _slide_time_without_ground = 0;
+            _slide_time_without_ground += Time.deltaTime;
+            
+
             return;
         }
 

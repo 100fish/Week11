@@ -294,7 +294,7 @@ public class NewMenuManager : MonoBehaviour
                         ///Idk where it happens yet though but something calls a function when the player is shot
                         ///that changes the roundstate to killcam
 
-                        Time.timeScale = 0;
+                        //Time.timeScale = 0;
                             
                         if (killcamLerpTimer > 0)
                         {
@@ -318,7 +318,7 @@ public class NewMenuManager : MonoBehaviour
                             killcamLerpTimer = killcamLerpTime;
                             killcamHoverTimer = killcamHoverTime;
 
-                            Time.timeScale = 1;
+                           // Time.timeScale = 1;
 
                             if (runIndex >= 9)
                             {
@@ -441,13 +441,13 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeFromMenu() 
     {
         menuCamera.depth = 80;
-        Time.timeScale = 1;
+        //Time.timeScale = 1;
     }
     private void ChangeToMenu()
     {
         FocusUIPanel(GameStateUIPanels[(int)GameState.Menu]);
         UnityEngine.Cursor.lockState = CursorLockMode.None;
-        Time.timeScale = 0;
+       // Time.timeScale = 0;
     }
 
     [SerializeField] Vector3[] levelBests;
@@ -481,7 +481,7 @@ public class NewMenuManager : MonoBehaviour
 
 
         InitializePlayerAndEnemies();
-        Time.timeScale = 1;
+        //Time.timeScale = 1;
 
         //Turn the gameplay UI on
         FocusUIPanel(GameStateUIPanels[(int)GameState.Playing]);
@@ -527,7 +527,7 @@ public class NewMenuManager : MonoBehaviour
     private void ChangeToElevator()
     {
 
-        Time.timeScale = 1;
+        //Time.timeScale = 1;
 
         currentStats.x = runIndex + 1;
         currentStats.z = enemyDeathCount;
@@ -581,7 +581,6 @@ public class NewMenuManager : MonoBehaviour
 
         Debug.Log("Starting ENDUI");
         finalScore = endUI.Start_UI();
-
 
         currentStats = new Vector3(0, 0, 0);
     }
@@ -891,7 +890,7 @@ public class NewMenuManager : MonoBehaviour
 
     private void ChangeFromPause()
     {
-        Time.timeScale = 1;
+        //Time.timeScale = 1;
         playerMovement.enabled = true;
 
         //Lock the cursor 
@@ -903,7 +902,7 @@ public class NewMenuManager : MonoBehaviour
     {
         ///Fix later
         FocusUIPanel(GameStateUIPanels[2]);
-        Time.timeScale = 0;
+      //  Time.timeScale = 0;
         playerMovement.enabled = false;
 
         //Free the cursor
@@ -919,7 +918,7 @@ public class NewMenuManager : MonoBehaviour
     }
     private void ChangeToKillcam(GameObject perpetrator)
     {
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
 
         if (perpetrator != null)
         {

@@ -252,9 +252,6 @@ public class Enemy : Entities
 
     public override void Hit_Entity(Entities perpetrator, PunchManager.PunchType punchType)
     {
-        Debug.Log("ID: " + id + " getting HIT");
-        StartUI.Punch_Hit_Enemy();
-
         if(!replayHit) enemyReplayState = EnemyReplayState.Active;
 
         if (enemyState != EnemyState.Dead)
@@ -286,6 +283,9 @@ public class Enemy : Entities
             }
             else
             {
+                StartUI.Punch_Hit_Enemy();
+                AudioManager.PlaySound(SFX.Punch_Hit);
+
                 enemyState = EnemyState.Dead;
 
                 enemyRigidBody.useGravity = true;

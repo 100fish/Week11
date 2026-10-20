@@ -121,7 +121,9 @@ public enum SFX
     Shot,
     LockOn,
     StartSlide,
-    EndSlide = 10
+    EndSlide = 10,
+    Punch_Woosh = 21,
+    Punch_Hit = 22
 }
 
 public enum MUSIC

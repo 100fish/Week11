@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerAnimator : MonoBehaviour
 {
@@ -11,15 +13,82 @@ public class PlayerAnimator : MonoBehaviour
     bool _falling = false;
     bool _doubleJump = false;
 
+    List<Vector3> rotations = new List<Vector3>();
+    List<Vector3> positions = new List<Vector3>();
+
+    [SerializeField] bool _set = false;
+
     private void Awake()
     {
         Player_Animator = GetComponent<Animator>();
+
+        Add_Positions_And_Rotations();
+        Set_Pos_And_Rotations();
+    }
+
+    public void Add_Positions_And_Rotations()
+    {
+        if (_set) return;
+        _set = true;
+
+        Add_Pos(transform);
+    }
+
+    public void Add_Pos(Transform _child)
+    {
+        if (_child.childCount <= 0) return;
+
+        foreach (Transform child in _child)
+        {
+            positions.Add(child.position);
+            rotations.Add(child.eulerAngles);
+
+            Add_Pos(child);
+        }
+
+    }
+
+    public void OnDisable()
+    {
+        Player_Animator.enabled = false;
+    }
+
+    int _increment = 0;
+
+    public void Set_Pos_And_Rotations()
+    {
+        _increment = 0;
+
+        Set_Pos(transform);
+
+        print("increment: " + _increment);
+
+        Player_Animator.enabled = true;
+    }
+
+    public void Set_Pos(Transform _child)
+    {
+        if (_child.childCount <= 0) return;
+
+        foreach (Transform child in _child)
+        {
+            child.position = positions[_increment];
+            child.eulerAngles = positions[_increment];
+            _increment++;
+
+            Set_Pos(child);
+        }
+
+        _moving = false;
+        _sliding = false;
+        _falling = false;
+        _doubleJump = false;
     }
 
     public void PlayAnimation(PlayerAnimationState state)
     {
-        if (state != PlayerAnimationState.Walk) _moving = false;
         if (state != PlayerAnimationState.Slide) _sliding = false;
+        if (state != PlayerAnimationState.Walk) _moving = false;
         if (state != PlayerAnimationState.Falling || state != PlayerAnimationState.Jump) _falling = false;
         if (state != PlayerAnimationState.DoubleJump || state != PlayerAnimationState.Jump) _doubleJump = false;
 

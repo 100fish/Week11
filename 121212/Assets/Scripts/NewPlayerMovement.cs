@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Specialized;
 using TMPro;
 using UnityEngine;
@@ -310,7 +311,7 @@ public class NewPlayerMovement : Entities
             _no_ground_slide = false;
             Slide_Roll(true);
 
-             slide_amount = slide_max;
+            slide_amount = slide_max;
             slide_move = Get_Movement_Direction(true);
             slide_bump = 2;
         }
@@ -321,7 +322,6 @@ public class NewPlayerMovement : Entities
     {
         if (movementState == MovementState.Controlled)
         {
-            
             if (slide_amount <= 0) return;
 
             //AudioManager.PlaySound(SFX.SlideCymbol, 0.2f);
@@ -346,7 +346,6 @@ public class NewPlayerMovement : Entities
 
     public void Reset_Player()
     {
-        slide_amount = 0;
         groundedPlayer = true;
         current_jump_multiplier = 1;
         transform.position = new Vector3(0, 0, 0);
@@ -371,6 +370,12 @@ public class NewPlayerMovement : Entities
         _slide_sfx = false;
         _no_ground_slide = false;
         Slide_Roll(false);
+
+        slide_amount = 0;
+        slide_delay = slide_delay_max;
+        slide_delaying = true;
+
+        playerAnimator.Set_Pos_And_Rotations();
     }
 
     private void Update()
@@ -448,6 +453,9 @@ public class NewPlayerMovement : Entities
         myCamera.fieldOfView = _FOV;
 
         //cameraDistance = Vector3.Distance(myCamera.transform.position, transform.position);
+
+        if (NewMenuManager.instance.is_UpperCut_On()) Set_Uppercut(true);
+        else Set_Uppercut(false);
     }
 
     public void Check_FrameRate()
@@ -564,6 +572,8 @@ public class NewPlayerMovement : Entities
 
         if(windup_punching)
         {
+            AudioManager.PlaySound(SFX.Punch_Woosh);
+
             if(upper_cut) playerAnimator.Uppercut();
             else playerAnimator.Punch();
         }

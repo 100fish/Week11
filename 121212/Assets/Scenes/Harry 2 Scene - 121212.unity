@@ -3319,9 +3319,9 @@ MonoBehaviour:
   myEndUI: {fileID: 846859043}
   currentLevel: 0
   levels:
-  - {fileID: 3579740394190914425, guid: 3cf86eaf0ae854846b0dfb5cf4cf5b4e, type: 3}
   - {fileID: 3579740394190914425, guid: adeb5c3aeea643d42a0c45b0508e662c, type: 3}
   - {fileID: 3579740394190914425, guid: e02f386b6502a854f96bb0b0e4e66073, type: 3}
+  - {fileID: 3579740394190914425, guid: 3cf86eaf0ae854846b0dfb5cf4cf5b4e, type: 3}
 --- !u!1 &1073875410
 GameObject:
   m_ObjectHideFlags: 0
@@ -5728,18 +5728,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 709044117}
     m_Modifications:
-    - target: {fileID: 1513789061831958091, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: Loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1513789061831958091, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Volume
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1513789061831958091, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+    - target: {fileID: 2705042556087643145, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: f9856ffa5e6007b478105c34f3f9cc86, type: 3}
+      objectReference: {fileID: 8300000, guid: 56cea207fc642e94a96e666215c68dac, type: 3}
     - target: {fileID: 4639348880672186596, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5781,45 +5773,37 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5732228776475451881, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Volume
-      value: 0.09
-      objectReference: {fileID: 0}
-    - target: {fileID: 5732228776475451881, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Resource
-      value: 
-      objectReference: {fileID: 8300000, guid: a4346c8ad1a53a14ca2e5bc036b70d58, type: 3}
-    - target: {fileID: 5732228776475451881, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_PlayOnAwake
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5732228776475451881, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
-      value: 0.045
-      objectReference: {fileID: 0}
-    - target: {fileID: 7513516523899360118, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Volume
-      value: 0.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7513516523899360118, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Resource
-      value: 
-      objectReference: {fileID: 8300000, guid: f718ed081dd18b7438d08e59ad1ec89a, type: 3}
-    - target: {fileID: 7513516523899360118, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7750710688875926950, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: m_Volume
-      value: 0.06
-      objectReference: {fileID: 0}
-    - target: {fileID: 7750710688875926950, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+    - target: {fileID: 6020415533558992415, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: 251b0c640f3730e47a8b7708904231fc, type: 3}
-    - target: {fileID: 7862324848822145685, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
-      propertyPath: StartLevelMusicTime
-      value: 5.7
+      objectReference: {fileID: 8300000, guid: b904f7d059ca4a744bba73bac4cf3f48, type: 3}
+    - target: {fileID: 6587237684528685797, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: bdf49377cbe903843a77f69a3ed58b79, type: 3}
+    - target: {fileID: 7409796128264497162, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 869d479c3823213488f2ae97245f3c82, type: 3}
+    - target: {fileID: 7448853063894135409, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: f5d76f541de7d834aa3ceaaa6946bfb3, type: 3}
+    - target: {fileID: 7513516523899360118, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8387737251761497663, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: c8b0adb5f2996544e9a5e4bb0a188ce4, type: 3}
     - target: {fileID: 8872786764463540138, guid: 4c09fd2619b38df4eafd89f5c90a7572, type: 3}
       propertyPath: m_Name
       value: AudioManager

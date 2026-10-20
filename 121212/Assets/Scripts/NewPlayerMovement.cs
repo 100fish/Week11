@@ -114,7 +114,7 @@ public class NewPlayerMovement : Entities
     public AnimationCurve PunchEvaluation;
     bool upper_cut = false;
 
-
+    bool _slide_audio;
     bool can_jump = true;
     public void Set_Jump(bool _can)
     {
@@ -256,8 +256,6 @@ public class NewPlayerMovement : Entities
         Punch(true);
     }
 
-
-
     private void Punch(bool _upper_cut)
     {
         Debug.Log("starting punch func0");
@@ -289,6 +287,14 @@ public class NewPlayerMovement : Entities
         stop_punch = true;
     }
 
+    bool _slide_sfx = false;
+    bool _no_ground_slide = false;
+
+    public void Slide_Roll(bool _slide)
+    {
+        AudioManager.PlaySound(SFX.SlideRoll, 0.2f, true, !_slide);
+    }
+
     private void Slide(InputAction.CallbackContext contex) => Slide();
     private void Slide()
     {
@@ -300,9 +306,11 @@ public class NewPlayerMovement : Entities
             if (slide_delaying) return;
 
             AudioManager.PlaySound(SFX.StartSlide, 0.1f);
-            AudioManager.PlaySound(SFX.SlideRoll, 0.2f);
+            _slide_sfx = true;
+            _no_ground_slide = false;
+            Slide_Roll(true);
 
-            slide_amount = slide_max;
+             slide_amount = slide_max;
             slide_move = Get_Movement_Direction(true);
             slide_bump = 2;
         }
@@ -313,13 +321,16 @@ public class NewPlayerMovement : Entities
     {
         if (movementState == MovementState.Controlled)
         {
-            AudioManager.PlaySound(SFX.SlideRoll, 0.2f, false, true);
+            
             if (slide_amount <= 0) return;
 
             //AudioManager.PlaySound(SFX.SlideCymbol, 0.2f);
             double_jumped = false;
 
             AudioManager.PlaySound(SFX.EndSlide, 0.1f);
+            _slide_sfx = false;
+            _no_ground_slide = false;
+            Slide_Roll(false);
 
             slide_amount = 0;
             slide_delay = slide_delay_max;
@@ -339,10 +350,14 @@ public class NewPlayerMovement : Entities
         groundedPlayer = true;
         current_jump_multiplier = 1;
         transform.position = new Vector3(0, 0, 0);
+
+        _slide_sfx = false;
+        _no_ground_slide = false;
+        Slide_Roll(false);
     }
 
     private void Update()
-    {   
+    {
 
         ///DEBUG
         for (int i = 0; i < IDTexts.Length; i++)
@@ -381,6 +396,17 @@ public class NewPlayerMovement : Entities
 
         if (slide_amount > 0)
         {
+            if (!groundedPlayer && current_kyote_time <= max_kyote_time - 0.05f && !_no_ground_slide)
+            {
+                _no_ground_slide = true;
+                Slide_Roll(false);
+            }
+            else if (groundedPlayer && _no_ground_slide)
+            {
+                _no_ground_slide = false;
+                Slide_Roll(true);
+            }
+
             characterController.height = 1;
             new_camera_position_change_y = -0.55f;
 

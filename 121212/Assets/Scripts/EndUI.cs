@@ -82,6 +82,7 @@ public class EndUI : MonoBehaviour
 
         AudioManager.PlayMusic(MUSIC.Applause);
         AudioManager.PlayMusic(MUSIC.EndMusic);
+        AudioManager.Stop_LevelSound();
 
         if (overall_score < 1.2f) RetryAnimator.SetBool("Retry", true);
         else RetryAnimator.SetBool("Retry", false);

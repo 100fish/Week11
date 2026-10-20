@@ -203,7 +203,6 @@ public class NewMenuManager : MonoBehaviour
 
         //Timer setup
         gameTimer = gameTimerLimit;
-        runStartTimer = 6.5f;
 
         killcamLerpTimer = killcamLerpTime;
         killcamHoverTimer = killcamHoverTime;
@@ -231,6 +230,8 @@ public class NewMenuManager : MonoBehaviour
                         //its all good cause all the dynamic tutorial stuff is  handled by whatever other script actually idk
                         break;
                     case RoundState.Countdown:
+
+                       
 
                         if (runStartTimer > 0)
                         {//keep counting until round starts
@@ -300,14 +301,14 @@ public class NewMenuManager : MonoBehaviour
                     case RoundState.Pause:
                         break;
                     case RoundState.Killcam:
-                        
+
                         ///I'm not commenting all of this cause its pretty simple and we're gonna remove it anyway
                         ///The important part is the game HAS TO GO THROUGH HERE to kill the player via being shot
                         ///Idk where it happens yet though but something calls a function when the player is shot
                         ///that changes the roundstate to killcam
 
                         //Time.timeScale = 0;
-                            
+
                         if (killcamLerpTimer > 0)
                         {
                             killcamLerpTimer -= Time.unscaledDeltaTime;
@@ -497,17 +498,19 @@ public class NewMenuManager : MonoBehaviour
         //load mouse's position on UI
         Mouse.current.WarpCursorPosition(mousePosOnUI);
 
-        //Change the roundstate to tutorial, which is what actually begins the game
-        if(tutorialCompleted /*|| StartUI.Instance.NoTutorial*/)
-        {
-            //Debug.Log(2);
+        ////Change the roundstate to tutorial, which is what actually begins the game
+        //if(tutorialCompleted /*|| StartUI.Instance.NoTutorial*/)
+        //{
+        //    //Debug.Log(2);
 
-            ChangeRoundState(RoundState.Countdown);
-        }
-        else
-        {
-            ChangeRoundState(RoundState.Tutorial);
-        }
+        //    ChangeRoundState(RoundState.Countdown);
+        //}
+        //else
+        //{
+        //    ChangeRoundState(RoundState.Tutorial);
+        //}
+
+        ChangeRoundState(RoundState.Countdown);
 
         currentStats.x = 0;
         currentStats.y = 0;

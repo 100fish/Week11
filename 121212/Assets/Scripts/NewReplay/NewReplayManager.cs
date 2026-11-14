@@ -103,6 +103,13 @@ public class NewReplayManager : MonoBehaviour
             enemies[i].ReviveEnemy();
             enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
         }
+
+        enemyHighestTimelines = new int[enemies.Count];
+        for (int i = 0; i < enemyHighestTimelines.Length; i++)
+        {
+            enemyHighestTimelines[i] = -1;
+        }
+
         //capture first frame
         TakeAndLoadSnapshots();
     }
@@ -143,6 +150,7 @@ public class NewReplayManager : MonoBehaviour
 
         m_time = 0; //Sets time to zero
         snapshotIndex = 0; //Sets the playback/recording to the beginning
+        
     }
 
     //Changes the character that the player controls to the next one in the array
@@ -205,6 +213,8 @@ public class NewReplayManager : MonoBehaviour
             m_time += Time.fixedDeltaTime;
         }
     }
+
+    int[] enemyHighestTimelines;
 
     //This is where all the meat is
     private void TakeAndLoadSnapshots()
@@ -304,6 +314,8 @@ public class NewReplayManager : MonoBehaviour
         Debug.Log("LOADING/SAVING " + enemies.Count + " ENEMIES");*/
         for (int i = 0; i < enemies.Count; i++)
         {
+
+
             //For every enemy in the list
             //(this is a pretty static list, it could be an array
             //We're going to check its state, and do something based on that
@@ -323,26 +335,69 @@ public class NewReplayManager : MonoBehaviour
             switch (enemies[i].enemyReplayState)
             {
                 case Enemy.EnemyReplayState.Active:
-                    //Checks if there is a frame for this enemy, passes if there isn't
-                    if (currentSnapshotData.enemySnapshots.Count <= i)
-                    {
-                        enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
-                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot(m_time));
-                    }
-                    else
-                    {
-                        //Debug.Log("CHANGINGTOPLAYBACK---------------------------------------------------------------------------------");
-                        //enemies[i].enemyReplayState = Enemy.EnemyReplayState.Playback;
+                     enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
+                     currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot(m_time));
+                    //come back to here
+                    //well you'll be right back anyway I THINK!
+                    //ummm
+                    //you have to make it so that the data gets skipped if its being marked to be skipped
+                    //alright smart guy find the time you got this
+                    //love ya
 
-                        enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)0;
-                        currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot(m_time));
-                    }
+                    //So the problem is basically that ummmmmmmmmmmmmm
+                    //When the turret reaches the end of the recording its making and in the previous run it went past that point then
+                    //ummm its not actually gonna run outta frames which is bad if it is a two health turret
+                    //time travel so hard
+                    //so when we're playing back
+                    //since this only affects playback turrets
+                    //then obviously we check if we've marked a most recent time of end of cause. end of timeline. end of timeline for turret. okay dokay.
+                    //uhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+                    // if we do it that way then who stores that information cause I guess we can put it in the end of the frame
+                    //in the frame in the snapshot I mean like I was gonna already
+                    //and then we can just
+                    //well
+                    //thats the same thing as marking the frame
+                    //well
+                    //whenever we find a frame thats marked for end of timeline
+                    //EOT
+                    //then um we know that we dont want to playback ANYTHING right
+                    //cause nothing that comes after that frame is
+                    //um real anymore
+                    //and if it was real then it would just happen again
 
+                    //when is a frame marked for eot
+                    //not at the end of every round
+                    //just at the end of a round where a turret is interacted with
+                    //if a turret is interacted with then it becomes active
+                    //so whenever a turret becomes active
+                    //that is when that turret should KNOW
+                    //that it has to mark the last frame it records as EOT
+
+                    //because on the next run assuming no interaction it will play out that timeline and then go into active from ther
+                    
+
+                    //Actually, if what I store is the associated run index
+                    //and we check the run index that each snapshot is associated with
+                    //ummmthats kind of easier.
+                    //Like when its recorded/
+                    //So basically know what the largest run index encountered for that enemy is while loading frames.
+                    //Save that
+                    //And if that run index 
+                    //FUCKKKKKK I love iteration so muhc
+                    //If that run index is ummmm
+                    //Ever lower than the recorded highest then you're trying to retrieve data from a timeline that has been overwritten
+                    //ok so dont do that
+
+                    //todo:
+
+                    //frames can store what run index they were recorded on
+                    // the replay manager keeps track of the highest one it sees while it replays them
+                    //and if it sees a previous timeline it changes to active
+                    //wow, no problem at all! lets get to work!
                     break;                  
                 case Enemy.EnemyReplayState.Playback:
                     enemies[i].enemyRigidBody.constraints = (RigidbodyConstraints)126;
 
-                    //if we're past the snapshot frames on file then start saving frames of motionlessness instead so we don't get errors
                     if (currentSnapshotData.enemySnapshots.Count <= i)
                     {
                         if(currentSnapshotData.frameTime != 0)
@@ -366,10 +421,28 @@ public class NewReplayManager : MonoBehaviour
                             frameToLoad = FindEnemyNonNullFrame(newReplayContainer, snapshotIndex, i - 1);
                         }
 
-                        enemies[i].LoadSnapshot(frameToLoad, m_time);
-
+                        //Debug.Log("EHT: " + enemyHighestTimelines[i]);
+                        //Debug.Log("FTL index: " + frameToLoad.replay_runIndex);
+                        if(enemyHighestTimelines[i] <= frameToLoad.replay_runIndex)
+                        {
+                            //Debug.Log("EHT INCREASE!/stay: " + enemyHighestTimelines[i]);
+                            enemyHighestTimelines[i] = frameToLoad.replay_runIndex;
+                            enemies[i].LoadSnapshot(frameToLoad, m_time);
+                        }
+                        else
+                        {
+                            //Debug.Log("EHT DEEEEEEEEEEEEEEEEECREASE!: " + enemyHighestTimelines[i]);
+                            //EV VERYTHING FUCKING IS FUCKING EXPLODES
+                            //we need to change to active from here
+                            //is it that simple?
+                            if (currentSnapshotData.frameTime != 0)
+                            {
+                                currentSnapshotData.AddEnemySnapshot(enemies[i].SaveSnapshot(m_time));
+                                enemies[i].enemyReplayState = Enemy.EnemyReplayState.Active;
+                            }
+                        }
                     }
-                    break;
+                break;
             }
         }
 
@@ -377,16 +450,6 @@ public class NewReplayManager : MonoBehaviour
 
         #endregion
 
-        //So now after the player section and the enemy section
-        //we have a snapshot that has all of the new data
-        ///but not dynamically
-        //and we've loaded all of our all data
-        ///Wthiout respect to causality
-
-
-
-        //then we add that snapshot frame to the list in the container
-        ///or here
         if (newReplayContainer.m_snapshots[^1].frameTime <= m_time)
         {
             //if we're past the end of the list of snapshots, add a new one
@@ -403,7 +466,6 @@ public class NewReplayManager : MonoBehaviour
 
         //and we increase the index to move onto the next frame
         snapshotIndex++;
-        //Debug.Log("End of this takeandloadSnapshot");
     }
     private NewPlayerSnapshotInfo FindPlayerNonNullFrame(NwReplayContainer newReplayContainer, int snapshotIndex, int index)
     {
@@ -418,5 +480,13 @@ public class NewReplayManager : MonoBehaviour
             return newReplayContainer.m_snapshots[snapshotIndex].enemySnapshots[enemies[index].id];
         else
             return FindEnemyNonNullFrame(newReplayContainer, snapshotIndex-1, index);
+    }
+
+    public void ClearFromFrame(int ID, int frameID)
+    {
+        for (int i = frameID; i < newReplayContainer.m_snapshots.Count; i++)
+        {
+            //newReplayContainer.m_snapshots[i].enemySnapshots[ID].
+        }
     }
 }

@@ -37,39 +37,45 @@ public class PunchManager : MonoBehaviour
     {
         if (canPunch)
         {
-            //For every entity that can be punched
-            //(This function is static so the list of enemies has to be passed in by the caller lol
-            //if they have a reference to replaymanager they can get it from there
-            //or get a reference to replaymanager from menumanager
-            //Debug.Log(instance.entities.Count);
+            //for
             for (int i = 0; i < instance.entities.Count; i++)
             {
-                //If an entity is within range
+                //distance check
                 if (Vector3.Distance(punchPosition.position, instance.entities[i].transform.position) < punchRange)
                 {
-                    //And there's nothing blocking the punch
+                    //collision check
                     if (Physics.Linecast(punchPosition.position, instance.entities[i].transform.position))
                     {
-                        //Debug.Log("Puncher: " + puncher.id);
-                        //Debug.Log("Instance: " + instance.entities[i]);
-
-                        Debug.Log("///////////////");
-                        Debug.Log("BANG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                        Debug.Log("///////////////");
-
+                        //final check
                         if (instance.entities[i] != null)
                         {
+                            //get and store entity info
                             Entities.EntityType hitType = instance.entities[i].myEntityType;
+                            bool enemyHealth = instance.entities[i].GetComponent<Enemy>().health;
+                            //Debug.Log("Enemy health when punched: " + enemyHealth);
 
+                            //hit entity
                             if (hitType != Entities.EntityType.Player)
                             {
                                 instance.entities[i].Hit_Entity(puncher, punchType);
                             }
 
+                            //end round by hitting player back
                             if (puncher.newMenuManager.enemyDeathCount != puncher.newMenuManager.newReplayManager.enemies.Count
                                 && hitType == Entities.EntityType.Enemy)
                             {
-                                puncher.Hit_Entity(puncher, PunchType.None);
+                                if (enemyHealth && punchType == PunchType.Left)
+                                {
+                                    //fucking using the function wrong
+                                    //Passing punchtype right means they ended the round by killing a yellow
+                                    //Debug.Log("Yellow");
+                                    puncher.Hit_Entity(puncher, PunchType.Right);
+                                }
+                                else
+                                {
+                                    //Debug.Log("Red");
+                                    puncher.Hit_Entity(puncher, PunchType.None);
+                                }
                             }
                         }
                     }

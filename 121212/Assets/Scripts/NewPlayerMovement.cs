@@ -229,7 +229,10 @@ public class NewPlayerMovement : Entities
 
     private void LeftPunch(InputAction.CallbackContext context)
     {
+        Debug.Log("-1: Punch Input");
+
         if (!can_punch) return;
+        Debug.Log("-0.5: middle");
         if (!Can_LeftPunch()) return;
 
 
@@ -240,6 +243,7 @@ public class NewPlayerMovement : Entities
 
         // CameraShake();
 
+        Debug.Log("0: Punch function");
         Punch(false);
     }
 
@@ -573,9 +577,11 @@ public class NewPlayerMovement : Entities
 
     public void Punching()
     {
+        Debug.Log("1: PunchING function");
+
         //print("Punching: " + held_punch_for);
 
-        if(windup_punching)
+        if (windup_punching)
         {
             AudioManager.PlaySound(SFX.Punch_Woosh);
 
@@ -610,6 +616,8 @@ public class NewPlayerMovement : Entities
             punchType = PunchManager.PunchType.Right;
         } else
         {
+            Debug.Log("2: PunchManager Call");
+
             PunchManager.Punch(this, transform, PunchManager.PunchType.Left, true, punchRange);
             punchType = PunchManager.PunchType.Left;
         }
@@ -911,12 +919,19 @@ public class NewPlayerMovement : Entities
             switch (perpetrator.myEntityType)
             {
                 case EntityType.Player:
-                    newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.player);
+                    if(punchType == PunchManager.PunchType.Right)
+                    {
+                        newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.yellow);
+                    }
+                    else
+                    {
+                        newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.player);
+                    }
                     break;
                 case EntityType.Enemy:
                     if (perpetrator.GetComponent<Enemy>().startHealth)
                     {
-                        newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.bigEnemy);
+                        newMenuManager.PlayerDeath(perpetrator.gameObject, NewMenuManager.RoundEndCause.projectile);
                     }
                     else
                     {

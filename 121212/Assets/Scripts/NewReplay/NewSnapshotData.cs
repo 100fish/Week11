@@ -78,7 +78,7 @@ public struct NewSnapshotData
     //used by ReplayManager when saving Enemy info
     public void AddEnemySnapshot(NewSnapshotInfoEnemy data)
     {
-        //If this is a new enemy (past the count of the current players for this frame) then add it to the end of the list
+        //If this is a new enemy (past the count of the current enemies for this frame) then add it to the end of the list
         if (data.replay_id >= enemySnapshots.Count)
         {
             enemySnapshots.Add(data);

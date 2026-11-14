@@ -13,5 +13,5 @@ public class NewSnapshotInfoEnemy
 
     public PunchManager.PunchType replay_wasPunched = PunchManager.PunchType.None;
     public bool replay_health = false;
-    public List<Entities> affectedObjects = new List<Entities>();
+    public int replay_runIndex = -1;
 }

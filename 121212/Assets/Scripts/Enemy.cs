@@ -419,7 +419,8 @@ public class Enemy : Entities
             replay_rotation = transform.rotation,
             replay_angularVelocity = enemyRigidBody.angularVelocity,
             replay_wasPunched = punched,
-            replay_health = health
+            replay_health = health,
+            replay_runIndex = newMenuManager.runIndex
         };
 
         if (punched != PunchManager.PunchType.None && startHealth == true)
@@ -427,39 +428,56 @@ public class Enemy : Entities
             
             myScuffedPunches.Add(new Vector2((float)punched, snapShotTime));
 
-            Debug.Log("/////////State: " + enemyReplayState);
-            Debug.Log("New member!: here's everyone: ");
+            //Debug.Log("/////////State: " + enemyReplayState);
+            //Debug.Log("New member!: here's everyone: ");
             for (int i = 0; i < myScuffedPunches.Count; i++)
             {
-                Debug.Log(myScuffedPunches[i]);
-                Debug.Log(health);
+                //Debug.Log(myScuffedPunches[i]);
+                //Debug.Log(health);
             }
 
             punched = PunchManager.PunchType.None;
         }
 
-
+        //Debug.Log("Numbers for: " + id);
+        //Debug.Log(newMenuManager.runIndex);
+        //Debug.Log(NewSnapshotInfo.replay_runIndex);
         return NewSnapshotInfo;
     }
+
+    //my scuffed punches is a list of punches
+    //seperate to the replay, with stored time and punch info, thats all
+    //the reason it has to be done this way is we cant live simulate the punches
+    //we have to fake everything
+    //and if we fake everything, then the turret has to come out of replay at the right time.
+    //The problem is that it has to respond to only the right punches
+    
+    //The reason that the enemy is snapping back to the ground
+    //is that its prev ious data wasnt erased when it hit the ground
+    //Not the ground, when the player hit it
+    //1: enemy sits still
+    //2: enemy gets punched up
+    //3: enemy plays back getting punched up, and thjen keeps playing the tape from sitting still once it ends
+    //OK. I'm going to go and fix that now
+
     public void LoadSnapshot(NewSnapshotInfoEnemy info, float snapshotTime)
     {
+        //load easy info
         transform.position = info.replay_position;
         enemyRigidBody.linearVelocity = info.replay_linearVelocity;
         transform.rotation = info.replay_rotation;
         enemyRigidBody.angularVelocity = info.replay_angularVelocity;
         health = info.replay_health;
-        
 
-        //Debug.Log("I'm: " + id + " and I'm now loading: " + info.replay_wasPunched + "at " + newReplayManager.snapshotIndex);
-
+        //yellow behaviour
         if(startHealth == true)
         {
             for (int i = 0; i < myScuffedPunches.Count; i++)
             {
-                Debug.Log("///State: " + enemyReplayState);
-                Debug.Log("Loading%Checking: " + myScuffedPunches[i]);
-                Debug.Log("against: " + snapshotTime);
-                Debug.Log("health: " + health);
+                //Debug.Log("///State: " + enemyReplayState);
+                //Debug.Log("Loading%Checking: " + myScuffedPunches[i]);
+                //Debug.Log("against: " + snapshotTime);
+                //Debug.Log("health: " + health);
 
                 if (myScuffedPunches[i].y < snapshotTime)
                 {

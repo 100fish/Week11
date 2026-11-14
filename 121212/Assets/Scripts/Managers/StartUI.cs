@@ -93,7 +93,7 @@ public class StartUI : MonoBehaviour
         new_player_movement.Set_Jump(false);
         new_player_movement.Set_DoubleJump(false);
         new_player_movement.Set_Slide(false);
-        new_player_movement.Set_Punch(false);
+        //new_player_movement.Set_Punch(false);
     }
 
     static bool _set_ui = false;

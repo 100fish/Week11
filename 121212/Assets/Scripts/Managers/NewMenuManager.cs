@@ -110,7 +110,7 @@ public class NewMenuManager : MonoBehaviour
         projectile,
         player,
         time,
-        bigEnemy
+        yellow
     }
 
     //the game's state
@@ -1003,8 +1003,8 @@ public class NewMenuManager : MonoBehaviour
                 PlayerTransition(RoundEndCause.time);
                 elevatorAnimator.deathText.text = "WATCH\nTHE CLOCK"; 
                 break;
-            case RoundEndCause.bigEnemy:
-                PlayerTransition(RoundEndCause.bigEnemy);
+            case RoundEndCause.yellow:
+                PlayerTransition(RoundEndCause.yellow);
                 elevatorAnimator.deathText.text = "MUST UPPERCUT\nYELLOW";
                 break;
             default:
@@ -1030,17 +1030,7 @@ public class NewMenuManager : MonoBehaviour
     //But its ok if there's no perp (null)! as long as the cause isn't an enemy
     private void EndRound(RoundEndCause roundEndCause, GameObject perp)
     {
-
-        if(roundEndCause != RoundEndCause.projectile)
-        {
-            ChangeRoundState(RoundState.DeathUI, roundEndCause);
-        }
-        else
-        {
-            ///Killcam off for now, come back later
-            //ChangeRoundState(RoundState.Killcam, perp);
-            ChangeRoundState(RoundState.DeathUI, roundEndCause);
-        }
+        ChangeRoundState(RoundState.DeathUI, roundEndCause);
     }
 
     #endregion

@@ -74,6 +74,9 @@ public class CameraTransition : MonoBehaviour
             case NewMenuManager.RoundEndCause.time:
                 transitionCause = TransitionCause.Environment;
                 break;
+            case NewMenuManager.RoundEndCause.yellow:
+                transitionCause = TransitionCause.Enemy;
+                break;
             default:
                 break;
         }
